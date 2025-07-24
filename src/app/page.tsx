@@ -326,9 +326,9 @@ const ExampleSection1 = () => {
   return (
     <div className="max-h-screen  w-full" id="courses">
       <Header />
-      <div className=" pb-40 lg:px-14 px-4 ">
+      <div className="  lg:px-14 px-4 ">
         <div
-          className="rounded-2xl pt-28 lg:pt-10 flex flex-col lg:flex-row lg:items-center lg:justify-center  h-full w-full" // 112px = py-14 (3.5rem) * 2
+          className="rounded-2xl  pt-28 lg:pt-10 flex flex-col lg:flex-row lg:items-center lg:justify-center  h-[80vh] w-full" // 112px = py-14 (3.5rem) * 2
           style={{
             backgroundImage: `url("/Board.png")`,
             backgroundSize: "cover",
@@ -342,12 +342,12 @@ const ExampleSection1 = () => {
             transition={{ duration: 0.8 }}
             className="flex flex-col lg:gap-4 lg:w-1/2 lg:justify-center justify-end  lg:p-14 p-4"
           >
-            <h1 className="text-midnight_text text-3xl sm:text-5xl font-semibold  text-white">
+            <h1 className="text-midnight_text text-xl sm:text-5xl font-semibold  text-white">
               L&apos;école de demain,{" "}
               <span className="text-blue-500">Aujourd&apos;hui</span>, dans ta
               poche.
             </h1>
-            <h3 className="text-white/70 text-lg pt-2 lg:pt-0">
+            <h3 className="text-white/70 lg:text-lg text-sm pt-2 lg:pt-0">
               Des cours en vidéo, des exercices corrigés et des QCM intelligents
               pour progresser à ton rythme, du primaire au lycée.
             </h3>
@@ -399,7 +399,7 @@ const ExampleSection1 = () => {
               </div>
             </div>
           </motion.div>
-          <motion.div className=" flex justify-center place-items-end  items-end  h-full">
+          <motion.div className=" flex justify-center place-items-end  items-end">
             <Image
               src="/student5.png"
               alt="nothing"

@@ -209,7 +209,7 @@ const SectionNavigation = ({
   isScrolling 
 }: any) => {
   return (
-    <div className="fixed lg:right-16 right-8 top-1/2 transform -translate-y-1/2 z-50 space-y-4 flex flex-col gap-1">
+    <div className="fixed lg:right-16 right-8 top-4/5 transform -translate-y-1/2 z-50 space-y-4 flex flex-col gap-1">
       {Array.from({ length: sectionsCount }, (_, index) => (
         <motion.button
           key={index}

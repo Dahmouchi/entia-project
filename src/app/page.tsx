@@ -271,54 +271,58 @@ const ModernFeatureCard = ({ feature, index }: any) => {
 };
 const ModernFeatureCards = ({ features }: any) => {
   return (
-    <div className="relative p-2">
-      {/* Background décoratif */}
-      <div className="absolute inset-0 bg-gradient-to-br  rounded-3xl" />
+   <div className="relative p-2">
+  {/* Background décoratif */}
+  <div className="absolute inset-0 bg-gradient-to-br rounded-3xl" />
 
-      {/* Grille de cartes */}
-      <div className="relative z-10 lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 lg:gap-8 lg:p-6 p-2  hidden">
+  {/* Grille de cartes */}
+  <div className="relative z-10 lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 lg:gap-8 lg:p-6 p-2 hidden">
+    {features.map((feature: any, index: any) => (
+      <Card key={index} feature={feature} index={index} />
+    ))}
+  </div>
+  
+  {/* Mobile Carousel */}
+  <div className="lg:hidden px-2"> {/* Added px-6 for side padding */}
+    <Carousel
+      opts={{
+        align: "start", // Changed from "center" to "start"
+        loop: true,
+      }}
+      plugins={[
+        Autoplay({
+          delay: 3000,
+          stopOnInteraction: false,
+        }),
+      ]}
+      className="relative group"
+    >
+      <CarouselContent className="ml-6 gap-4"> {/* Added ml-4 */}
         {features.map((feature: any, index: any) => (
-          <Card key={index} feature={feature} index={index} />
+          <CarouselItem key={index} className="pl-4 basis-[85%] sm:basis-[45%]"> {/* Added pl-4 and basis */}
+            <Card feature={feature} index={index} />
+          </CarouselItem>
         ))}
-      </div>
-      <div className="lg:hidden">
-        <Carousel
-          opts={{
-            align: "center",
-            loop: true,
-          }}
-          plugins={[
-            Autoplay({
-              delay: 2000,
-              stopOnInteraction: false,
-            }),
-          ]}
-          className="relative group"
-        >
-          <CarouselContent className=" gap-8">
-            {features.map((feature: any, index: any) => (
-              <Card key={index} feature={feature} index={index} />
-            ))}
-          </CarouselContent>
+      </CarouselContent>
 
-          {/* Navigation Arrows */}
-          <div className="hidden sm:block">
-            <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
-            <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
-          </div>
-
-          {/* Mobile Navigation */}
-          <div className="sm:hidden flex justify-center gap-4 mt-12">
-            <CarouselPrevious className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
-              <ChevronLeft className="w-5 h-5" />
-            </CarouselPrevious>
-            <CarouselNext className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
-              <ChevronRight className="w-5 h-5" />
-            </CarouselNext>
-          </div>
-        </Carousel>
+      {/* Navigation Arrows */}
+      <div className="hidden sm:block">
+        <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+        <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
       </div>
-    </div>
+
+      {/* Mobile Navigation */}
+      <div className="sm:hidden flex justify-center gap-4 mt-12">
+        <CarouselPrevious className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
+          <ChevronLeft className="w-5 h-5" />
+        </CarouselPrevious>
+        <CarouselNext className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
+          <ChevronRight className="w-5 h-5" />
+        </CarouselNext>
+      </div>
+    </Carousel>
+  </div>
+</div>
   );
 };
 // Configuration des sections d'exemple
@@ -328,7 +332,7 @@ const ExampleSection1 = () => {
       
       <div className="  lg:px-14 px-4 ">
         <div
-          className="rounded-2xl relative flex flex-col lg:flex-row lg:items-center lg:justify-center  lg:h-[90vh] h-[85vh] w-full" // 112px = py-14 (3.5rem) * 2
+          className="rounded-2xl relative flex flex-col lg:flex-row lg:items-center lg:justify-center  lg:h-[90vh] h-[87.5vh] w-full" // 112px = py-14 (3.5rem) * 2
           style={{
             backgroundImage: `url("/Board.png")`,
             backgroundSize: "cover",
@@ -469,17 +473,17 @@ const ExampleSection2 = () => {
           viewport={{ once: true, margin: "100px" }}
           className="text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white px-2 mt-28">
+          <h2 className="text-2xl md:text-5xl font-bold text-white px-2 mt-32">
             Pourquoi choisir <span className="text-indigo-400">Scoolia.ma</span>{" "}
             ?
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
+          <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
             La révolution de l&apos;éducation au Maroc, accessible à tous et
             tournée vers l&apos;avenir.
           </p>
         </motion.div>
 
-        <div className="mt-6 md:mt-12 h-[calc(100%-200px)]">
+        <div className=" h-[calc(100%-200px)]">
           <ModernFeatureCards features={features} />
         </div>
       </div>

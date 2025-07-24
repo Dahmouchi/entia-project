@@ -324,11 +324,15 @@ const ModernFeatureCards = ({ features }: any) => {
 // Configuration des sections d'exemple
 const ExampleSection1 = () => {
   return (
-    <div className="h-screen lg:px-14 px-4 py-14 w-full ">
-      <div
-        className="rounded-2xl  h-full w-full "
-        style={{ backgroundImage: `url("/Board.png")` }}
-      >
+    <div className="min-h-screen lg:px-14 px-4 py-14 w-full" id="courses">
+  <div
+    className="rounded-2xl min-h-[calc(100vh-112px)] w-full" // 112px = py-14 (3.5rem) * 2
+    style={{ 
+      backgroundImage: `url("/Board.png")`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}
+  >
         <div className="grid grid-cols-1 lg:grid-cols-12 space-x-1  h-full">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -338,7 +342,9 @@ const ExampleSection1 = () => {
             className="col-span-6 flex flex-col lg:gap-4 lg:justify-center justify-end  lg:p-14 p-4"
           >
             <h1 className="text-midnight_text text-3xl sm:text-5xl font-semibold pt-28 lg:pt-0 text-white">
-              L&apos;école de demain, <span className="text-blue-500">Aujourd&apos;hui</span>, dans ta poche.
+              L&apos;école de demain,{" "}
+              <span className="text-blue-500">Aujourd&apos;hui</span>, dans ta
+              poche.
             </h1>
             <h3 className="text-white/70 text-lg pt-2 lg:pt-0">
               Des cours en vidéo, des exercices corrigés et des QCM intelligents
@@ -392,10 +398,7 @@ const ExampleSection1 = () => {
               </div>
             </div>
           </motion.div>
-          <motion.div
-           
-            className="col-span-6 flex justify-center items-end  h-full"
-          >
+          <motion.div className="col-span-6 flex justify-center items-end  h-full">
             <Image
               src="/student5.png"
               alt="nothing"
@@ -437,10 +440,14 @@ const ExampleSection2 = () => {
     },
   ];
   return (
-    <div className="h-screen lg:px-14 px-4 py-14 w-full " id="#courses">
+    <div className="min-h-screen lg:px-14 px-4 py-14 w-full" id="courses">
       <div
-        className=" rounded-2xl  h-full w-full  "
-        style={{ backgroundImage: `url("/Board.png")` }}
+        className="rounded-2xl min-h-[calc(100vh-112px)] w-full" // 112px = py-14 (3.5rem) * 2
+        style={{
+          backgroundImage: `url("/Board.png")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
         <div className="max-w-6xl mx-auto space-y-4">
           <motion.div
@@ -448,7 +455,7 @@ const ExampleSection2 = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center pt-36"
+            className="text-center pt-30"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white px-2">
               Pourquoi choisir{" "}

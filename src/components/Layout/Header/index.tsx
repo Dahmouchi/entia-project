@@ -74,10 +74,10 @@ const Header: React.FC = () => {
 
   return (
    <header
-  className={`fixed top-0 z-50 w-full pb-16 transition-all duration-300 ${sticky ? "shadow-lg py-5" : "shadow-none py-6"}`}
+  className={`fixed top-0 z-50 w-full pb-16 transition-all duration-300 ${sticky ? "shadow-lg lg:py-5" : "shadow-none py-4"}`}
 >
   {/* Background Image */}
-  <div className="absolute inset-0 z-0 overflow-hidden">
+  <div className="absolute -top-8 inset-0 z-0 overflow-hidden">
     <img 
       src="/nav.png" 
       className="w-full h-full object-cover" 
@@ -89,16 +89,16 @@ const Header: React.FC = () => {
 
   {/* Content */}
   <div className="relative z-10">
-    <div className="lg:py-0 py-2">
+    <div className="lg:py-0 py-0">
       <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between px-4">
-        <Logo />
+        <img src="/images/logo/logo.png" className="h-auto w-30 lg:w-40" alt="" />
         <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
           {headerData.map((item, index) => (
             <HeaderLink key={index} item={item} />
           ))}
         </nav>
          <motion.button
-      className="relative group px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium shadow-lg overflow-hidden"
+      className="relative group px-6 lg:py-3 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium shadow-lg overflow-hidden"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       initial={{ opacity: 0, y: 20 }}
@@ -131,57 +131,10 @@ const Header: React.FC = () => {
       
       {/* Button content */}
       <div className="relative z-10 flex items-center justify-center gap-2">
-        <LogIn className="text-lg" />
+        <LogIn className="lg:text-lg text-sm" />
         <span>Connexion</span>
       </div>
     </motion.button>
-      </div>
-      
-      {navbarOpen && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40" />
-      )}
-      
-      <div
-        ref={mobileMenuRef}
-        className={`lg:hidden fixed top-0 right-0 h-full w-full bg-darkmode shadow-lg transform transition-transform duration-300 max-w-xs ${navbarOpen ? "translate-x-0" : "translate-x-full"} z-50`}
-      >
-        <div className="flex items-center justify-between p-4">
-          <h2 className="text-lg font-bold text-midnight_text dark:text-midnight_text">
-            <Logo />
-          </h2>
-          <button
-            onClick={() => setNavbarOpen(false)}
-            className="bg-[url('/images/closed.svg')] bg-no-repeat bg-contain w-5 h-5 absolute top-0 right-0 mr-8 mt-8 dark:invert"
-            aria-label="Close menu Modal"
-          ></button>
-        </div>
-        <nav className="flex flex-col items-start p-4">
-          {headerData.map((item, index) => (
-            <MobileHeaderLink key={index} item={item} />
-          ))}
-          <div className="mt-4 flex flex-col space-y-4 w-full">
-            <Link
-              href="#"
-              className="bg-transparent border border-primary text-primary px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white"
-              onClick={() => {
-                setIsSignInOpen(true);
-                setNavbarOpen(false);
-              }}
-            >
-              Sign In
-            </Link>
-            <Link
-              href="#"
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              onClick={() => {
-                setIsSignUpOpen(true);
-                setNavbarOpen(false);
-              }}
-            >
-              Sign Up
-            </Link>
-          </div>
-        </nav>
       </div>
     </div>
   </div>

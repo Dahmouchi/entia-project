@@ -324,7 +324,7 @@ const ModernFeatureCards = ({ features }: any) => {
 // Configuration des sections d'exemple
 const ExampleSection1 = () => {
   return (
-    <div className="h-screen lg:px-14 px-4 py-4 lg:py-8 w-full ">
+    <div className="max-h-screen lg:px-14 px-4 py-4 lg:py-8 w-full ">
       <div
         className="rounded-2xl  h-full w-full "
         style={{ backgroundImage: `url("/Board.png")` }}
@@ -335,7 +335,7 @@ const ExampleSection1 = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.8 }}
-            className="col-span-6 flex flex-col lg:gap-4 lg:justify-center justify-end pt-16  lg:p-14 p-4"
+            className="col-span-6 flex flex-col lg:gap-4 lg:justify-center justify-end  lg:p-14 p-4"
           >
             <h1 className="text-midnight_text text-4xl sm:text-5xl font-semibold pt-28 lg:pt-0 text-white">
               L&apos;école de demain, <span className="text-blue-500">Aujourd&apos;hui</span>, dans ta poche.
@@ -437,7 +437,7 @@ const ExampleSection2 = () => {
     },
   ];
   return (
-    <div className="h-screen lg:px-14 px-4 py-4 lg:py-8 w-full " id="#courses">
+    <div className="max-h-screen lg:px-14 px-4 py-4 lg:py-8 w-full " id="#courses">
       <div
         className=" rounded-2xl  h-full w-full  "
         style={{ backgroundImage: `url("/Board.png")` }}

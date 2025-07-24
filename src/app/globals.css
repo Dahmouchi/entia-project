@@ -120,3 +120,35 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* In your global CSS */
+html, body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* Ensure sections don't have pointer events when not active */
+section {
+  pointer-events: none;
+}
+
+section.active {
+  pointer-events: auto;
+}
+
+/* Animation delays */
+.animate-fade-in-up {
+  animation-delay: 0.2s;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}

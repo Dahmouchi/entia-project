@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 
 import ScrollToTop from "@/components/ScrollToTop";
 import NextAuthProvider from "../../providers/NextAuthProvider";
+import { AOSInit } from "@/components/aos";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
           </NextAuthProvider>
           <ScrollToTop />
         </ThemeProvider>
+        <AOSInit />
       </body>
     </html>
   );

@@ -326,7 +326,7 @@ const ExampleSection1 = () => {
   return (
     <div className="h-screen lg:px-14 px-4 py-4 lg:py-8 w-full ">
       <div
-        className="bg-red-500 rounded-2xl  h-full w-full "
+        className="rounded-2xl  h-full w-full "
         style={{ backgroundImage: `url("/Board.png")` }}
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 space-x-1  h-full">
@@ -335,7 +335,7 @@ const ExampleSection1 = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.8 }}
-            className="col-span-6 flex flex-col lg:gap-4 lg:justify-center justify-end  lg:p-14 p-4"
+            className="col-span-6 flex flex-col lg:gap-4 lg:justify-center justify-end pt-16  lg:p-14 p-4"
           >
             <h1 className="text-midnight_text text-4xl sm:text-5xl font-semibold pt-28 lg:pt-0 text-white">
               L&apos;école de demain, <span className="text-blue-500">Aujourd&apos;hui</span>, dans ta poche.
@@ -393,10 +393,7 @@ const ExampleSection1 = () => {
             </div>
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.8 }}
+           
             className="col-span-6 flex justify-center items-end  h-full"
           >
             <Image
@@ -442,7 +439,7 @@ const ExampleSection2 = () => {
   return (
     <div className="h-screen lg:px-14 px-4 py-4 lg:py-8 w-full " id="#courses">
       <div
-        className="bg-red-500 rounded-2xl  h-full w-full  "
+        className=" rounded-2xl  h-full w-full  "
         style={{ backgroundImage: `url("/Board.png")` }}
       >
         <div className="max-w-6xl mx-auto space-y-4">

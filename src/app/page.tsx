@@ -333,7 +333,7 @@ const ExampleSection1 = () => {
       backgroundPosition: 'center'
     }}
   >
-    
+
         <div className="grid grid-cols-1 lg:grid-cols-12 space-x-1  h-full">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -441,38 +441,40 @@ const ExampleSection2 = () => {
     },
   ];
   return (
-    <div className="min-h-screen lg:px-14 px-4 py-14 w-full" id="courses">
-      <div
-        className="rounded-2xl min-h-[calc(100vh-112px)] w-full" // 112px = py-14 (3.5rem) * 2
-        style={{
-          backgroundImage: `url("/Board.png")`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="max-w-6xl mx-auto space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center pt-30"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white px-2">
-              Pourquoi choisir{" "}
-              <span className="text-indigo-400">Scoolia.ma</span> ?
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto px-2">
-              La révolution de l&apos;éducation au Maroc, accessible à tous et
-              tournée vers l&apos;avenir.
-            </p>
-          </motion.div>
-          <div className="mt-8 lg:mt-0">
-            <ModernFeatureCards features={features} />
-          </div>
-        </div>
-      </div>
+   <div 
+  className="relative w-full min-h-[100dvh] lg:px-14 px-4 pt-24 pb-14" 
+  id="courses"
+  style={{
+    backgroundImage: "url('/Board.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed"
+  }}
+>
+  {/* Extra padding for mobile browser UI */}
+  <div className="h-14 md:h-0 w-full fixed top-0 left-0 bg-transparent pointer-events-none" />
+  
+  <div className="max-w-6xl mx-auto space-y-4 h-full">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true, margin: "100px" }}
+      className="text-center pt-16 md:pt-10"
+    >
+      <h2 className="text-3xl md:text-5xl font-bold text-white px-2">
+        Pourquoi choisir <span className="text-indigo-400">Scoolia.ma</span> ?
+      </h2>
+      <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
+        La révolution de l&apos;éducation au Maroc, accessible à tous et tournée vers l&apos;avenir.
+      </p>
+    </motion.div>
+    
+    <div className="mt-6 md:mt-12 h-[calc(100%-200px)]">
+      <ModernFeatureCards features={features} />
     </div>
+  </div>
+</div>
   );
 };
 const ExampleSection3 = () => {

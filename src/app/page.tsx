@@ -399,7 +399,7 @@ const ExampleSection1 = () => {
               </div>
             </div>
           </motion.div>
-          <motion.div className="  justify-center place-items-end  items-end hidden lg:flex">
+          <motion.div className=" justify-center place-items-end h-full  items-end hidden lg:flex">
             <Image
               src="/student5.png"
               alt="nothing"

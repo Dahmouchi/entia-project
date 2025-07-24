@@ -324,7 +324,7 @@ const ModernFeatureCards = ({ features }: any) => {
 // Configuration des sections d'exemple
 const ExampleSection1 = () => {
   return (
-    <div className="lg:px-14 px-4 py-4 lg:py-8 w-full ">
+    <div className="h-screen lg:px-14 px-4 py-14 w-full ">
       <div
         className="rounded-2xl  h-full w-full "
         style={{ backgroundImage: `url("/Board.png")` }}
@@ -437,7 +437,7 @@ const ExampleSection2 = () => {
     },
   ];
   return (
-    <div className="lg:px-14 px-4 py-4 lg:py-8 w-full " id="#courses">
+    <div className="h-screen lg:px-14 px-4 py-14 w-full " id="#courses">
       <div
         className=" rounded-2xl  h-full w-full  "
         style={{ backgroundImage: `url("/Board.png")` }}
@@ -448,7 +448,7 @@ const ExampleSection2 = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center pt-44 lg:pt-36"
+            className="text-center pt-36"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white px-2">
               Pourquoi choisir{" "}
@@ -459,7 +459,7 @@ const ExampleSection2 = () => {
               tournée vers l&apos;avenir.
             </p>
           </motion.div>
-          <div className="mt-12 lg:mt-0">
+          <div className="mt-8 lg:mt-0">
             <ModernFeatureCards features={features} />
           </div>
         </div>

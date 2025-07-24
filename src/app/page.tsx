@@ -326,7 +326,7 @@ const ExampleSection1 = () => {
   return (
     <div className="max-h-screen  w-full" id="courses">
       <Header />
-      <div className="lg:px-14 px-4 ">
+      <div className=" pb-40 lg:px-14 px-4 ">
         <div
           className="rounded-2xl pt-28 lg:pt-10 flex flex-col lg:flex-row lg:items-center lg:justify-center  h-full w-full" // 112px = py-14 (3.5rem) * 2
           style={{
@@ -360,7 +360,7 @@ const ExampleSection1 = () => {
                                         />
                                     </button>
                                 </div>*/}
-            <div className="flex  flex-col gap-3 pt-6 lg:pt-4">
+            <div className="flex  flex-col gap-3 pt-6 lg:pt-4 ">
               <div className="flex gap-2">
                 <Image
                   src="/images/banner/check-circle.svg"

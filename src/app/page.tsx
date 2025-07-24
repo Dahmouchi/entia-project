@@ -333,6 +333,7 @@ const ExampleSection1 = () => {
       backgroundPosition: 'center'
     }}
   >
+    
         <div className="grid grid-cols-1 lg:grid-cols-12 space-x-1  h-full">
           <motion.div
             initial={{ opacity: 0, y: 50 }}

@@ -324,25 +324,23 @@ const ModernFeatureCards = ({ features }: any) => {
 // Configuration des sections d'exemple
 const ExampleSection1 = () => {
   return (
-    <div className="min-h-screen lg:px-14 px-4 py-14 w-full" id="courses">
+    <div className="max-h-screen lg:px-14 px-4 py-14 w-full" id="courses">
   <div
-    className="rounded-2xl min-h-[calc(100vh-112px)] w-full" // 112px = py-14 (3.5rem) * 2
+    className="rounded-2xl flex flex-col lg:flex-row lg:items-center lg:justify-center  h-full w-full" // 112px = py-14 (3.5rem) * 2
     style={{ 
       backgroundImage: `url("/Board.png")`,
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }}
   >
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 space-x-1  h-full">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.8 }}
-            className="col-span-6 flex flex-col lg:gap-4 lg:justify-center justify-end  lg:p-14 p-4"
+            className="flex flex-col lg:gap-4 lg:w-1/2 lg:justify-center justify-end  lg:p-14 p-4"
           >
-            <h1 className="text-midnight_text text-3xl sm:text-5xl font-semibold pt-28 lg:pt-0 text-white">
+            <h1 className="text-midnight_text text-3xl sm:text-5xl font-semibold pt-20 lg:pt-0 text-white">
               L&apos;école de demain,{" "}
               <span className="text-blue-500">Aujourd&apos;hui</span>, dans ta
               poche.
@@ -399,7 +397,7 @@ const ExampleSection1 = () => {
               </div>
             </div>
           </motion.div>
-          <motion.div className="col-span-6 flex justify-center items-end  h-full">
+          <motion.div className=" flex justify-center place-items-end  items-end  h-full">
             <Image
               src="/student5.png"
               alt="nothing"
@@ -408,7 +406,6 @@ const ExampleSection1 = () => {
               height={805}
             />
           </motion.div>
-        </div>
       </div>
     </div>
   );

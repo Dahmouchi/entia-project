@@ -152,3 +152,7 @@ section.active {
 .delay-300 {
   animation-delay: 0.3s;
 }
+
+.tes{
+  z-index: 999;
+}

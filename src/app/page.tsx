@@ -324,15 +324,17 @@ const ModernFeatureCards = ({ features }: any) => {
 // Configuration des sections d'exemple
 const ExampleSection1 = () => {
   return (
-    <div className="max-h-screen lg:px-14 px-4 py-14 w-full" id="courses">
-  <div
-    className="rounded-2xl flex flex-col lg:flex-row lg:items-center lg:justify-center  h-full w-full" // 112px = py-14 (3.5rem) * 2
-    style={{ 
-      backgroundImage: `url("/Board.png")`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }}
-  >
+    <div className="max-h-screen  w-full" id="courses">
+      <Header />
+      <div className="lg:px-14 px-4 ">
+        <div
+          className="rounded-2xl pt-28 lg:pt-10 flex flex-col lg:flex-row lg:items-center lg:justify-center  h-full w-full" // 112px = py-14 (3.5rem) * 2
+          style={{
+            backgroundImage: `url("/Board.png")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -340,7 +342,7 @@ const ExampleSection1 = () => {
             transition={{ duration: 0.8 }}
             className="flex flex-col lg:gap-4 lg:w-1/2 lg:justify-center justify-end  lg:p-14 p-4"
           >
-            <h1 className="text-midnight_text text-3xl sm:text-5xl font-semibold pt-20 lg:pt-0 text-white">
+            <h1 className="text-midnight_text text-3xl sm:text-5xl font-semibold  text-white">
               L&apos;école de demain,{" "}
               <span className="text-blue-500">Aujourd&apos;hui</span>, dans ta
               poche.
@@ -406,6 +408,7 @@ const ExampleSection1 = () => {
               height={805}
             />
           </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -438,40 +441,42 @@ const ExampleSection2 = () => {
     },
   ];
   return (
-   <div 
-  className="relative w-full min-h-[100dvh] lg:px-14 px-4 pt-24 pb-14" 
-  id="courses"
-  style={{
-    backgroundImage: "url('/Board.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundAttachment: "fixed"
-  }}
->
-  {/* Extra padding for mobile browser UI */}
-  <div className="h-14 md:h-0 w-full fixed top-0 left-0 bg-transparent pointer-events-none" />
-  
-  <div className="max-w-6xl mx-auto space-y-4 h-full">
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true, margin: "100px" }}
-      className="text-center pt-16 md:pt-10"
+    <div
+      className="relative w-full min-h-[100dvh] lg:px-14 px-4 pt-24 pb-14"
+      id="courses"
+      style={{
+        backgroundImage: "url('/Board.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
     >
-      <h2 className="text-3xl md:text-5xl font-bold text-white px-2">
-        Pourquoi choisir <span className="text-indigo-400">Scoolia.ma</span> ?
-      </h2>
-      <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
-        La révolution de l&apos;éducation au Maroc, accessible à tous et tournée vers l&apos;avenir.
-      </p>
-    </motion.div>
-    
-    <div className="mt-6 md:mt-12 h-[calc(100%-200px)]">
-      <ModernFeatureCards features={features} />
+      {/* Extra padding for mobile browser UI */}
+      <div className="h-14 md:h-0 w-full fixed top-0 left-0 bg-transparent pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto space-y-4 h-full">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "100px" }}
+          className="text-center"
+        >
+          <h2 className="text-3xl md:text-5xl font-bold text-white px-2">
+            Pourquoi choisir <span className="text-indigo-400">Scoolia.ma</span>{" "}
+            ?
+          </h2>
+          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
+            La révolution de l&apos;éducation au Maroc, accessible à tous et
+            tournée vers l&apos;avenir.
+          </p>
+        </motion.div>
+
+        <div className="mt-6 md:mt-12 h-[calc(100%-200px)]">
+          <ModernFeatureCards features={features} />
+        </div>
+      </div>
     </div>
-  </div>
-</div>
   );
 };
 const ExampleSection3 = () => {
@@ -508,7 +513,6 @@ const exampleSections = [
 const FullPageScrollExample = () => {
   return (
     <div>
-      <Header />
       <FullPageScrollSystem sections={exampleSections} />
     </div>
   );

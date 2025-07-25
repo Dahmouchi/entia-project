@@ -185,6 +185,8 @@ background: linear-gradient(90deg, rgba(0, 113, 158, 1) 0%, rgba(0, 25, 214, 1) 
     }
   }
 `;
+import { motion } from "framer-motion";
+
 
 const StyledWrappers = styled.div`
   .card {
@@ -248,22 +250,36 @@ const CardSection = () => {
   ];
 
   return (
-    <div className="max-h-screen  w-full" id="courses">
-      <div className="  lg:px-14 px-4 ">
-        <div
-          className="rounded-2xl relative flex flex-col lg:flex-row lg:items-center lg:justify-center  lg:h-[90vh] h-[86.5vh] w-full" // 112px = py-14 (3.5rem) * 2
-          style={{
-            backgroundImage: `url("/Board.png")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className=" lg:flex justify-center gap-8 py-12 flex-wrap hidden ">
+    <div
+      className="relative w-full h-[100dvh]  pt-36"
+      id="courses"
+      style={{
+        backgroundImage: "url('/Board.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+        <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true, margin: "100px" }}
+                    className="text-center"
+                  >
+                    <h2 className="text-2xl md:text-5xl font-bold text-white px-2">
+                      Des <span className="text-indigo-400">programmes riches</span>
+                    </h2>
+                    <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
+                      Scoolia.ma vous propose un contenu pédagogique complet et conforme
+                      aux normes marocaines
+                    </p>
+                  </motion.div>
+          <div className=" lg:flex justify-center gap-8 mt-6 flex-wrap hidden ">
             {cards.map((card) => (
               <CardAnimation key={card.id} title={card.title} />
             ))}
           </div>
-          <div className="lg:hidden px-2 mt-44">
+          <div className="lg:hidden px-2">
             {" "}
             {/* Added px-6 for side padding */}
             <Carousel
@@ -310,8 +326,6 @@ const CardSection = () => {
               </div>
             </Carousel>
           </div>
-        </div>
-      </div>{" "}
     </div>
   );
 };

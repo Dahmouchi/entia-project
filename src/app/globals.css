@@ -153,6 +153,7 @@ section.active {
   animation-delay: 0.3s;
 }
 
-.tes{
-  z-index: 999;
+.tes {
+  position: relative; /* or absolute/fixed if needed */
+  z-index: 9999;       /* higher than other sections */
 }

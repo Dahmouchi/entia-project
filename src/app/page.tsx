@@ -29,6 +29,8 @@ import {
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import Card from "./(user)/_components/testCard";
 import CardSection from "./(user)/_components/Card2";
+import CardSectionMatiere from "./(user)/_components/Card3";
+import CardsContainer from "./(user)/_components/Card3";
 
 const ModernFeatureCards = ({ features }: any) => {
   return (
@@ -271,7 +273,7 @@ const exampleSections = [
   },
   {
     id: "section4",
-    component: <CardSection />,
+    component: <CardsContainer />,
     backgroundColor: "",
   },
 ];

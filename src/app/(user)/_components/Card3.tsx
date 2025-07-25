@@ -155,7 +155,7 @@ const CardsContainer = () => {
             className="text-center"
           >
             <h2 className="text-2xl md:text-5xl font-bold text-white px-2">
-              Des <span className="text-indigo-400">programmes riches</span>
+              Des <span className="text-indigo-400">Programmes Riches</span>
             </h2>
             <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
               Scoolia.ma vous propose un contenu pédagogique complet et conforme
@@ -192,7 +192,7 @@ const CardsContainer = () => {
               ]}
               className="relative group"
             >
-             <CarouselContent className="ml-6 gap-4">
+             <CarouselContent className=" gap-4">
                 {/* Added ml-4 */}
                 {levels.map((level) => (
                 <CarouselItem key={level.name} className="px-2 pb-8">
@@ -203,16 +203,16 @@ const CardsContainer = () => {
 
               {/* Navigation Arrows */}
               <div className="hidden sm:block z-50">
-                <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-blue-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
-                <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-blue-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+                <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-purple-700 rounded-full shadow-lg hover:bg-blue-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+                <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-purple-700 rounded-full shadow-lg hover:bg-blue-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
               </div>
 
               {/* Mobile Navigation */}
               <div className="sm:hidden flex justify-center gap-4 mt-12 z-50">
-                <CarouselPrevious className="static w-10 h-10 bg-white text-blue-500 rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
+                <CarouselPrevious className="static w-10 h-10 bg-white text-blue-500 rounded-full shadow hover:bg-purple-700 hover:text-white transition-all border border-gray-200">
                   <ChevronLeft className="w-5 h-5" />
                 </CarouselPrevious>
-                <CarouselNext className="static w-10 h-10 bg-white text-blue-500 rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
+                <CarouselNext className="static w-10 h-10 bg-white text-blue-500 rounded-full shadow hover:bg-purple-700 hover:text-white transition-all border border-gray-200">
                   <ChevronRight className="w-5 h-5" />
                 </CarouselNext>
               </div>

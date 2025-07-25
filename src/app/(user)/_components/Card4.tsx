@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -17,28 +18,22 @@ import Autoplay from "embla-carousel-autoplay"; // Optional: if you want autopla
 import { BookOpenText, FileText, HelpCircle } from "lucide-react"; // import the necessary icons
 
 import { motion, scale, useMotionValue, useTransform } from "framer-motion";
-
-const CardAnimation = ({ feature, index }: any) => {
+const ReviewCard = ({ review }: any) => {
   return (
     <StyledWrapper>
-      <div className="e-card playing ">
+      <div className="e-card playing">
         <div className="image" />
         <div className="wave" />
         <div className="wave" />
         <div className="wave" />
         <div className="infotop mt-0">
-          <div className="text-white w-full items-center justify-center flex">
-            {feature?.icon}
-          </div>
-          {feature.title}
-          <br />
-          <div className="name px-3">{feature.description}</div>
+          <div className="text-white text-lg font-bold mb-2">{review.name}</div>
+          <div className="name px-4 italic text-sm">&quot;{review.comment}&quot;</div>
         </div>
       </div>
     </StyledWrapper>
   );
 };
-
 const StyledWrapper = styled.div`
   .e-card {
     margin: 0px auto;
@@ -136,34 +131,25 @@ const StyledWrapper = styled.div`
   }
 `;
 
-const CardSection = () => {
-  const cards = [
-    {
-      id: 1,
-      icon: <BookOpenText className="text-4xl mb-4 w-12 h-10" />,
-      title: "Cours détaillé",
-      description:
-        "Accédez à des cours riches, bien structurés, et faciles à comprendre.",
-    },
-    {
-      id: 2,
-      icon: <FileText className="text-4xl mb-4 w-12 h-10" />,
-      title: "Exercice avec corrigé",
-      description:
-        "Pratiquez avec des exercices variés accompagnés de leurs corrigés détaillés.",
-    },
-    {
-      id: 3,
-      icon: <HelpCircle className="text-4xl mb-4 w-12 h-10" />,
-      title: "QCM interactif",
-      description:
-        "Testez vos connaissances avec des QCM interactifs pour progresser efficacement.",
-    },
-  ];
+const reviews = [
+  {
+    name: "Sara M. – Lycée",
+    comment: "Grâce à Scoolia, j'ai enfin compris mes cours de mathématiques. Les vidéos sont claires et les exercices m'ont beaucoup aidée à progresser.",
+  },
+  {
+    name: "Yassine B. – Collège",
+    comment: "J'adore les QCM interactifs ! C'est motivant et ça me permet de savoir rapidement où je dois m'améliorer.",
+  },
+  {
+    name: "Inès T. – Terminale",
+    comment: "Une plateforme très bien faite. Je révise à mon rythme, et je me sens beaucoup plus confiante pour les examens.",
+  },
+];
 
+const ReviewSection = () => {
   return (
     <div
-      className="relative w-full h-[100dvh]  pt-36"
+      className="relative w-full h-[100dvh] pt-36"
       style={{
         backgroundImage: "url('/Board.png')",
         backgroundSize: "cover",
@@ -178,55 +164,38 @@ const CardSection = () => {
         className="text-center"
       >
         <h2 className="text-2xl md:text-5xl font-bold text-white px-2">
-          Des <span className="text-yellow-400">Outils Pédagogiques</span>{" "}
-          Puissants
+          Ce que <span className="text-yellow-400">nos partenaires</span> disent de nous
         </h2>
         <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
-          Chaque chapitre inclut un cours structuré, des exercices corrigés et
-          des QCM.
+          Des entreprises et institutions qui nous font confiance témoignent de leur expérience avec Scoolia.ma.
         </p>
       </motion.div>
-      <div className=" lg:flex justify-center gap-8 mt-6 flex-wrap hidden ">
-        {cards.map((card) => (
-          <CardAnimation key={card.id} feature={card} />
+
+      <div className="lg:flex justify-center gap-8 mt-6 flex-wrap hidden">
+        {reviews.map((review, index) => (
+          <ReviewCard key={index} review={review} />
         ))}
       </div>
+
       <div className="lg:hidden px-2 mt-6">
-        {" "}
-        {/* Added px-6 for side padding */}
         <Carousel
-          opts={{
-            align: "center", // Changed from "center" to "start"
-            loop: true,
-          }}
-          plugins={[
-            Autoplay({
-              delay: 4000,
-              stopOnInteraction: false,
-            }),
-          ]}
+          opts={{ align: "center", loop: true }}
+          plugins={[Autoplay({ delay: 4000, stopOnInteraction: false })]}
           className="relative group"
         >
           <CarouselContent className="gap-4 ml-2">
-            {" "}
-            {/* Added ml-4 */}
-            {cards.map((card, index) => (
-              <CarouselItem
-                key={index}
-                className="px-2 basis-[85%] sm:basis-[45%] "
-              >
-                <CardAnimation key={card.id} feature={card} />
+            {reviews.map((review, index) => (
+              <CarouselItem key={index} className="px-2 basis-[85%] sm:basis-[45%]">
+                <ReviewCard review={review} />
               </CarouselItem>
             ))}
           </CarouselContent>
 
-          {/* Navigation Arrows */}
           <div className="hidden sm:block z-50">
             <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
             <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
           </div>
 
-          {/* Mobile Navigation */}
           <div className="sm:hidden flex justify-center gap-4 mt-12 z-50 w-full">
             <CarouselPrevious className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-yellow-400 hover:text-white transition-all border border-gray-200">
               <ChevronLeft className="w-5 h-5" />
@@ -241,4 +210,4 @@ const CardSection = () => {
   );
 };
 
-export default CardSection;
+export default ReviewSection;

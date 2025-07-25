@@ -31,6 +31,7 @@ import Card from "./(user)/_components/testCard";
 import CardSection from "./(user)/_components/Card2";
 import CardSectionMatiere from "./(user)/_components/Card3";
 import CardsContainer from "./(user)/_components/Card3";
+import ReviewSection from "./(user)/_components/Card4";
 
 const ModernFeatureCards = ({ features }: any) => {
   return (
@@ -60,7 +61,7 @@ const ModernFeatureCards = ({ features }: any) => {
       ]}
       className="relative group"
     >
-      <CarouselContent className="ml-6 gap-4"> {/* Added ml-4 */}
+      <CarouselContent className="ml-9 gap-4"> {/* Added ml-4 */}
         {features.map((feature: any, index: any) => (
           <CarouselItem key={index} className="pl-4 basis-[85%] sm:basis-[45%]"> {/* Added pl-4 and basis */}
             <Card feature={feature} index={index} />
@@ -274,6 +275,11 @@ const exampleSections = [
   {
     id: "section4",
     component: <CardsContainer />,
+    backgroundColor: "",
+  },
+   {
+    id: "section5",
+    component: <ReviewSection />,
     backgroundColor: "",
   },
 ];

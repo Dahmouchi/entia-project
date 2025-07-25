@@ -389,7 +389,7 @@ const FullPageScrollSystem = ({ sections = [], showFooter = true }: {
                 animate="center"
                 exit="exit"
                 transition={{
-                  duration: 0.8, // Réduit de 1.2s à 0.8s
+                  duration: 0.5, // Réduit de 1.2s à 0.8s
                   ease: [0.25, 0.46, 0.45, 0.94],
                 }}
                 className={`fixed inset-0 flex items-center justify-center ${section.backgroundColor}`}

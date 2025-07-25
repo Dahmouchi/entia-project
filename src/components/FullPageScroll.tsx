@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import {
   motion,
   useScroll,
@@ -13,39 +13,38 @@ import {
   useAnimation,
   AnimatePresence,
 } from "framer-motion";
-// at the top of your file
+
+// Optimisation 1: Variants simplifiés avec moins de propriétés pour améliorer les performances
 const variants = {
   enter: (direction: number) => ({
-    y: direction > 0 ? "100vh" : "-100vh", // coming from bottom if ↓, top if ↑
+    y: direction > 0 ? "100vh" : "-100vh",
     opacity: 0,
-    scale: 0.8,
-    filter: "blur(4px)",
+    scale: 0.95, // Réduit de 0.8 à 0.95 pour moins de calculs
   }),
   center: {
     y: 0,
     opacity: 1,
     scale: 1,
-    filter: "blur(0px)",
   },
   exit: (direction: number) => ({
-    y: direction < 0 ? "100vh" : "-100vh", // exiting toward bottom if ↑ (dir<0), top if ↓
+    y: direction < 0 ? "100vh" : "-100vh",
     opacity: 0,
-    scale: 0.8,
-    filter: "blur(4px)",
+    scale: 0.95, // Réduit de 0.8 à 0.95 pour moins de calculs
   }),
 };
 
-// Hook personnalisé pour la gestion du défilement pleine page
-const useFullPageScroll = (sectionsCount: any) => {
+// Hook personnalisé optimisé pour la gestion du défilement pleine page
+const useFullPageScroll = (sectionsCount: number) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [previousSection, setPreviousSection] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState(0); // 1 pour bas, -1 pour haut
-  const containerRef = useRef(null);
+  const [scrollDirection, setScrollDirection] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
   const lastScrollTime = useRef(0);
-
-  const scrollToSection = (sectionIndex: any, direction = 0) => {
+  
+  // Optimisation 2: Utilisation de useCallback pour éviter les re-créations de fonctions
+  const scrollToSection = useCallback((sectionIndex: number, direction = 0) => {
     if (isScrolling || sectionIndex < 0 || sectionIndex >= sectionsCount)
       return;
 
@@ -54,15 +53,17 @@ const useFullPageScroll = (sectionsCount: any) => {
     setPreviousSection(currentSection);
     setCurrentSection(sectionIndex);
 
-    // Débloquer après l'animation
-    setTimeout(() => setIsScrolling(false), 1200);
-  };
+    // Optimisation 3: Réduction du timeout de 1200ms à 800ms pour une meilleure réactivité
+    setTimeout(() => setIsScrolling(false), 800);
+  }, [isScrolling, sectionsCount, currentSection]);
 
-  const handleWheel = (e: any) => {
+  // Optimisation 4: Throttling amélioré avec useCallback
+  const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
 
     const now = Date.now();
-    if (now - lastScrollTime.current < 150) return; // Throttle augmenté
+    // Optimisation 5: Réduction du throttle de 150ms à 100ms pour une meilleure réactivité
+    if (now - lastScrollTime.current < 100) return;
     lastScrollTime.current = now;
 
     if (isScrolling) return;
@@ -71,9 +72,9 @@ const useFullPageScroll = (sectionsCount: any) => {
     const nextSection = currentSection + direction;
 
     scrollToSection(nextSection, direction);
-  };
+  }, [isScrolling, currentSection, scrollToSection]);
 
-  const handleKeyDown = (e: any) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (isScrolling) return;
 
     switch (e.key) {
@@ -96,35 +97,37 @@ const useFullPageScroll = (sectionsCount: any) => {
         scrollToSection(sectionsCount - 1, 1);
         break;
     }
-  };
+  }, [isScrolling, currentSection, scrollToSection, sectionsCount]);
 
-  const handleTouchStart = (e: any) => {
+  const handleTouchStart = useCallback((e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
-  };
+  }, []);
 
-  const handleTouchEnd = (e: any) => {
+  const handleTouchEnd = useCallback((e: TouchEvent) => {
     if (isScrolling) return;
 
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartY.current - touchEndY;
 
     if (Math.abs(diff) > 50) {
-      // Seuil minimum pour déclencher
       const direction = diff > 0 ? 1 : -1;
       const nextSection = currentSection + direction;
       scrollToSection(nextSection, direction);
     }
-  };
+  }, [isScrolling, currentSection, scrollToSection]);
 
   useEffect(() => {
-    const container = containerRef.current as any;
+    const container = containerRef.current;
     if (!container) return;
 
-    // Event listeners
-    container.addEventListener("wheel", handleWheel, { passive: false });
+    // Optimisation 6: Utilisation d'options passives pour de meilleures performances
+    const wheelOptions = { passive: false };
+    const touchOptions = { passive: true };
+
+    container.addEventListener("wheel", handleWheel, wheelOptions);
     window.addEventListener("keydown", handleKeyDown);
-    container.addEventListener("touchstart", handleTouchStart);
-    container.addEventListener("touchend", handleTouchEnd);
+    container.addEventListener("touchstart", handleTouchStart, touchOptions);
+    container.addEventListener("touchend", handleTouchEnd, touchOptions);
 
     return () => {
       container.removeEventListener("wheel", handleWheel);
@@ -132,7 +135,7 @@ const useFullPageScroll = (sectionsCount: any) => {
       container.removeEventListener("touchstart", handleTouchStart);
       container.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [currentSection, isScrolling, sectionsCount]);
+  }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchEnd]);
 
   return {
     containerRef,
@@ -144,8 +147,8 @@ const useFullPageScroll = (sectionsCount: any) => {
   };
 };
 
-// Composant pour une section individuelle avec animations bidirectionnelles
-const FullPageSection = ({
+// Optimisation 7: Mémoisation du composant FullPageSection
+const FullPageSection = React.memo(({
   children,
   index,
   currentSection,
@@ -154,115 +157,90 @@ const FullPageSection = ({
   scrollDirection,
   backgroundColor = "bg-white",
   className = "",
-}: any) => {
+}: {
+  children: React.ReactNode;
+  index: number;
+  currentSection: number;
+  previousSection: number;
+  isScrolling: boolean;
+  scrollDirection: number;
+  backgroundColor?: string;
+  className?: string;
+}) => {
   const isActive = currentSection === index;
   const wasActive = previousSection === index;
   const isEntering = isActive && !wasActive && isScrolling;
   const isExiting = !isActive && wasActive && isScrolling;
 
-  // Fonction pour déterminer l'animation d'une section
-  const getAnimationProps = () => {
+  // Optimisation 8: Mémoisation des propriétés d'animation
+  const animationProps = useMemo(() => {
     if (isExiting) {
-      // Section qui sort : TOUJOURS zoom out + fade out + blur
       return {
-        scale: 0.8,
+        scale: 0.95, // Réduit de 0.8 à 0.95
         opacity: 0,
-        filter: "blur(4px)",
-        rotateX: -3,
-        z: -100,
         y: 0,
       };
     } else if (isEntering) {
-      // Section qui entre : direction dépend du sens de scroll
       return {
         scale: 1,
         opacity: 1,
-        filter: "blur(0px)",
-        rotateX: 0,
-        z: 0,
-        y: 0, // Position finale
+        y: 0,
       };
     } else if (isActive) {
-      // Section active normale
       return {
         scale: 1,
         opacity: 1,
-        filter: "blur(0px)",
-        rotateX: 0,
-        z: 0,
         y: 0,
       };
     } else {
-      // Section en attente (position initiale selon la direction)
-      const waitingY =
-        scrollDirection === 1
-          ? "100vh"
-          : scrollDirection === -1
-          ? "-100vh"
-          : "100vh";
+      const waitingY = scrollDirection === 1 ? "100vh" : scrollDirection === -1 ? "-100vh" : "100vh";
       return {
-        scale: 0.95,
+        scale: 0.98, // Réduit de 0.95 à 0.98
         opacity: 0,
-        filter: "blur(0px)",
-        rotateX: 0,
-        z: 0,
         y: waitingY,
       };
     }
-  };
+  }, [isExiting, isEntering, isActive, scrollDirection]);
 
-  // Position initiale selon la direction du scroll
-  const getInitialProps = () => {
+  const initialProps = useMemo(() => {
     if (index === 0) {
       return {
         scale: 1,
         opacity: 1,
-        filter: "blur(0px)",
-        rotateX: 0,
-        z: 0,
         y: 0,
       };
     } else {
-      // Pour les sections non-actives, position initiale selon la direction
       const initialY = isEntering
-        ? scrollDirection === 1
-          ? "100vh"
-          : "-100vh" // Arrive du bas si on descend, du haut si on monte
-        : index > currentSection
-        ? "100vh"
-        : "-100vh"; // Position par défaut
+        ? scrollDirection === 1 ? "100vh" : "-100vh"
+        : index > currentSection ? "100vh" : "-100vh";
 
       return {
-        scale: 0.95,
+        scale: 0.98, // Réduit de 0.95 à 0.98
         opacity: 0,
-        filter: "blur(0px)",
-        rotateX: 0,
-        z: 0,
         y: initialY,
       };
     }
-  };
+  }, [index, isEntering, scrollDirection, currentSection]);
 
-  // Z-index intelligent pour la superposition correcte
-  const getZIndex = () => {
+  const zIndex = useMemo(() => {
     if (isActive) return 30;
     if (isExiting) return 10;
     if (isEntering) return 25;
     return 20;
-  };
+  }, [isActive, isExiting, isEntering]);
 
   return (
     <motion.section
       className={`fixed inset-0 flex items-center justify-center ${backgroundColor} ${className}`}
       style={{
-        zIndex: getZIndex(),
+        zIndex,
         transformOrigin: "center center",
-        transformStyle: "preserve-3d",
+        // Optimisation 9: Suppression de transformStyle preserve-3d pour de meilleures performances
       }}
-      initial={getInitialProps()}
-      animate={getAnimationProps()}
+      initial={initialProps}
+      animate={animationProps}
       transition={{
-        duration: 1.2,
+        duration: 0.8, // Réduit de 1.2s à 0.8s pour plus de fluidité
         ease: [0.25, 0.46, 0.45, 0.94],
         type: "tween",
       }}
@@ -270,43 +248,62 @@ const FullPageSection = ({
       <div className="w-full h-full overflow-hidden">{children}</div>
     </motion.section>
   );
-};
+});
 
-// Navigation dots
-const SectionNavigation = ({
+FullPageSection.displayName = "FullPageSection";
+
+// Optimisation 10: Mémoisation du composant SectionNavigation
+const SectionNavigation = React.memo(({
   sectionsCount,
   currentSection,
   scrollToSection,
   isScrolling,
-}: any) => {
+}: {
+  sectionsCount: number;
+  currentSection: number;
+  scrollToSection: (index: number, direction: number) => void;
+  isScrolling: boolean;
+}) => {
+  // Optimisation 11: Mémoisation de la liste des sections
+  const sectionButtons = useMemo(() => 
+    Array.from({ length: sectionsCount }, (_, index) => (
+      <motion.button
+        key={index}
+        className={`w-3 h-3 rounded-full border-2 transition-all duration-200 ${
+          currentSection === index
+            ? "bg-white border-white scale-125"
+            : "bg-transparent border-white/50 hover:border-white"
+        }`}
+        onClick={() => {
+          if (!isScrolling) {
+            const direction = index > currentSection ? 1 : -1;
+            scrollToSection(index, direction);
+          }
+        }}
+        whileHover={{ scale: 1.2 }}
+        whileTap={{ scale: 0.9 }}
+        disabled={isScrolling}
+      />
+    )), [sectionsCount, currentSection, isScrolling, scrollToSection]);
+
   return (
     <div className="fixed lg:right-16 right-8 top-4/5 transform -translate-y-1/2 z-50 space-y-4 flex flex-col gap-1">
-      {Array.from({ length: sectionsCount }, (_, index) => (
-        <motion.button
-          key={index}
-          className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
-            currentSection === index
-              ? "bg-white border-white scale-125"
-              : "bg-transparent border-white/50 hover:border-white"
-          }`}
-          onClick={() => {
-            if (!isScrolling) {
-              const direction = index > currentSection ? 1 : -1;
-              scrollToSection(index, direction);
-            }
-          }}
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.9 }}
-          disabled={isScrolling}
-        />
-      ))}
+      {sectionButtons}
     </div>
   );
-};
+});
 
-// Indicateur de progression
-const ScrollProgress = ({ currentSection, sectionsCount }: any) => {
-  const progress = (currentSection / (sectionsCount - 1)) * 100;
+SectionNavigation.displayName = "SectionNavigation";
+
+// Optimisation 12: Mémoisation du composant ScrollProgress
+const ScrollProgress = React.memo(({ currentSection, sectionsCount }: {
+  currentSection: number;
+  sectionsCount: number;
+}) => {
+  const progress = useMemo(() => 
+    (currentSection / (sectionsCount - 1)) * 100, 
+    [currentSection, sectionsCount]
+  );
 
   return (
     <div className="fixed top-0 left-0 w-full h-1 bg-black/20 z-50">
@@ -314,16 +311,26 @@ const ScrollProgress = ({ currentSection, sectionsCount }: any) => {
         className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
         initial={{ width: 0 }}
         animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
+        transition={{ 
+          duration: 0.6, // Réduit de 0.8s à 0.6s
+          ease: "easeInOut" 
+        }}
       />
     </div>
   );
-};
+});
 
-// Composant Footer moderne
+ScrollProgress.displayName = "ScrollProgress";
 
-// Composant principal du système de défilement pleine page
-const FullPageScrollSystem = ({ sections = [], showFooter = true }: any) => {
+// Composant principal optimisé du système de défilement pleine page
+const FullPageScrollSystem = ({ sections = [], showFooter = true }: {
+  sections: Array<{
+    id: string;
+    component: React.ReactNode;
+    backgroundColor: string;
+  }>;
+  showFooter?: boolean;
+}) => {
   const sectionsCount = sections.length;
   const {
     containerRef,
@@ -334,8 +341,11 @@ const FullPageScrollSystem = ({ sections = [], showFooter = true }: any) => {
     scrollDirection,
   } = useFullPageScroll(sectionsCount);
 
-  // Afficher le footer sur la dernière section
-  const isFooterVisible = showFooter && currentSection === sectionsCount - 1;
+  // Optimisation 13: Mémoisation de la visibilité du footer
+  const isFooterVisible = useMemo(() => 
+    showFooter && currentSection === sectionsCount - 1, 
+    [showFooter, currentSection, sectionsCount]
+  );
 
   // Désactiver le scroll par défaut
   useEffect(() => {
@@ -363,8 +373,13 @@ const FullPageScrollSystem = ({ sections = [], showFooter = true }: any) => {
 
       {/* Sections */}
       <div className="relative h-screen overflow-hidden">
-        <AnimatePresence initial={false} custom={scrollDirection}>
-          {sections.map((section: any, index: any) =>
+        <AnimatePresence 
+          initial={false} 
+          custom={scrollDirection}
+          // Optimisation 14: Mode wait pour éviter les animations simultanées
+          mode="wait"
+        >
+          {sections.map((section, index) =>
             index === currentSection ? (
               <motion.section
                 key={index}
@@ -374,15 +389,13 @@ const FullPageScrollSystem = ({ sections = [], showFooter = true }: any) => {
                 animate="center"
                 exit="exit"
                 transition={{
-                  duration: 1.2,
+                  duration: 0.8, // Réduit de 1.2s à 0.8s
                   ease: [0.25, 0.46, 0.45, 0.94],
                 }}
                 className={`fixed inset-0 flex items-center justify-center ${section.backgroundColor}`}
                 style={{
                   transformOrigin: "center center",
-                  // only the current section should receive pointer events:
                   pointerEvents: index === currentSection ? "auto" : "none",
-                  // make sure it sits on top of any “exiting” section
                   zIndex: index === currentSection ? 30 : 10,
                 }}
                 id={section.id}

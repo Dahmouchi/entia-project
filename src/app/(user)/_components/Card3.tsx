@@ -1,8 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay"; // Optional: if you want autoplay
 
 type Subject = {
   name: string;
@@ -81,13 +88,6 @@ const LevelCard = ({ level }: { level: Level }) => {
     <div className="relative  h-[17em] w-full max-w-[22em] border-2 border-[rgba(75,30,133,0.5)] rounded-[1.5em] bg-gradient-to-br from-[rgba(75,30,133,1)] via-purple-700/80 to-[rgba(75,30,133,0.2)] text-white font-nunito p-[1.5em] flex flex-col gap-[1em] backdrop-blur-[12px] hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 group/card hover:-translate-y-1 mx-auto">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-fuchsia-500/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-[1.5em]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,50,190,0.1),transparent_60%)] group-hover/card:animate-pulse" />
-
-      <div className="absolute top-4 right-4 flex gap-2">
-        <div className="w-2 h-2 rounded-full bg-purple-300/50" />
-        <div className="w-2 h-2 rounded-full bg-purple-300/30" />
-        <div className="w-2 h-2 rounded-full bg-purple-300/10" />
-      </div>
-
       <div className="relative z-10 transition-transform duration-300 group-hover/card:translate-y-[-2px] space-y-3">
         <h1 className="text-[2em] font-bold bg-gradient-to-r from-white via-purple-100 to-purple-200 bg-clip-text text-transparent">
           {level.name}
@@ -145,7 +145,7 @@ const CardsContainer = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className=" pt-36">
+      <div className=" pt-36 w-full flex items-center justify-center flex-col">
         
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -162,14 +162,14 @@ const CardsContainer = () => {
               aux normes marocaines
             </p>
           </motion.div>
-          <div className="hidden md:flex justify-center gap-8 px-4 mt-4">
+          <div className="hidden md:flex justify-center gap-8 px-4 mt-8 max-w-6xl">
             {levels.map((level) => (
               <LevelCard key={level.name} level={level} />
             ))}
           </div>
 
           {/* Mobile View - Carousel */}
-          <div className="md:hidden px-4">
+          <div className="md:hidden px-4 mt-6">
               <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -180,21 +180,42 @@ const CardsContainer = () => {
            
           </motion.div>
             <Carousel
-              showArrows={true}
-              showStatus={false}
-              showThumbs={false}
-              infiniteLoop={true}
-              centerMode={true}
-              centerSlidePercentage={90}
-              swipeable={true}
-              emulateTouch={true}
-              className="mt-8"
+              opts={{
+                align: "center", // Changed from "center" to "start"
+                loop: true,
+              }}
+              plugins={[
+                Autoplay({
+                  delay: 4000,
+                  stopOnInteraction: false,
+                }),
+              ]}
+              className="relative group"
             >
-              {levels.map((level) => (
-                <div key={level.name} className="px-2 pb-8">
+             <CarouselContent className="ml-6 gap-4">
+                {/* Added ml-4 */}
+                {levels.map((level) => (
+                <CarouselItem key={level.name} className="px-2 pb-8">
                   <LevelCard level={level} />
-                </div>
+                </CarouselItem>
               ))}
+              </CarouselContent>
+
+              {/* Navigation Arrows */}
+              <div className="hidden sm:block z-50">
+                <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-blue-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+                <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-[#1a0be8] rounded-full shadow-lg hover:bg-blue-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+              </div>
+
+              {/* Mobile Navigation */}
+              <div className="sm:hidden flex justify-center gap-4 mt-12 z-50">
+                <CarouselPrevious className="static w-10 h-10 bg-white text-blue-500 rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
+                  <ChevronLeft className="w-5 h-5" />
+                </CarouselPrevious>
+                <CarouselNext className="static w-10 h-10 bg-white text-blue-500 rounded-full shadow hover:bg-[#1a0be8] hover:text-white transition-all border border-gray-200">
+                  <ChevronRight className="w-5 h-5" />
+                </CarouselNext>
+              </div>
             </Carousel>
         </div>
       </div>

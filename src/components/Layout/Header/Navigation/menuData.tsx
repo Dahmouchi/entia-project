@@ -2,8 +2,8 @@ import { HeaderItem } from "@/types/menu";
 
 export const headerData: HeaderItem[] = [
   { label: "Home", href: "/" },
-  { label: "Courses", href: "/#courses  " },
-  { label: "Mentor", href: "/#mentor" },
-  { label: "Group", href: "/#portfolio" },
+  { label: "Courses", href: "#section2  " },
+  { label: "Mentor", href: "#section3" },
+  { label: "Group", href: "#portfolio" },
   
 ];

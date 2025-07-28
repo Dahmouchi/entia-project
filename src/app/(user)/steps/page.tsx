@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User,
   Phone,
-  Calendar,
   BookOpen,
   IdCard,
   ChevronRight,
@@ -28,7 +27,6 @@ interface PersonalInfo {
   nom: string;
   prenom: string;
   phone: string;
-  age: string;
 }
 
 interface StudyInfo {
@@ -214,7 +212,6 @@ const PersonalInfoStep = ({
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           Informations Personnelles
         </h2>
-        <p className="text-gray-600">Commençons par vos informations de base</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -250,16 +247,6 @@ const PersonalInfoStep = ({
         required
       />
 
-      <InputField
-        label="Âge"
-        type="number"
-        value={data.age}
-        onChange={(value) => onChange({ ...data, age: value })}
-        placeholder="Votre âge"
-        icon={Calendar}
-        error={errors.age}
-        required
-      />
     </motion.div>
   );
 };
@@ -316,7 +303,7 @@ const StudyInfoStep = ({
         label="Code d'inscription"
         value={data.codeInscription}
         onChange={(value) => onChange({ ...data, codeInscription: value })}
-        placeholder="Ex: EDU2024-001234"
+        placeholder="Ex: 01234567"
         icon={IdCard}
         error={errors.codeInscription}
         required
@@ -332,8 +319,7 @@ const StudyInfoStep = ({
               Code d&apos;inscription
             </h4>
             <p className="text-sm text-blue-700">
-              Vous trouverez votre code d&apos;inscription dans l&apos;email de
-              confirmation ou sur votre certificat d&apos;inscription.
+              Insérez le code d&apos;inscription qui vous a été accordé, Merci.
             </p>
           </div>
         </div>
@@ -387,10 +373,7 @@ const ConfirmationStep = ({ data }: { data: FormData }) => {
             <span className="text-gray-600">Téléphone :</span>
             <span className="font-medium">{data.personal.phone}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Âge :</span>
-            <span className="font-medium">{data.personal.age} ans</span>
-          </div>
+         
           <div className="flex justify-between">
             <span className="text-gray-600">Niveau :</span>
             <span className="font-medium">
@@ -425,7 +408,6 @@ const MultiStepForm = () => {
       nom: "",
       prenom: "",
       phone: "",
-      age: "",
     },
     study: {
       niveau: "",
@@ -446,7 +428,6 @@ const MultiStepForm = () => {
               nom: user.name || "",
               prenom: user.prenom || "",
               phone: user.phone?.toString() || "",
-              age: user.age?.toString() || "", // add this if age is part of DB
             },
             study: {
               niveau:  "",
@@ -482,11 +463,6 @@ const MultiStepForm = () => {
     else if (!/^[\+]?[0-9\s\-\(\)]{8,}$/.test(data.phone)) {
       errors.phone = "Format de téléphone invalide";
     }
-    if (!data.age.trim()) errors.age = "L'âge est requis";
-    else if (parseInt(data.age) < 13 || parseInt(data.age) > 100) {
-      errors.age = "L'âge doit être entre 13 et 100 ans";
-    }
-
     return errors;
   };
 
@@ -586,7 +562,7 @@ const nextStep = async () => {
             backgroundPosition: "center",
           }}>
       <Header visible={false}/>
-      <div className="max-w-2xl mx-auto lg:pt-32">
+      <div className="max-w-2xl mx-auto pt-32 p-2">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {currentStep < 2 && (
             <ProgressIndicator currentStep={currentStep} totalSteps={2} />

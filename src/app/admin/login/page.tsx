@@ -13,10 +13,11 @@ const session = await getServerSession(authOptions);
   return (
     <div
       className="flex h-screen w-full items-center relative justify-center bg-gray-900 bg-cover bg-no-repeat"
-      style={{
-        backgroundImage:
-          'url("https://images.pexels.com/photos/13288524/pexels-photo-13288524.jpeg")',
-      }}
+     style={{
+            backgroundImage: `url("/Board.png")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
     >
       <div className="w-full h-full bg-black/20 absolute top-0"></div>
       <div className="rounded-xl bg-gray-100/20 border-2 bg-opacity-50 px-16 py-10 shadow-lg backdrop-blur-xs max-sm:px-8">

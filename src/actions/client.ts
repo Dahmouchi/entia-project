@@ -46,7 +46,6 @@ export async function updateClientProfile1(id: string, formData: {
     nom: string;
     prenom: string;
     phone: string;
-    age: string;
   };
   study: {
     niveau: string;
@@ -60,7 +59,6 @@ export async function updateClientProfile1(id: string, formData: {
         name: formData.personal.nom,
         prenom: formData.personal.prenom,
         phone: parseInt(formData.personal.phone), // assuming phone is number in schema       
-        age:parseInt(formData.personal.age),
         step: 1, // Set step = 1 to mark profile as completed
       },
     });
@@ -76,7 +74,6 @@ export async function updateClientProfile2(id: string, formData: {
     nom: string;
     prenom: string;
     phone: string;
-    age: string;
   };
   study: {
     niveau: string;

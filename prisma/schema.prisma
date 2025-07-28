@@ -12,6 +12,63 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model Niveau {
+  id      String   @id @default(cuid())
+  name    String   // "Primaire", "Collège", "Lycée"
+  grades  Grade[]
+}
+
+model Grade {
+  id        String    @id @default(cuid())
+  name      String    // "CE1", "2AC", "1Bac"...
+  niveauId  String
+  niveau    Niveau    @relation(fields: [niveauId], references: [id])
+  users     User[]
+  subjects  Subject[]
+}
+
+model Subject {
+  id        String    @id @default(cuid())
+  name      String
+  color     String
+  gradeId   String
+  grade     Grade     @relation(fields: [gradeId], references: [id])
+  courses   Course[]
+}
+
+model Course {
+  id         String     @id @default(cuid())
+  title      String
+  content    String?    // description or summary
+  subjectId  String
+  subject    Subject    @relation(fields: [subjectId], references: [id])
+  documents  Document[]
+  quizzes    Quiz[]
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id])
+}
+
+model Quiz {
+  id        String   @id @default(cuid())
+  title     String
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id])
+  questions Question[]
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  content   String
+  answer    String
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+}
 model RegisterCode {
   id         String   @id @default(cuid())
   code       String   @unique
@@ -43,6 +100,10 @@ model User {
   updatedAt        DateTime        @updatedAt
   username         String          @unique
   verified_email   String?
+
+  // Relations
+  gradeId          String?
+  grade            Grade?          @relation(fields: [gradeId], references: [id])
   registerCode     RegisterCode?
   accounts         Account[]
   Authenticator    Authenticator[]

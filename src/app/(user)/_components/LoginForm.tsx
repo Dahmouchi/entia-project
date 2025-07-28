@@ -225,7 +225,7 @@ const AuthForm = () => {
 
           {/* Titre principal */}
           <h2 className="text-5xl font-bold mb-6 leading-tight">
-            Votre parcours d&apos;apprentissage commence ici
+            Votre parcours d&apos;apprentissage <span className="text-blue-500 uppercase">commence ici</span>
           </h2>
 
           <p className="text-xl text-blue-100 mb-12 leading-relaxed">
@@ -324,21 +324,6 @@ const AuthForm = () => {
               </a>
             </div>
           </div>
-
-          {/* Lien d'inscription */}
-          <motion.div
-            className="text-center mt-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <p className="text-white">
-              Nouveau sur EduPlatform ?{" "}
-              <a href="#" className="font-semibold hover:underline">
-                Créer un compte
-              </a>
-            </p>
-          </motion.div>
         </motion.div>
       </div>
     </div>

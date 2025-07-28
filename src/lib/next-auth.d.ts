@@ -9,6 +9,7 @@ declare module "next-auth" {
       username?: string; // Add username here
       twoFactorEnabled: boolean;
       twoFactorVerified: boolean;
+      step:number;
       role:string;
       statut?:boolean;
     } & DefaultSession["user"];
@@ -20,6 +21,7 @@ declare module "next-auth" {
     twoFactorEnabled: boolean;
     twoFactorVerified?: boolean;
     role:string;
+    step:number;
     statut?:boolean;
   }
 }
@@ -31,6 +33,7 @@ declare module "next-auth/jwt" {
     twoFactorEnabled: boolean;
     twoFactorVerified: boolean;
     role:string;
+    step:number;
     statut?:boolean;
   }
 }

@@ -122,10 +122,7 @@
 }
 
 /* In your global CSS */
-html, body {
-  overflow: hidden;
-  overscroll-behavior: none;
-}
+
 
 /* Ensure sections don't have pointer events when not active */
 section {

@@ -1,8 +1,10 @@
+"use client"
+import { signOut } from 'next-auth/react'
 import React from 'react'
 
 const UserPage = () => {
   return (
-    <div>UserPage</div>
+    <div onClick={()=>signOut()} >UserPage</div>
   )
 }
 

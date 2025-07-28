@@ -20,7 +20,8 @@ import {
   ListOrdered,
   StarHalf,
   Sparkle,
-  Sparkles
+  Sparkles,
+  Key
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
@@ -55,6 +56,11 @@ const datas = {
       title: "Accueil",
       url: "/admin/dashboard",
       icon: House,
+    },
+    {
+      title: "Codes",
+      url: "/admin/dashboard/codes",
+      icon: Key,
     },
     {
       title: "Ajouter",

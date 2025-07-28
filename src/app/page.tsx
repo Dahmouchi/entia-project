@@ -288,7 +288,7 @@ const exampleSections = [
 const FullPageScrollExample = () => {
   return (
     <div>
-      <Header />
+      <Header visible={true} />
       <FullPageScrollSystem sections={exampleSections} />
       
     </div>

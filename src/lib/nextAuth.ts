@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
-  secret:"18f105de83a4db48a323a67b4077dbe1",
+  secret: "18f105de83a4db48a323a67b4077dbe1",
   debug: true,
   providers: [
     GoogleProvider({
@@ -44,6 +44,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name,
+          step: user.step,
           username: user.username, // Ensure username is returned
           role: user.role,
           twoFactorEnabled: user.twoFactorEnabled,
@@ -81,13 +82,14 @@ export const authOptions: NextAuthOptions = {
 
         // If 2FA is enabled, verify the code
         const twoFactorVerified = false;
-  return {
+        return {
           id: user.id,
+          step: user.step,
           username: user.username,
           role: user.role,
           twoFactorEnabled: user.twoFactorEnabled,
           twoFactorVerified, // Now it reflects the verification status
-          statut:user.statut,
+          statut: user.statut,
         };
       },
     }),
@@ -95,11 +97,39 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
     maxAge: 10 * 60 * 60, // 10 hours in seconds
-    updateAge: 60 * 60,   // optional: refresh token every 1 hour
-  },  
+    updateAge: 60 * 60, // optional: refresh token every 1 hour
+  },
   callbacks: {
-    async signIn({ user }) {
-      const dbUser = await prisma.user.findUnique({
+    
+    async signIn({ user, account }) {
+      if (account?.provider === "google" && user.email) {
+        let dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (!dbUser) {
+          dbUser = await prisma.user.create({
+            data: {
+              email: user.email,              
+              step: 0,
+              username: user.email?.split("@")[0], // ensure uniqueness in production
+              role: "USER",
+            },
+          });
+        }
+
+        // Return dbUser instead of default `user`, so jwt() receives full info
+        user.id = dbUser.id;
+        user.username = dbUser.username;
+        user.step = dbUser.step;
+        user.role = dbUser.role;
+        user.twoFactorEnabled = dbUser.twoFactorEnabled;
+        user.statut = dbUser.statut;
+
+        return true;
+      }
+      else if (account?.provider === "username-only") {
+         const dbUser = await prisma.user.findUnique({
         where: { username: user.username },
       });
 
@@ -108,19 +138,23 @@ export const authOptions: NextAuthOptions = {
       }
 
       return true;
+      }
+
+      return true;
     },
 
-    async jwt({ token, user,trigger,session }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
         token.twoFactorEnabled = user.twoFactorEnabled ?? false;
         token.twoFactorVerified = user.twoFactorVerified || false;
+        token.step = user.step;
         token.role = user.role;
         token.statut = user.statut;
       }
-      if(trigger === "update"){
-          token.twoFactorVerified = session.twoFactorVerified;
+      if (trigger === "update") {
+        token.step = session.step;
       }
       return token;
     },
@@ -131,6 +165,7 @@ export const authOptions: NextAuthOptions = {
       session.user.twoFactorEnabled = token.twoFactorEnabled;
       session.user.twoFactorVerified = token.twoFactorVerified;
       session.user.role = token.role;
+      session.user.step = token.step;
       session.user.statut = token.statut;
       return session;
     },

@@ -79,7 +79,7 @@ const reviews = [
 const ReviewSection = () => {
   return (
     <div
-      className="relative w-full h-[100dvh] pt-36"
+      className="relative w-full h-[100dvh] pt-32"
       style={{
         backgroundImage: "url('/Board.png')",
         backgroundSize: "cover",
@@ -115,22 +115,22 @@ const ReviewSection = () => {
         >
           <CarouselContent className="gap-4 ml-2">
             {reviews.map((review, index) => (
-              <CarouselItem key={index} className="px-2 basis-[85%] sm:basis-[45%]">
+              <CarouselItem key={index} className="px-2 basis-[87%] sm:basis-[45%]">
                 <ReviewCard review={review} />
               </CarouselItem>
             ))}
           </CarouselContent>
 
           <div className="hidden sm:block z-50">
-            <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
-            <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+            <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-purple-500 rounded-full shadow-lg hover:bg-purple-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+            <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-purple-500 rounded-full shadow-lg hover:bg-purple-500 hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
           </div>
 
           <div className="sm:hidden flex justify-center gap-4 mt-12 z-50 w-full">
-            <CarouselPrevious className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-yellow-400 hover:text-white transition-all border border-gray-200">
+            <CarouselPrevious className="static w-10 h-10 bg-white text-purple-500 rounded-full shadow hover:bg-purple-500 hover:text-white transition-all border border-gray-200">
               <ChevronLeft className="w-5 h-5" />
             </CarouselPrevious>
-            <CarouselNext className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-yellow-400 hover:text-white transition-all border border-gray-200">
+            <CarouselNext className="static w-10 h-10 bg-white text-purple-500 rounded-full shadow hover:bg-purple-500 hover:text-white transition-all border border-gray-200">
               <ChevronRight className="w-5 h-5" />
             </CarouselNext>
           </div>

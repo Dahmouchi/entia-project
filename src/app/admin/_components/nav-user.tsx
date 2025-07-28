@@ -33,7 +33,7 @@ export function NavUser() {
                 className="data-[state=open]:bg-sidebar-accent cursor-pointer data-[state=open]:text-sidebar-accent-foreground dark:bg-slate-700"
               >
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={session?.user.image || "/user.png"} alt={"user.name"} />
+                  <AvatarImage src={session?.user.image || "/userProfile.png"} alt={"user.name"} />
                 </Avatar>
                 <div className=" flex-1 text-left text-sm leading-tight hidden lg:grid">
                   <span className="truncate font-semibold">

@@ -12,129 +12,59 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, GraduationCap, Quote, Star } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay"; // Optional: if you want autoplay
 
-import { BookOpenText, FileText, HelpCircle } from "lucide-react"; // import the necessary icons
-
-import { motion, scale, useMotionValue, useTransform } from "framer-motion";
+import { motion} from "framer-motion";
 const ReviewCard = ({ review }: any) => {
   return (
-    <StyledWrapper>
-      <div className="e-card playing">
-        <div className="image" />
-        <div className="wave" />
-        <div className="wave" />
-        <div className="wave" />
-        <div className="infotop mt-0">
-          <div className="text-white text-lg font-bold mb-2">{review.name}</div>
-          <div className="name px-4 italic text-sm">&quot;{review.comment}&quot;</div>
+    <motion.div
+      className="relative w-80 h-80 rounded-2xl overflow-hidden group cursor-pointer"
+      whileHover={{ scale: 1.02, y: -5 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
+      {/* Background avec gradient animé */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-white/20" />
+      
+      {/* Effet de brillance au hover */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+      
+      {/* Contenu */}
+      <div className="relative h-full p-6 flex flex-col justify-between text-white">
+        {/* Header avec icône */}
+        <div className="flex items-center justify-between">
+          <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <GraduationCap className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            ))}
+          </div>
+        </div>
+        
+        {/* Citation */}
+        <div className="flex-1 flex flex-col justify-center">
+          <Quote className="w-6 h-6 text-white/60 mb-4" />
+          <p className="lg:text-lg text-sm leading-relaxed font-medium mb-4">
+            {review.comment}
+          </p>
+        </div>
+        
+        {/* Footer avec nom */}
+        <div className="border-t border-white/20 pt-4">
+          <h3 className="font-bold lg:text-xl text-sm">{review.name}</h3>
+          <p className="text-white/80 lg:text-sm text-xs">Étudiant Scoolia</p>
         </div>
       </div>
-    </StyledWrapper>
+    </motion.div>
   );
 };
-const StyledWrapper = styled.div`
-  .e-card {
-    margin: 0px auto;
-    background: transparent;
-    box-shadow: 0px 8px 28px -9px rgba(0, 0, 0, 0.45);
-    position: relative;
-    width: 240px;
-    height: 300px;
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .wave {
-    position: absolute;
-    width: 540px;
-    height: 700px;
-    opacity: 0.6;
-    left: 0;
-    top: 0;
-    margin-left: -50%;
-    margin-top: -80%;
-    background: linear-gradient(
-      744deg,
-      #ffe600,
-      #f9c802 60%,
-      #ffad00
-    ); /* Yellow Gradient */
-  }
-
-  .icon {
-    width: 3em;
-    margin-top: -1em;
-    padding-bottom: 1em;
-  }
-
-  .infotop {
-    text-align: center;
-    font-size: 20px;
-    position: absolute;
-    top: 4em;
-    left: 0;
-    right: 0;
-    color: #fffde7; /* Light yellowish-white for contrast */
-    font-weight: 600;
-  }
-
-  .name {
-    font-size: 14px;
-    font-weight: 200;
-    position: relative;
-    top: 1em;
-    text-transform: lowercase;
-    color: #fffde7;
-  }
-
-  .wave:nth-child(2),
-  .wave:nth-child(3) {
-    top: 210px;
-  }
-
-  .playing .wave {
-    border-radius: 40%;
-    animation: wave 3000ms infinite linear;
-  }
-
-  .wave {
-    border-radius: 40%;
-    animation: wave 55s infinite linear;
-  }
-
-  .playing .wave:nth-child(2) {
-    animation-duration: 4000ms;
-  }
-
-  .wave:nth-child(2) {
-    animation-duration: 50s;
-  }
-
-  .playing .wave:nth-child(3) {
-    animation-duration: 5000ms;
-  }
-
-  .wave:nth-child(3) {
-    animation-duration: 45s;
-  }
-
-  @keyframes wave {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`;
 
 const reviews = [
   {
     name: "Sara M. – Lycée",
-    comment: "Grâce à Scoolia, j'ai enfin compris mes cours de mathématiques. Les vidéos sont claires et les exercices m'ont beaucoup aidée à progresser.",
+    comment: "Grâce à Scoolia, j'ai enfin compris mes cours de mathématiques, Les vidéos sont claires.",
   },
   {
     name: "Yassine B. – Collège",

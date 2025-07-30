@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   Check,
   AlertCircle,
+  School,
 
 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -21,6 +22,7 @@ import { redirect, useRouter } from "next/navigation";
 import { getClientById, updateClientProfile1, updateClientProfile2 } from "@/actions/client";
 import { toast } from "react-toastify";
 import Header from "@/components/Layout/Header";
+import { getNiveau } from "@/actions/grads";
 
 // Types pour les données du formulaire
 interface PersonalInfo {
@@ -30,6 +32,7 @@ interface PersonalInfo {
 }
 
 interface StudyInfo {
+  gradeId:string;
   niveau: string;
   codeInscription: string;
 }
@@ -251,24 +254,51 @@ const PersonalInfoStep = ({
   );
 };
 
-// Étape 2: Informations d'étude
 const StudyInfoStep = ({
   data,
   onChange,
   errors,
 }: {
-  data: StudyInfo;
+  data: StudyInfo & { gradeId?: string }; // Add gradeId to your StudyInfo type
   onChange: (data: StudyInfo) => void;
   errors: Partial<StudyInfo>;
 }) => {
-  const niveauOptions = [
-    { value: "college", label: "Collège" },
-    { value: "lycee", label: "Lycée" },
-    { value: "universite", label: "Université" },
-    { value: "master", label: "Master" },
-    { value: "doctorat", label: "Doctorat" },
-    { value: "formation", label: "Formation Professionnelle" },
-  ];
+  const [niveauOptions, setNiveauOptions] = useState<{
+    value: string;
+    label: string;
+    grades?: { value: string; label: string }[];
+  }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNiveaux = async () => {
+      try {
+        const response = await getNiveau();
+        
+        if (response.success) {
+          const options = response.data.map((niveau: any) => ({
+            value: niveau.id,
+            label: niveau.name,
+            grades: niveau.grades.map((grade: any) => ({
+              value: grade.id,
+              label: grade.name,
+            })),
+          }));
+          setNiveauOptions(options);
+        }
+      } catch (error) {
+        console.error("Error fetching niveaux:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNiveaux();
+  }, []);
+
+  const handleNiveauChange = (value: string) => {
+    onChange({ ...data, niveau: value, gradeId: '' }); // Reset grade when niveau changes
+  };
 
   return (
     <motion.div
@@ -279,7 +309,6 @@ const StudyInfoStep = ({
       className="space-y-6"
     >
       <div className="text-center mb-8">
-       
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           Informations d&apos;Étude
         </h2>
@@ -288,16 +317,39 @@ const StudyInfoStep = ({
         </p>
       </div>
 
-      <SelectField
-        label="Niveau d'étude"
-        value={data.niveau}
-        onChange={(value) => onChange({ ...data, niveau: value })}
-        options={niveauOptions}
-        placeholder="Sélectionnez votre niveau"
-        icon={BookOpen}
-        error={errors.niveau}
-        required
-      />
+       {loading ? (
+      <div className="flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    ) : (
+      <>
+        <SelectField
+          label="Niveau d'étude"
+          value={data.niveau}
+          onChange={handleNiveauChange}
+          options={niveauOptions}
+          placeholder="Sélectionnez votre niveau"
+          icon={BookOpen}
+          error={errors.niveau}
+          required
+        />
+
+        {data.niveau && (
+          <SelectField
+            label="Classe/Niveau spécifique"
+            value={data.gradeId}
+            onChange={(value) => onChange({ ...data, gradeId: value })}
+            options={
+              niveauOptions.find((n) => n.value === data.niveau)?.grades || []
+            }
+            placeholder="Sélectionnez votre classe"
+            icon={School}
+            error={errors.gradeId}
+            required
+          />
+        )}
+      </>
+    )}
 
       <InputField
         label="Code d'inscription"
@@ -411,6 +463,7 @@ const MultiStepForm = () => {
     },
     study: {
       niveau: "",
+      gradeId:"",
       codeInscription: "",
     },
   });
@@ -430,6 +483,7 @@ const MultiStepForm = () => {
               phone: user.phone?.toString() || "",
             },
             study: {
+              gradeId:"",
               niveau:  "",
               codeInscription: "",
             },

@@ -12,102 +12,137 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model Niveau {
-  id      String   @id @default(cuid())
-  name    String   // "Primaire", "Collège", "Lycée"
+  id      String  @id @default(cuid())
+  handler String  @unique // short readable identifier (e.g. "fractions-course")
+  name    String // "Primaire", "Collège", "Lycée"
   grades  Grade[]
 }
 
+model CourseProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId]) // One record per user/course
+}
+
 model Grade {
-  id        String    @id @default(cuid())
-  name      String    // "CE1", "2AC", "1Bac"...
-  niveauId  String
-  niveau    Niveau    @relation(fields: [niveauId], references: [id])
-  users     User[]
-  subjects  Subject[]
+  id       String    @id @default(cuid())
+  handler  String    @unique // short readable identifier (e.g. "fractions-course")
+  name     String // "CE1", "2AC", "1Bac"...
+  niveauId String
+  niveau   Niveau    @relation(fields: [niveauId], references: [id], onDelete: Cascade)
+  users    User[]
+  subjects Subject[]
 }
 
 model Subject {
-  id        String    @id @default(cuid())
-  name      String
-  color     String
-  gradeId   String
-  grade     Grade     @relation(fields: [gradeId], references: [id])
-  courses   Course[]
+  id          String   @id @default(cuid())
+  handler     String   @unique // short readable identifier (e.g. "fractions-course")
+  name        String
+  description String?
+  color       String
+  gradeId     String
+  grade       Grade    @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  courses     Course[]
 }
 
 model Course {
-  id         String     @id @default(cuid())
+  id         String           @id @default(cuid())
   title      String
-  content    String?    // description or summary
+  content    String? // description or summary
+  videoUrl   String? // Video (optional)
+  coverImage String? // Cover image (optional)
+  handler    String           @unique // short readable identifier (e.g. "fractions-course")
+  index      Int // order of the course in a subject
   subjectId  String
-  subject    Subject    @relation(fields: [subjectId], references: [id])
+  subject    Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   documents  Document[]
   quizzes    Quiz[]
+  progress   CourseProgress[]
+
+  @@index([index])
 }
 
 model Document {
-  id        String   @id @default(cuid())
-  name      String
-  url       String
-  courseId  String
-  course    Course   @relation(fields: [courseId], references: [id])
+  id       String @id @default(cuid())
+  name     String
+  url      String
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
 model Quiz {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   title     String
   courseId  String
-  course    Course   @relation(fields: [courseId], references: [id])
+  course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
   questions Question[]
 }
 
 model Question {
-  id        String   @id @default(cuid())
-  content   String
-  answer    String
-  quizId    String
-  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  id      String @id @default(cuid())
+  content String
+  answer  String
+  quizId  String
+  quiz    Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+   options Option[] // New relation
+}
+model Option {
+  id         String   @id @default(cuid())
+  text       String
+  isCorrect  Boolean
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 model RegisterCode {
-  id         String   @id @default(cuid())
-  code       String   @unique
-  isUsed     Boolean  @default(false) // statut: consommé or not
-  createdAt  DateTime @default(now())
-  usedAt     DateTime? // when the code was consumed
-  user       User?    @relation(fields: [userId], references: [id])
-  userId     String?  @unique // One user can be linked to one code
+  id        String    @id @default(cuid())
+  code      String    @unique
+  isUsed    Boolean   @default(false) // statut: consommé or not
+  createdAt DateTime  @default(now())
+  usedAt    DateTime? // when the code was consumed
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @unique // One user can be linked to one code
 }
 
 model User {
-  id               String          @id @default(cuid())
+  id               String    @id @default(cuid())
   name             String?
-  email            String          @unique
-  archive          Boolean         @default(false)
-  createdAt        DateTime        @default(now())
+  email            String    @unique
+  archive          Boolean   @default(false)
+  createdAt        DateTime  @default(now())
   emailVerified    DateTime?
   image            String?
-  step             Int             @default(0)
+  step             Int       @default(0)
   phone            Int?
   age              Int?
   password         String?
   prenom           String?
   qrSecret         String?
-  role             Role            @default(USER)
-  statut           Boolean         @default(true)
-  twoFactorEnabled Boolean         @default(true)
+  role             Role      @default(USER)
+  statut           Boolean   @default(true)
+  StatutUser       StatutUser @default(awaiting)
+  twoFactorEnabled Boolean   @default(true)
   twoFactorSecret  String?
-  updatedAt        DateTime        @updatedAt
-  username         String          @unique
+  updatedAt        DateTime  @updatedAt
+  username         String    @unique
   verified_email   String?
 
   // Relations
-  gradeId          String?
-  grade            Grade?          @relation(fields: [gradeId], references: [id])
-  registerCode     RegisterCode?
-  accounts         Account[]
-  Authenticator    Authenticator[]
-  sessions         Session[]
+  gradeId        String?
+  grade          Grade?           @relation(fields: [gradeId], references: [id])
+  registerCode   RegisterCode?
+  courseProgress CourseProgress[] // 👈 Progress relation
+  accounts       Account[]
+  Authenticator  Authenticator[]
+  sessions       Session[]
 }
 
 model Account {
@@ -163,4 +198,9 @@ model Authenticator {
 enum Role {
   USER
   ADMIN
+}
+enum StatutUser {
+  subscribed
+  awaiting
+  verified
 }

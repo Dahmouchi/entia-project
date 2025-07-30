@@ -1,11 +1,17 @@
-"use client"
-import { signOut } from 'next-auth/react'
-import React from 'react'
 
-const UserPage = () => {
+import React from 'react'
+import ModernStudentSpace from '../_components/homePage';
+import { getStudentById } from '@/actions/client';
+
+const page = async () => {
+
+ 
+  const user = await getStudentById();
   return (
-    <div onClick={()=>signOut()} >UserPage</div>
+    <div>
+      <ModernStudentSpace user = {user}/>
+    </div>
   )
 }
 
-export default UserPage
+export default page

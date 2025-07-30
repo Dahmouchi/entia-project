@@ -71,87 +71,10 @@ const registerSchema = z.object({
 });
 
 const AuthForm = () => {
-  const [loginView, setLoginView] = useState(false);
-  const [registerView, setRegisterView] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+
   const [loading, setLoading] = useState(false);
-  const { data: session, update } = useSession();
 
-  const formLogin = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-  const formRegister = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      nom: "",
-      prenom: "",
-      phone: undefined,
-      email: "",
-      passwordr: "",
-      confirmPassword: "",
-    },
-  });
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
-    setLoading(true);
-    if (isLogin) {
-      // Login logic
-      const res = await signIn("username-only", {
-        username: values.username.toLowerCase(),
-        password: values.password,
-        redirect: false,
-      });
-
-      if (res?.error) {
-        toast.error(res.error);
-        setLoading(false);
-      } else {
-        await update();
-        setLoading(false);
-        redirect("/dashboard");
-      }
-    }
-  }
-  async function onSubmitRegister(values: z.infer<typeof registerSchema>) {
-    setLoading(true);
-
-    if (!isLogin) {
-      // Register logic
-      try {
-        if (values.passwordr === values.confirmPassword) {
-          const response = await RegisterClient(
-            values.nom,
-            values.prenom,
-            values.email,
-            values.phone,
-            values.passwordr
-          );
-          if (response.success) {
-            toast.success("Registration successful! Please login.");
-            setIsLogin(true);
-            formRegister.reset();
-          }
-        }
-      } catch (error) {
-        toast.error("Registration failed");
-      } finally {
-        setLoading(false);
-      }
-    }
-  }
-  const toggleAuthMode = () => {
-    setIsLogin(!isLogin);
-    formLogin.reset();
-    formRegister.reset();
-    setLoginView(false);
-    setRegisterView(false);
-  };
-  if (loading) {
-    return <Loading />;
-  }
+ 
   const GoogleLoginButton = ({ onClick }: { onClick: () => void }) => {
     return (
       <motion.button

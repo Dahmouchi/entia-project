@@ -21,7 +21,10 @@ import {
   StarHalf,
   Sparkle,
   Sparkles,
-  Key
+  Key,
+  Shapes,
+  LibraryBig,
+  BookText
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
@@ -63,21 +66,31 @@ const datas = {
       icon: Key,
     },
     {
-      title: "Ajouter",
-      url: "/admin/dashboard/tours/add",
+      title: "Niveaux",
+      url: "/admin/dashboard/niveaux",
       icon: Route,
     },
-  
+  {
+      title: "Classes",
+      url: "/admin/dashboard/classes",
+      icon: Shapes,
+    },
+    {
+      title: "Matieres",
+      url: "/admin/dashboard/matieres",
+      icon: LibraryBig,
+    },
+    {
+      title: "Cours",
+      url: "/admin/dashboard/cours",
+      icon: BookText,
+    },
     {
       title: "Utilisateurs",
       url: "/admin/dashboard/users",
       icon: Users,
     },
-     {
-      title: "Blogs",
-      url: "/admin/dashboard/blogs",
-      icon: Newspaper,
-    },
+     
     {
       title: "Settings",
       url: "/admin/dashboard/settings",

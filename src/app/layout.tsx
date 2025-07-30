@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import ScrollToTop from "@/components/ScrollToTop";
 import NextAuthProvider from "../../providers/NextAuthProvider";
 import { AOSInit } from "@/components/aos";
+import { ToastContainer } from "react-toastify";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -41,6 +42,18 @@ export default function RootLayout({
           <ScrollToTop />
         </ThemeProvider>
         <AOSInit />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </body>
     </html>
   );

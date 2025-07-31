@@ -48,3 +48,22 @@ export async function getSubjectProgress(userId: string, subjectId: string) {
     percentage: Math.round((completedCourses / totalCourses) * 100),
   }
 }
+
+export async function getCourseCompletionStatus(userId: string, courseId: string) {
+ const progress = await prisma.courseProgress.findUnique({
+    where: {
+      userId_courseId: {
+        userId,
+        courseId,
+      },
+    },
+    select: {
+      completed: true,
+    },
+  });
+
+  return {
+    courseId,
+    completed: progress?.completed ?? false,
+  };
+}

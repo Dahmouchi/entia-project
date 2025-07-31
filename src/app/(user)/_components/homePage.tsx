@@ -304,7 +304,7 @@ const SubjectCard = ({
 
   return (
     <motion.div
-      onClick={()=>router.push(`/dashboard/${subject.handler}/chapitre/aa`)}
+      onClick={()=>router.push(`/dashboard/${subject.handler}/chapitre/${subject.courses[0].handler}`)}
       className="bg-white h-full rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer group"
       whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
       whileTap={{ scale: 0.98 }}
@@ -620,8 +620,8 @@ const ModernStudentSpace = ({ user }: any) => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {/* Statistiques */}
-              <StudentStats userId={user.id}/>
+              {/* Statistiques  <StudentStats userId={user.id}/>*/}
+             
 
               {/* Filtres 
               <div className="flex items-center space-x-4 mb-6">

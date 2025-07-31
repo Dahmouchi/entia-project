@@ -223,7 +223,9 @@ export async function getStudentById() {
             include: {
               subjects: {
                 include: {
-                  courses: true,
+                  courses: {
+                    orderBy:{ index: "asc" },
+                  },
                 },
               },
             },

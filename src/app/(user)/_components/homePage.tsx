@@ -41,6 +41,7 @@ import {
   Bookmark,
   ChevronsUpDown,
   LogOut,
+  User2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -530,7 +531,6 @@ const ModernStudentSpace = ({ user }: any) => {
   const router = useRouter();
   const subjects = user.grade.subjects;
 
-  console.log(user);
   // Filtrage des matières
   const filteredSubjects = subjects.filter((subject: any) => {
     const matchesSearch = subject.name
@@ -598,6 +598,13 @@ const ModernStudentSpace = ({ user }: any) => {
                   align="end"
                   sideOffset={4}
                 >
+                   <DropdownMenuItem
+                    onClick={() => router.push("/dashboard/profile")}
+                    className="cursor-pointer"
+                  >
+                    <User2 />
+                    Profile
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => signOut({ callbackUrl: "/login" })}
                     className="cursor-pointer"

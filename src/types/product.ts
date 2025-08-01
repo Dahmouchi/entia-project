@@ -111,7 +111,23 @@ export type QuizScore = {
   completedAt: Date;
   attempts: number;
 };
+export interface UserStats {
+  totalCourses: number;
+  completedCourses: number;
+  totalQuizzes: number;
+  averageScore: number;
+  totalTimeSpent: number; // en heures
+  currentStreak: number; // jours consécutifs d'activité
+  rank: number; // classement dans la classe
+  totalStudentsInGrade: number;
+}
 
+export enum StatutUser {
+  awaiting = 'awaiting',
+  active = 'active',
+  suspended = 'suspended',
+  graduated = 'graduated'
+}
 export interface LearningContextType {
   currentCourse: Course | null;
   courseProgress: CourseProgress[];

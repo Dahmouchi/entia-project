@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, User2 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 const HeaderSubject = (user:any) => {
@@ -58,6 +58,13 @@ const HeaderSubject = (user:any) => {
                   align="end"
                   sideOffset={4}
                 >
+                   <DropdownMenuItem
+                    onClick={() => router.push("/dashboard/profile")}
+                    className="cursor-pointer"
+                  >
+                    <User2 />
+                    Profile
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => signOut({ callbackUrl: "/login" })}
                     className="cursor-pointer"

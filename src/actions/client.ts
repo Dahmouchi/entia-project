@@ -212,6 +212,7 @@ export async function updateClientProfile2(
 
 import { authOptions } from "@/lib/nextAuth";
 import { getServerSession } from "next-auth";
+import { tr } from "date-fns/locale";
 export async function getStudentById() {
   try {
     const session = await getServerSession(authOptions);
@@ -219,8 +220,10 @@ export async function getStudentById() {
       const client = await prisma.user.findUnique({
         where: { id: session.user.id },
         include: {
+          
           grade: {
             include: {
+              niveau: true,
               subjects: {
                 include: {
                   courses: {

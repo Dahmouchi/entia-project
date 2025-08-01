@@ -52,7 +52,7 @@ const CoursePage = async ({ params }: any) => {
           <ButtonComplete userId={user.id} course={course.data}/>
         </div>
 
-        <CourseContent course={course.data} />
+        <CourseContent course={course.data} userId={user.id}/>
       </div>
     </div>
   );

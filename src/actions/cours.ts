@@ -587,7 +587,11 @@ export async function getCoursByHandle(courseId: string) {
         documents: true,
         quizzes: {
           include: {
-            questions: true
+            questions: {
+              include:{
+                options: true,
+              }
+            }
           }
         },
         progress: {

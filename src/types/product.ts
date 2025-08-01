@@ -102,10 +102,15 @@ export interface SubjectProgress {
   percentage: number;
 }
 
-export interface QuizScore {
-  correct: number | undefined;
-  total: number | undefined;
-}
+
+export type QuizScore = {
+  quizId: string;
+  score: number;
+  totalQuestions: number;
+  percentage: number;
+  completedAt: Date;
+  attempts: number;
+};
 
 export interface LearningContextType {
   currentCourse: Course | null;

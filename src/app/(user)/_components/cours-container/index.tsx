@@ -1,10 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-//import CoursContainerInfos from "../cours/cours-infos";
 import Tooltip from "../tooltip";
-import { CheckCircle, Circle, Clock, Play } from "lucide-react";
+import { CheckCircle, Circle, Play } from "lucide-react";
 import Badge from "../badge";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,7 +14,6 @@ const CoursContainer = (params: any) => {
   const userId = params.userId; // pass this from parent
 
   const [completedStatus, setCompletedStatus] = useState<{ [key: string]: boolean }>({});
-
   useEffect(() => {
     const fetchCompletionStatus = async () => {
       const results = await Promise.all(
@@ -95,12 +92,7 @@ const CoursContainer = (params: any) => {
                     }`}
                   >
                     {course.title}
-                  </h4>
-
-                  <div className="flex items-center space-x-1 mt-1">
-                    <Clock className="w-3 h-3 text-gray-400" />
-                    <span className="text-xs text-gray-500">~15 min</span>
-                  </div>
+                  </h4>        
                 </div>
 
                 {isActive && (

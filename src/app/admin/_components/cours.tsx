@@ -379,6 +379,11 @@ export default function CoursesPage({ classe, subject, coures }: any) {
                             <Button
                               variant="ghost"
                               size="sm"
+                              onClick={() =>
+                                router.push(
+                                  `/admin/dashboard/cours/${course.handler}`
+                                )
+                              }
                               className="text-blue-600 hover:text-blue-800"
                             >
                               <Edit className="h-4 w-4" />

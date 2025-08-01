@@ -357,7 +357,7 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
     // Vérifier que le cours existe
     const existingCourse = await prisma.course.findUnique({
       where: { id: courseId },
-      select: { id: true, handler: true }
+      select: { id: true, handler: true,coverImage:true }
     });
 
     if (!existingCourse) {
@@ -402,7 +402,7 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
 
     // Upload de la nouvelle image de couverture si fournie
     let coverImageUrl: string | undefined;
-    if (data.coverImage) {
+    if (data.coverImage !== existingCourse.coverImage && data.coverImage) {
       try {
         coverImageUrl = await uploadImage(data.coverImage);
       } catch (error) {

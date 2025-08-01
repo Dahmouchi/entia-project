@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import React, { useState, useEffect } from 'react';
 import { 
@@ -239,7 +240,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
   const saveScore = async (score: QuizScore) => {
     setIsSubmitting(true);
     try {
-      const result = await saveQuizResult({
+       await saveQuizResult({
         quizId: score.quizId,
         userId,
         score: score.score,
@@ -437,7 +438,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <button
                       onClick={() => startQuiz(quiz)}
                       className={`
@@ -529,7 +530,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
             }
           </p>
           
-          <div className="flex items-center justify-center space-x-4">
+          <div className="flex items-center justify-center space-x-4 gap-2">
             <button
               onClick={resetQuiz}
               className="px-8 py-3 bg-white text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold border-2 border-gray-200 hover:border-gray-300 flex items-center space-x-2"
@@ -630,47 +631,60 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
       </div>
 
       {/* Navigation améliorée */}
-      <div className="flex items-center justify-between bg-gray-50 rounded-2xl p-6">
-        <button
-          onClick={handlePreviousQuestion}
-          disabled={currentQuestionIndex === 0}
-          className="flex items-center space-x-2 px-6 py-3 text-gray-600 border-2 border-gray-300 rounded-xl hover:bg-white hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Précédent</span>
-        </button>
-        
-        <button
-          onClick={resetQuiz}
-          className="px-6 py-3 text-gray-600 hover:text-red-600 transition-colors font-medium"
-        >
-          Abandonner le quiz
-        </button>
-        
-        <button
-          onClick={handleNextQuestion}
-          disabled={!hasSelectedAnswer || isSubmitting}
-          className={`
-            flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-            ${isLastQuestion
-              ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl'
-              : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl'
-            }
-          `}
-        >
-          {isSubmitting ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-              <span>Envoi...</span>
-            </>
-          ) : (
-            <>
-              <span>{isLastQuestion ? 'Terminer le quiz' : 'Question suivante'}</span>
-              {isLastQuestion ? <Trophy className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
-            </>
-          )}
-        </button>
-      </div>
+     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-gray-50 rounded-2xl lg:p-6 p-4">
+  {/* Previous Button - Full width on mobile, auto on larger screens */}
+  <button
+    onClick={handlePreviousQuestion}
+    disabled={currentQuestionIndex === 0}
+    className="w-full sm:w-auto flex items-center justify-center space-x-2 px-4 py-2 sm:px-6 sm:py-3 text-gray-600 border-2 border-gray-300 rounded-xl hover:bg-white hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium sm:font-semibold"
+  >
+    <ArrowLeft className="w-4 h-4" />
+    <span className="hidden xs:inline">Précédent</span>
+  </button>
+
+  {/* Abandon Button - Center on mobile, between prev/next on larger screens */}
+  <button
+    onClick={resetQuiz}
+    className="order-last sm:order-none w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base text-gray-600 hover:text-red-600 transition-colors font-medium whitespace-nowrap"
+  >
+    Abandonner
+    <span className="hidden sm:inline"> le quiz</span>
+  </button>
+
+  {/* Next/Submit Button - Full width on mobile, auto on larger screens */}
+  <button
+    onClick={handleNextQuestion}
+    disabled={!hasSelectedAnswer || isSubmitting}
+    className={`
+      w-full sm:w-auto flex items-center justify-center space-x-2 px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-medium sm:font-semibold transition-all duration-200 
+      disabled:opacity-50 disabled:cursor-not-allowed
+      ${isLastQuestion
+        ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800'
+        : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
+      }
+    `}
+  >
+    {isSubmitting ? (
+      <>
+        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+        <span>Envoi...</span>
+      </>
+    ) : (
+      <>
+        <span>
+          {isLastQuestion 
+            ? <><span className="hidden xs:inline">Terminer</span><span className="xs:hidden">Fin</span></>
+            : <><span className="hidden xs:inline">Question</span> suivante</>
+          }
+        </span>
+        {isLastQuestion 
+          ? <Trophy className="w-4 h-4 hidden sm:block" /> 
+          : <ArrowRight className="w-4 h-4 hidden sm:block" />
+        }
+      </>
+    )}
+  </button>
+</div>
     </div>
   );
 };

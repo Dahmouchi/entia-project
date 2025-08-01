@@ -1,11 +1,32 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { FileText, Download, HelpCircle } from "lucide-react";
+import {
+  FileText,
+  Download,
+  HelpCircle,
+  Eye,
+  ExternalLink,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import QuizDisplay from "./quizSection";
+import PDFModal from "./PDFModal";
 
 const CourseContent = ({ course, userId }: any) => {
+  const [selectedPDF, setSelectedPDF] = useState<{
+    url: string;
+    name: string;
+  } | null>(null);
+  const handleViewPDF = (document: any) => {
+    setSelectedPDF({
+      url: document.url,
+      name: document.name,
+    });
+  };
+
+  const handleClosePDF = () => {
+    setSelectedPDF(null);
+  };
   const handleScoreUpdate = (score: any) => {
     console.log("Nouveau score:", score);
     // Ici vous pouvez envoyer le score à votre API ou mettre à jour votre état global
@@ -24,64 +45,134 @@ const CourseContent = ({ course, userId }: any) => {
   const quizzes = course.quizzes;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border">
-      {/* Navigation par onglets */}
-
-      {/* Contenu des sections */}
-      <div className="lg:p-6 p-2">
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Documents et ressources
-          </h3>
-
-          {documents.length > 0 ? (
-            <div className="grid gap-3">
-              {documents.map((document: any) => (
-                <div
-                  key={document.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-shrink-0">
-                      <FileText className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-900">
-                        {document.name}
-                      </h4>
-                      <p className="text-xs text-gray-500">Document PDF</p>
-                    </div>
-                  </div>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(document.url, "_blank")}
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Télécharger
-                  </Button>
+    <>
+      <div className="bg-white rounded-lg shadow-sm border">
+        {/* Contenu des sections */}
+        <div className="lg:p-6 p-2">
+          <div className="space-y-6">
+            {/* Section Documents */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <FileText className="w-5 h-5 text-blue-600" />
                 </div>
-              ))}
+                <h3 className="text-xl font-bold text-gray-900">
+                  Documents et ressources
+                </h3>
+              </div>
+
+              {documents.length > 0 ? (
+                <div className="grid gap-4">
+                  {documents.map((document: any) => (
+                    <div
+                      key={document.id}
+                      className="group relative bg-gradient-to-r from-white to-gray-50 border-2 border-gray-100 rounded-xl p-4 md:p-6 hover:border-blue-200 transition-all duration-300 hover:shadow-lg"
+                    >
+                      {/* Hover indicator */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        {/* Document info (left side) */}
+                        <div className="flex flex-col xs:flex-row gap-4 items-start xs:items-center">
+                          {/* Icon */}
+                          <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg">
+                            <FileText className="w-5 h-5 md:w-6 text-white" />
+                          </div>
+
+                          {/* Text content */}
+                          <div className="flex-1 min-w-0">
+                            {" "}
+                            {/* min-w-0 prevents text overflow */}
+                            <h4 className="text-base md:text-lg max-w-[200px] font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                              {document.name}
+                            </h4>
+                            <p className="text-xs md:text-sm text-gray-600 mt-1">
+                              Document PDF • Cliquez pour visualiser
+                            </p>
+                            {/* Features - show on all screens */}
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-gray-500">
+                              <span className="flex items-center space-x-1">
+                                <Eye className="w-3 h-3 flex-shrink-0" />
+                                <span>Aperçu disponible</span>
+                              </span>
+                              
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action buttons (right side) */}
+                        <div className="flex flex-col sm:flex-row gap-2 justify-end">
+                          {/* View button - primary on mobile */}
+                          
+                          {/* Secondary actions */}
+                          <div className="flex gap-2">
+                            {/* Download button */}
+                            <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => handleViewPDF(document)}
+                              className="flex-1 sm:flex-none border-2 bg-blue-600 hover:bg-blue-800 border-gray-300 hover:border-blue-300 "
+                          >
+                            <Eye className="w-4 h-4 mr-1 md:mr-2" />
+                            <span>Visualiser</span>
+                          </Button>
+
+
+                            {/* Open in new tab - icon only */}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                window.open(document.url, "_blank")
+                              }
+                              className="text-gray-500 hover:text-blue-600 p-2"
+                              title="Ouvrir dans un nouvel onglet"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
+                  <div className="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <FileText className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-700 mb-2">
+                    Aucun document disponible
+                  </h4>
+                  <p className="text-gray-500">
+                    Les documents pour ce cours seront bientôt disponibles.
+                  </p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500">
-                Aucun document disponible pour ce cours.
-              </p>
+
+            {/* Section Quiz */}
+            <div className="space-y-4 border-t border-gray-200 pt-6">
+              <QuizDisplay
+                quizzes={quizzes}
+                userId={userId}
+                onScoreUpdate={handleScoreUpdate}
+              />
             </div>
-          )}
-        </div>
-        <div className="space-y-4 mt-5">
-          <QuizDisplay
-            quizzes={quizzes}
-            userId={userId}
-            onScoreUpdate={handleScoreUpdate}
-          />
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Modal PDF */}
+      {selectedPDF && (
+        <PDFModal
+          isOpen={!!selectedPDF}
+          onClose={handleClosePDF}
+          pdfUrl={selectedPDF.url}
+          documentName={selectedPDF.name}
+        />
+      )}
+    </>
   );
 };
 

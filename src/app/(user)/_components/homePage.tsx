@@ -284,8 +284,9 @@ const SubjectCard = ({
   subject: any;
   userId: string;
 }) => {
+  const [icon, setIcon] = useState<React.ReactNode>(null);
+
   // For random icons (different each time)
-  const subjectWithRandomIcon = { icon: getRandomIcon() };
   const [progress, setProgress] = useState({
     completed: 0,
     total: 0,
@@ -294,6 +295,7 @@ const SubjectCard = ({
   const router = useRouter();
   useEffect(() => {
     const fetchProgress = async () => {
+      setIcon(getRandomIcon());
       const progressData = await getSubjectProgress(userId, subject.id);
       setProgress(progressData);
     };
@@ -325,8 +327,8 @@ const SubjectCard = ({
         <div className="relative z-10 flex items-start justify-between">
           <div className="flex items-center space-x-4">
             <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-              {subjectWithRandomIcon.icon}
-            </div>
+    {icon || <div className="w-8 h-8" />} {/* Fallback while loading */}
+  </div>
             <div>
               <h3 className="text-xl font-bold">{subject.name}</h3>
             </div>

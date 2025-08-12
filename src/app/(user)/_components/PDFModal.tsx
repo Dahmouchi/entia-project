@@ -144,9 +144,7 @@ const PDFModal: React.FC<PDFModalProps> = ({
         <div className="flex flex-col xs:flex-row lg:flex-row items-center justify-between gap-3 p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
           {/* Document info - left side */}
           <div className="flex items-center gap-3 w-full xs:w-auto min-w-0">
-            <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
-              <Download className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-            </div>
+            
             <div className="min-w-0">
               {" "}
               {/* Prevents text overflow */}
@@ -196,17 +194,7 @@ const PDFModal: React.FC<PDFModalProps> = ({
               <X className="w-4 h-4" />
             </Button>
 
-            {/* Download button - hidden on smallest screens */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => window.open(pdfUrl, "_blank")}
-              className="h-8 w-8 p-0 hidden sm:inline-flex hover:bg-blue-50 hover:text-blue-600 transition-colors"
-              aria-label="Télécharger le document"
-              title="Télécharger"
-            >
-              <Download className="w-4 h-4" />
-            </Button>
+            
           </div>
         </div>
 

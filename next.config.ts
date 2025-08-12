@@ -1,6 +1,13 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  webpack: (
+    config,
+    { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
+  ) => {
+    config.resolve.alias.canvas = false;
+    return config
+  },
   experimental: {
     serverActions: {
        bodySizeLimit: '50mb', // or '50mb' or whatever size you need

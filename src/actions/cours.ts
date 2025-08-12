@@ -53,7 +53,7 @@ async function uploadImage(imageURL: File): Promise<string> {
 }
 
 // Fonction d'upload de document PDF (adaptée de la fonction image)
-async function uploadDocument(document: File): Promise<string> {
+export async function uploadDocument(document: File): Promise<string> {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const filename = `${timestamp}-${document.name}`;
 
@@ -431,13 +431,7 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
           include: {
             grade: true
           }
-        },
-        documents: true,
-        quizzes: {
-          include: {
-            questions: true
-          }
-        }
+        },        
       }
     });
 
@@ -453,6 +447,46 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
       success: false,
       error: "Erreur interne du serveur lors de la mise à jour du cours"
     };
+  }
+}
+// Example in /actions/cours.ts
+export async function updateCourseDocuments(courseId: string, docs: { name: string; url: string; courseId: string; id?: string }[]) {
+  try {
+    // Get current documents from DB
+    const existingDocs = await prisma.document.findMany({ where: { courseId } });
+
+    // Find docs to delete (in DB but not in the new list)
+    const toDelete = existingDocs.filter(dbDoc => !docs.some(d => d.id === dbDoc.id));
+
+    // Delete removed docs
+    await prisma.document.deleteMany({
+      where: { id: { in: toDelete.map(d => d.id) } }
+    });
+
+    // Upsert all docs (update if id exists, create otherwise)
+    for (const doc of docs) {
+      if (doc.id) {
+        await prisma.document.update({
+          where: { id: doc.id },
+          data: { name: doc.name, url: doc.url }
+        });
+      } else {
+        await prisma.document.create({
+          data: { name: doc.name, url: doc.url, courseId }
+        });
+      }
+    }
+
+    // Return updated course
+    const updatedCourse = await prisma.course.findUnique({
+      where: { id: courseId },
+      include: { documents: true }
+    });
+
+    return { success: true, updatedCourse };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to update documents" };
   }
 }
 

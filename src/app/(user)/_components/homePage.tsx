@@ -42,6 +42,7 @@ import {
   ChevronsUpDown,
   LogOut,
   User2,
+  LayoutDashboard,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -49,6 +50,7 @@ import { signOut } from "next-auth/react";
 import { completeCourse, getSubjectProgress } from "@/actions/progress";
 import { toast } from "react-toastify";
 import { getStudentStats } from "@/actions/client";
+import QuizDisplay from "./quizzes";
 
 // Types de données
 interface Course {
@@ -193,8 +195,8 @@ const sampleSubjects: Subject[] = [
 ];
 
 // Composant pour les statistiques de l'étudiant
-const StudentStats = ({userId}:any) => {
- const [stats, setStats] = useState<any>(null);
+const StudentStats = ({ userId }: any) => {
+  const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -219,7 +221,7 @@ const StudentStats = ({userId}:any) => {
       icon: <Clock className="w-6 h-6" />,
       color: "text-blue-500",
     },
-    
+
     {
       label: "Streak actuel",
       value: `${stats.streak} jours`,
@@ -227,7 +229,6 @@ const StudentStats = ({userId}:any) => {
       color: "text-purple-500",
     },
   ];
-
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
@@ -307,7 +308,11 @@ const SubjectCard = ({
 
   return (
     <motion.div
-      onClick={()=>router.push(`/dashboard/${subject.handler}/chapitre/${subject.courses[0].handler}`)}
+      onClick={() =>
+        router.push(
+          `/dashboard/${subject.handler}/chapitre/${subject.courses[0].handler}`
+        )
+      }
       className="bg-white h-full rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer group"
       whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
       whileTap={{ scale: 0.98 }}
@@ -328,8 +333,9 @@ const SubjectCard = ({
         <div className="relative z-10 flex items-start justify-between">
           <div className="flex items-center space-x-4">
             <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-    {icon || <div className="w-8 h-8" />} {/* Fallback while loading */}
-  </div>
+              {icon || <div className="w-8 h-8" />}{" "}
+              {/* Fallback while loading */}
+            </div>
             <div>
               <h3 className="text-xl font-bold">{subject.name}</h3>
             </div>
@@ -347,7 +353,7 @@ const SubjectCard = ({
             </p>
             <p className="text-xs text-gray-500">Cours</p>
           </div>
-           <div className="text-center">
+          <div className="text-center">
             <p className="text-2xl font-bold text-gray-900">
               {progress.completed}
             </p>
@@ -382,7 +388,6 @@ const SubjectCard = ({
             />
           </div>
         </div>
-       
       </div>
       {/* Statistiques */}
     </motion.div>
@@ -525,8 +530,8 @@ const CourseCard = ({ course }: { course: Course }) => {
 };
 
 // Composant principal de l'espace étudiant
-const ModernStudentSpace = ({ user }: any) => {
-  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+const ModernStudentSpace = ({ user, quizzes }: any) => {
+  const [selectedSubject, setSelectedSubject] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
   const subjects = user.grade.subjects;
@@ -598,7 +603,7 @@ const ModernStudentSpace = ({ user }: any) => {
                   align="end"
                   sideOffset={4}
                 >
-                   <DropdownMenuItem
+                  <DropdownMenuItem
                     onClick={() => router.push("/dashboard/profile")}
                     className="cursor-pointer"
                   >
@@ -618,10 +623,43 @@ const ModernStudentSpace = ({ user }: any) => {
           </div>
         </div>
       </div>
+      <div className="mt-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-center bg-white rounded-full shadow-md p-1">
+          <div className="flex items-center space-x-3">
+            <LayoutDashboard className="w-5 h-5 text-gray-500" />
+
+            {/* Toggle Buttons */}
+            <div className="flex bg-gray-100 rounded-full p-1 gap-2">
+              <button
+                onClick={() => setSelectedSubject(true)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  selectedSubject
+                    ? "bg-blue-600 text-white shadow"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Les matières
+              </button>
+              <button
+                onClick={() => setSelectedSubject(false)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  !selectedSubject
+                    ? "bg-blue-600 text-white shadow"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Quizzes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <AnimatePresence mode="wait">
-          {!selectedSubject ? (
+          {/* Filtres */}
+
+          {selectedSubject ? (
             <motion.div
               key="subjects-view"
               initial={{ opacity: 0 }}
@@ -630,31 +668,9 @@ const ModernStudentSpace = ({ user }: any) => {
               transition={{ duration: 0.3 }}
             >
               {/* Statistiques  <StudentStats userId={user.id}/>*/}
-             
-
-              {/* Filtres 
-              <div className="flex items-center space-x-4 mb-6">
-                <Filter className="w-5 h-5 text-gray-600" />
-                <div className="flex space-x-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => setFilterCategory(category)}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        filterCategory === category
-                          ? "bg-blue-500 text-white"
-                          : "bg-white text-gray-600 hover:bg-gray-50"
-                      }`}
-                    >
-                      {category === "all" ? "Toutes" : category}
-                    </button>
-                  ))}
-                </div>
-              </div>*/}
 
               {/* Grille des matières */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              
                 {filteredSubjects.map((subject: any, index: any) => (
                   <motion.div
                     key={subject.id}
@@ -662,10 +678,7 @@ const ModernStudentSpace = ({ user }: any) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <SubjectCard
-                      subject={subject}
-                      userId={user.id} 
-                    />
+                    <SubjectCard subject={subject} userId={user.id} />
                   </motion.div>
                 ))}
               </div>
@@ -678,72 +691,7 @@ const ModernStudentSpace = ({ user }: any) => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {/* Header de la matière */}
-              <div className="mb-8">
-                <button
-                  onClick={() => setSelectedSubject(null)}
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-4"
-                >
-                  <ChevronRight className="w-5 h-5 rotate-180" />
-                  <span>Retour aux matières</span>
-                </button>
-
-                <div
-                  className={`bg-gradient-to-r ${selectedSubject.color} rounded-2xl p-8 text-white`}
-                >
-                  <div className="flex items-center space-x-4 mb-4">
-                    <div className="bg-white/20 p-4 rounded-xl backdrop-blur-sm">
-                      {selectedSubject.icon}
-                    </div>
-                    <div>
-                      <h2 className="text-3xl font-bold">
-                        {selectedSubject.title}
-                      </h2>
-                      <p className="text-white/80">
-                        {selectedSubject.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-6 mt-6">
-                    <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                      <p className="text-2xl font-bold">
-                        {selectedSubject.completedCourses}
-                      </p>
-                      <p className="text-white/80 text-sm">Cours terminés</p>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                      <p className="text-2xl font-bold">
-                        {selectedSubject.totalHours}
-                      </p>
-                      <p className="text-white/80 text-sm">Durée totale</p>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                      <p className="text-2xl font-bold">
-                        {selectedSubject.overallProgress}%
-                      </p>
-                      <p className="text-white/80 text-sm">Progression</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Liste des cours */}
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Cours disponibles
-                </h3>
-                {selectedSubject.courses.map((course, index) => (
-                  <motion.div
-                    key={course.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <CourseCard course={course} />
-                  </motion.div>
-                ))}
-              </div>
+              <QuizDisplay quizzes={quizzes} userId={user.id} />
             </motion.div>
           )}
         </AnimatePresence>

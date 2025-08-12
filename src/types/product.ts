@@ -227,3 +227,19 @@ export interface LearningState {
   lastAccessedCourse: string | null;
 }
 
+
+import { Trophy, Medal, Star, Award, XCircle } from "lucide-react";
+
+export function getBadgeConfig(percentage: number) {
+  if (percentage >= 90) {
+    return { icon: Trophy, color: 'text-yellow-700 bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-300', label: 'Excellent', description: 'Score parfait !', glow: 'shadow-yellow-200' };
+  } else if (percentage >= 80) {
+    return { icon: Medal, color: 'text-blue-700 bg-gradient-to-r from-blue-100 to-blue-200 border-blue-300', label: 'Très bien', description: 'Très bon résultat', glow: 'shadow-blue-200' };
+  } else if (percentage >= 70) {
+    return { icon: Star, color: 'text-green-700 bg-gradient-to-r from-green-100 to-green-200 border-green-300', label: 'Bien', description: 'Bon travail', glow: 'shadow-green-200' };
+  } else if (percentage >= 50) {
+    return { icon: Award, color: 'text-orange-700 bg-gradient-to-r from-orange-100 to-orange-200 border-orange-300', label: 'Passable', description: 'Peut mieux faire', glow: 'shadow-orange-200' };
+  } else {
+    return { icon: XCircle, color: 'text-red-700 bg-gradient-to-r from-red-100 to-red-200 border-red-300', label: 'À revoir', description: 'Recommencez le quiz', glow: 'shadow-red-200' };
+  }
+}

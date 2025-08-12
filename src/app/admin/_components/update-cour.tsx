@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -19,6 +21,8 @@ import {
 } from "lucide-react";
 import { updateCourse } from "@/actions/cours";
 import { toast } from "react-toastify";
+import DocumentManagement from "./cour-document";
+import QuizManager from "./quiz-management";
 
 interface Subject {
   id: string;
@@ -49,8 +53,7 @@ interface CourseFormData {
   index: number;
   subjectId: string;
   coverImage: File | null;
-  documents: File[];
-  quizzes: Quiz[];
+  coverImageUrl: string | null;
 }
 type Option = {
   id: string;
@@ -112,13 +115,13 @@ const FileUpload = ({
     [currentFiles, multiple, onFileSelect]
   );
 
- const removeFile = useCallback(
-  (index: number) => {
-    const newFiles = currentFiles.filter((_, i) => i !== index);
-    onFileSelect(newFiles);
-  },
-  [currentFiles, onFileSelect]
-);
+  const removeFile = useCallback(
+    (index: number) => {
+      const newFiles = currentFiles.filter((_, i) => i !== index);
+      onFileSelect(newFiles);
+    },
+    [currentFiles, onFileSelect]
+  );
 
   return (
     <div className="space-y-4">
@@ -191,392 +194,7 @@ const FileUpload = ({
   );
 };
 
-const QuizManager = ({
-  quizzes,
-  onQuizzesChange,
-}: {
-  quizzes: Quiz[];
-  onQuizzesChange: (quizzes: Quiz[]) => void;
-}) => {
-  const addQuiz = () => {
-    const newQuiz: Quiz = {
-      id: Date.now().toString(),
-      title: "",
-      questions: [
-        {
-          id: Date.now().toString(),
-          content: "",
-          options: [
-            { id: Date.now().toString(), text: "", isCorrect: false },
-            { id: (Date.now() + 1).toString(), text: "", isCorrect: false },
-          ],
-        },
-      ],
-    };
-    onQuizzesChange([...quizzes, newQuiz]);
-  };
 
-  const removeQuiz = (quizIndex: number) => {
-    onQuizzesChange(quizzes.filter((_, index) => index !== quizIndex));
-  };
-
-  const updateQuiz = (quizIndex: number, field: keyof Quiz, value: any) => {
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex ? { ...quiz, [field]: value } : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const addQuestion = (quizIndex: number) => {
-    const newQuestion: QuizQuestion = {
-      id: Date.now().toString(),
-      content: "",
-      options: [
-        { id: Date.now().toString(), text: "", isCorrect: false },
-        { id: (Date.now() + 1).toString(), text: "", isCorrect: false },
-      ],
-    };
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex
-        ? { ...quiz, questions: [...quiz.questions, newQuestion] }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const removeQuestion = (quizIndex: number, questionIndex: number) => {
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex
-        ? {
-            ...quiz,
-            questions: quiz.questions.filter(
-              (_, qIndex) => qIndex !== questionIndex
-            ),
-          }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const updateQuestion = (
-    quizIndex: number,
-    questionIndex: number,
-    field: keyof QuizQuestion,
-    value: string
-  ) => {
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex
-        ? {
-            ...quiz,
-            questions: quiz.questions.map((question, qIndex) =>
-              qIndex === questionIndex
-                ? { ...question, [field]: value }
-                : question
-            ),
-          }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const addOption = (quizIndex: number, questionIndex: number) => {
-    const newOption: Option = {
-      id: Date.now().toString(),
-      text: "",
-      isCorrect: false,
-    };
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex
-        ? {
-            ...quiz,
-            questions: quiz.questions.map((question, qIndex) =>
-              qIndex === questionIndex
-                ? { ...question, options: [...question.options, newOption] }
-                : question
-            ),
-          }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const removeOption = (
-    quizIndex: number,
-    questionIndex: number,
-    optionIndex: number
-  ) => {
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex
-        ? {
-            ...quiz,
-            questions: quiz.questions.map((question, qIndex) =>
-              qIndex === questionIndex
-                ? {
-                    ...question,
-                    options: question.options.filter(
-                      (_, oIndex) => oIndex !== optionIndex
-                    ),
-                  }
-                : question
-            ),
-          }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const updateOption = (
-    quizIndex: number,
-    questionIndex: number,
-    optionIndex: number,
-    field: keyof Option,
-    value: any
-  ) => {
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex
-        ? {
-            ...quiz,
-            questions: quiz.questions.map((question, qIndex) =>
-              qIndex === questionIndex
-                ? {
-                    ...question,
-                    options: question.options.map((option, oIndex) =>
-                      oIndex === optionIndex
-                        ? { ...option, [field]: value }
-                        : option
-                    ),
-                  }
-                : question
-            ),
-          }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const setCorrectOption = (
-    quizIndex: number,
-    questionIndex: number,
-    optionId: string
-  ) => {
-    const updatedQuizzes = quizzes.map((quiz, index) =>
-      index === quizIndex
-        ? {
-            ...quiz,
-            questions: quiz.questions.map((question, qIndex) =>
-              qIndex === questionIndex
-                ? {
-                    ...question,
-                    options: question.options.map((option) => ({
-                      ...option,
-                      isCorrect: option.id === optionId,
-                    })),
-                  }
-                : question
-            ),
-          }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Quiz associés</h3>
-        <button
-          type="button"
-          onClick={addQuiz}
-          className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Ajouter un quiz</span>
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {quizzes.map((quiz, quizIndex) => (
-          <motion.div
-            key={quiz.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="bg-white border border-gray-200 rounded-xl p-6 space-y-4"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <HelpCircle className="w-5 h-5 text-blue-600" />
-                </div>
-                <h4 className="font-medium text-gray-900">
-                  Quiz {quizIndex + 1}
-                </h4>
-              </div>
-              <button
-                type="button"
-                onClick={() => removeQuiz(quizIndex)}
-                className="text-red-500 hover:text-red-700 p-1"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Titre du quiz
-              </label>
-              <input
-                type="text"
-                value={quiz.title}
-                onChange={(e) => updateQuiz(quizIndex, "title", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Entrez le titre du quiz"
-              />
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h5 className="font-medium text-gray-900">Questions</h5>
-                <button
-                  type="button"
-                  onClick={() => addQuestion(quizIndex)}
-                  className="flex items-center space-x-1 text-blue-600 hover:text-blue-700"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Ajouter une question</span>
-                </button>
-              </div>
-
-              {quiz.questions.map((question, questionIndex) => (
-                <motion.div
-                  key={question.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="bg-gray-50 p-4 rounded-lg space-y-3"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">
-                      Question {questionIndex + 1}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => removeQuestion(quizIndex, questionIndex)}
-                      className="text-red-500 hover:text-red-700 p-1"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Question
-                    </label>
-                    <textarea
-                      value={question.content}
-                      onChange={(e) =>
-                        updateQuestion(
-                          quizIndex,
-                          questionIndex,
-                          "content",
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      rows={2}
-                      placeholder="Entrez la question"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Options de réponse
-                    </label>
-                    {question.options.map((option, optionIndex) => (
-                      <div
-                        key={option.id}
-                        className="flex items-center space-x-2"
-                      >
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setCorrectOption(
-                              quizIndex,
-                              questionIndex,
-                              option.id
-                            )
-                          }
-                          className={`p-1 rounded-full ${
-                            option.isCorrect
-                              ? "text-green-500"
-                              : "text-gray-400"
-                          }`}
-                        >
-                          {option.isCorrect ? (
-                            <Check className="w-5 h-5" />
-                          ) : (
-                            <Circle className="w-5 h-5" />
-                          )}
-                        </button>
-                        <input
-                          type="text"
-                          value={option.text}
-                          onChange={(e) =>
-                            updateOption(
-                              quizIndex,
-                              questionIndex,
-                              optionIndex,
-                              "text",
-                              e.target.value
-                            )
-                          }
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          placeholder="Entrez une option de réponse"
-                        />
-                        {question.options.length > 2 && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              removeOption(
-                                quizIndex,
-                                questionIndex,
-                                optionIndex
-                              )
-                            }
-                            className="text-red-500 hover:text-red-700 p-1"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => addOption(quizIndex, questionIndex)}
-                      className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 text-sm"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Ajouter une option</span>
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-
-      {quizzes.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
-          <HelpCircle className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-          <p>
-            Aucun quiz ajouté. Cliquez sur &quot;Ajouter un quiz&quot; pour
-            commencer.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-};
 
 // Composant principal du formulaire
 const CourseUpdateForm = ({ grades, coure }: any) => {
@@ -588,8 +206,7 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
     index: 1,
     subjectId: "",
     coverImage: null,
-    documents: [],
-    quizzes: [],
+    coverImageUrl: "",
   });
 
   const [selectedGrade, setSelectedGrade] = useState<string>("");
@@ -614,12 +231,17 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
         index: coure.index || 1,
         subjectId: coure.subjectId || "",
         coverImage: coure.coverImage || null,
-        documents: coure.documents || [],
-        quizzes: coure.quizzes || [],
+        coverImageUrl: coure.coverImage || null,
       });
     }
   }, [coure, grades]);
-
+  useEffect(() => {
+    return () => {
+      if (formData.coverImageUrl) {
+        URL.revokeObjectURL(formData.coverImageUrl);
+      }
+    };
+  }, [formData.coverImageUrl]);
   // Gestion de la sélection de classe
   const handleGradeChange = (gradeId: string) => {
     setSelectedGrade(gradeId);
@@ -668,7 +290,7 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
 
     try {
       // Simulation d'envoi au backend
-      const res = await updateCourse(coure.id,formData);
+      const res = await updateCourse(coure.id, formData);
       if (res.success) {
         toast.success(res.message || "Cours mis à jour avec succès");
       } else {
@@ -878,63 +500,44 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                 </p>
               )}
             </div>
-          </div>
-
-          {/* Upload d'image de couverture */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+             <h2 className="text-xl font-semibold text-gray-900 my-6">
               Image de couverture
             </h2>
-            <FileUpload
-              onFileSelect={(files) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  coverImage: files[0] || null,
-                }))
-              }
-              accept="image/*"
-              label="Image de couverture"
-              description="Glissez-déposez une image ou cliquez pour sélectionner (JPG, PNG)"
-              currentFiles={formData.coverImage ? [formData.coverImage] : []}
-            />
-          </div>
-
-          {/* Upload de documents PDF */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Documents PDF
-            </h2>
-            <FileUpload
-              onFileSelect={(updatedFiles) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  documents: updatedFiles, // ✅ This replaces the full list
-                }))
-              }
-              accept=".pdf"
-              multiple
-              label="Documents PDF"
-              description="Glissez-déposez des fichiers PDF ou cliquez pour sélectionner"
-              currentFiles={formData.documents}
-            />
-          </div>
-
-          {/* Gestion des quiz */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <QuizManager
-              quizzes={formData.quizzes}
-              onQuizzesChange={(quizzes) =>
-                setFormData((prev) => ({ ...prev, quizzes }))
-              }
-            />
-          </div>
-
-          {/* Boutons d'action */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <div className="flex items-center justify-between">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FileUpload
+                onFileSelect={(files) => {
+                  // Create URL for the first selected file
+                  const imageUrl = files[0]
+                    ? URL.createObjectURL(files[0])
+                    : null;
+                  setFormData((prev) => ({
+                    ...prev,
+                    coverImage: files[0] || null,
+                    coverImageUrl: imageUrl || "", // Store the URL in state
+                  }));
+                }}
+                accept="image/*"
+                label="Image de couverture"
+                description="Glissez-déposez une image ou cliquez pour sélectionner (JPG, PNG)"
+                currentFiles={formData.coverImage ? [formData.coverImage] : []}
+              />
+              {formData.coverImageUrl ? (
+                <img
+                  src={formData.coverImageUrl}
+                  alt="Preview de l'image de couverture"
+                  className="w-full h-full object-contain border border-gray-200 rounded-lg"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50">
+                  <span className="text-gray-400">
+                    Aucune image sélectionnée
+                  </span>
+                </div>
+              )}
+            </div>
+             <div className="flex items-center justify-between my-3">
               <div></div>
               <div className="flex items-center space-x-4">
-               
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -952,10 +555,34 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                     </>
                   )}
                 </button>
-              </div>
+              
             </div>
           </div>
+          </div>
+
+         
+
+          {/* Upload de documents PDF */}
+
+          {/* Boutons d'action */}
+          
+           
         </form>
+        {/* Gestion des documents PDF */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mt-6">
+          <DocumentManagement
+            initialDocuments={coure.documents}
+           
+          />
+        </div>
+        {/* Gestion des quiz */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mt-6">
+          <QuizManager
+            courseId={coure.id}
+            onQuizzesUpdate={()=>console.log("Quizzes updated")}
+            quizzes={coure.quizzes}          
+          />
+        </div>
       </div>
     </div>
   );

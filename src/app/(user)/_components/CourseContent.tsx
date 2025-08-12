@@ -1,32 +1,18 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import {
-  FileText,
-  Download,
-  HelpCircle,
-  Eye,
-  ExternalLink,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { FileText, Eye } from "lucide-react";
 import QuizDisplay from "./quizSection";
-import PDFModal from "./PDFModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import SimplePDFViewer from "./cours-pdf";
 
 const CourseContent = ({ course, userId }: any) => {
-  const [selectedPDF, setSelectedPDF] = useState<{
-    url: string;
-    name: string;
-  } | null>(null);
-  const handleViewPDF = (document: any) => {
-    setSelectedPDF({
-      url: document.url,
-      name: document.name,
-    });
-  };
-
-  const handleClosePDF = () => {
-    setSelectedPDF(null);
-  };
   const handleScoreUpdate = (score: any) => {
     console.log("Nouveau score:", score);
     // Ici vous pouvez envoyer le score à votre API ou mettre à jour votre état global
@@ -40,7 +26,6 @@ const CourseContent = ({ course, userId }: any) => {
       </div>
     );
   }
-
   const documents = course.documents;
   const quizzes = course.quizzes;
 
@@ -95,7 +80,6 @@ const CourseContent = ({ course, userId }: any) => {
                                 <Eye className="w-3 h-3 flex-shrink-0" />
                                 <span>Aperçu disponible</span>
                               </span>
-                              
                             </div>
                           </div>
                         </div>
@@ -103,34 +87,32 @@ const CourseContent = ({ course, userId }: any) => {
                         {/* Action buttons (right side) */}
                         <div className="flex flex-col sm:flex-row gap-2 justify-end">
                           {/* View button - primary on mobile */}
-                          
-                          {/* Secondary actions */}
-                          <div className="flex gap-2">
+                          <Dialog>
+                            <DialogTrigger>
+                              <div className="flex gap-2">
                             {/* Download button */}
-                            <Button
-                            variant="default"
-                            size="sm"
-                            onClick={() => handleViewPDF(document)}
-                              className="flex-1 sm:flex-none border-2 bg-blue-600 hover:bg-blue-800 border-gray-300 hover:border-blue-300 "
-                          >
-                            <Eye className="w-4 h-4 mr-1 md:mr-2" />
-                            <span>Visualiser</span>
-                          </Button>
-
-
-                            {/* Open in new tab - icon only */}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                window.open(document.url, "_blank")
-                              }
-                              className="text-gray-500 hover:text-blue-600 p-2"
-                              title="Ouvrir dans un nouvel onglet"
+                            <div
+                             
+                              className="flex-1 flex text-white items-center justify-center gap-2 rounded-sm px-2 py-1 sm:flex-none border-2 bg-blue-600 hover:bg-blue-800 border-gray-300 hover:border-blue-300 "
                             >
-                              <ExternalLink className="w-4 h-4" />
-                            </Button>
+                              <Eye className="w-4 h-4 mr-1 md:mr-2" />
+                              <span>Visualiser</span>
+                            </div>
+
+                            
                           </div>
+                            </DialogTrigger>
+                            <DialogOverlay>
+                              <DialogContent className="h-[99vh] min-w-[90vw] overflow-auto">
+                               <DialogTitle> 
+                               
+                               </DialogTitle>
+                                <SimplePDFViewer pdfFilePath={document.url} />
+                              </DialogContent>
+                            </DialogOverlay>
+                          </Dialog>
+                          {/* Secondary actions */}
+                          
                         </div>
                       </div>
                     </div>
@@ -162,16 +144,6 @@ const CourseContent = ({ course, userId }: any) => {
           </div>
         </div>
       </div>
-
-      {/* Modal PDF */}
-      {selectedPDF && (
-        <PDFModal
-          isOpen={!!selectedPDF}
-          onClose={handleClosePDF}
-          pdfUrl={selectedPDF.url}
-          documentName={selectedPDF.name}
-        />
-      )}
     </>
   );
 };

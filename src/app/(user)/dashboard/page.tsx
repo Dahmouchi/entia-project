@@ -2,7 +2,7 @@
 import React from 'react'
 import ModernStudentSpace from '../_components/homePage';
 import { getStudentById } from '@/actions/client';
-import { getQuizzesForUser } from '@/actions/quizResults';
+import { getQuizzesGroupedByMatiere } from '@/actions/quizResults';
 
 const page = async () => {
 
@@ -11,7 +11,7 @@ const page = async () => {
   if (!user) {
     return <div className="text-center">User not found</div>;
   }
-  const quizzes = await getQuizzesForUser(user.id);
+  const quizzes = await getQuizzesGroupedByMatiere(user.id);
   return (
     <div>
       <ModernStudentSpace user = {user} quizzes = {quizzes.data}/>

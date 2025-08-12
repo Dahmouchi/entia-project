@@ -320,97 +320,129 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
             <p className="text-gray-600 font-medium">Chargement des quiz...</p>
           </div>
         ) : quizzes.length > 0 ? (
-          <div className="grid gap-6">
-            {quizzes.map((quiz) => {
-              const score = quizScores[quiz.id];
-              const hasCompleted = !!score;
-              
-              return (
-                <div
-                  key={quiz.id}
-                  className="group relative bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                >
-                  {/* Badge de statut */}
-                  {hasCompleted && (
-                    <div className="absolute top-4 right-4">
-                      <ScoreBadge 
-                        percentage={score.percentage} 
-                        attempts={score.attempts}
-                        size="sm"
-                      />
-                    </div>
-                  )}
-                  
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="flex-1 pr-4">
-                      <h4 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                        {quiz.title}
-                      </h4>
-                      
-                      <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                        <div className="flex items-center space-x-1">
-                          <Target className="w-4 h-4" />
-                          <span>{quiz.questions.length} question{quiz.questions.length > 1 ? 's' : ''}</span>
-                        </div>
-                        {hasCompleted && (
-                          <div className="flex items-center space-x-1">
-                            <Clock className="w-4 h-4" />
-                            <span>Dernière tentative: {new Date(score.completedAt).toLocaleDateString()}</span>
-                          </div>
-                        )}
+  <div className="space-y-8">
+    {quizzes.map((matiere:any) => (
+      <div key={matiere.matiereId}>
+        {/* Matière title */}
+        <h3 className="text-2xl font-bold text-gray-100 mb-4">
+          {matiere.matiereName}
+        </h3>
+
+        {/* Quizzes grid */}
+        <div className="grid gap-6">
+          {matiere.quizzes.map((quiz:any) => {
+            const score = quizScores[quiz.id];
+            const hasCompleted = !!score;
+
+            return (
+              <div
+                key={quiz.id}
+                className="group relative bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              >
+                {/* Badge de statut */}
+                {hasCompleted && (
+                  <div className="absolute top-4 right-4">
+                    <ScoreBadge
+                      percentage={score.percentage}
+                      attempts={score.attempts}
+                      size="sm"
+                    />
+                  </div>
+                )}
+
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex-1 pr-4">
+                    <h4 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                      {quiz.title}
+                    </h4>
+
+                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
+                      <div className="flex items-center space-x-1">
+                        <Target className="w-4 h-4" />
+                        <span>
+                          {quiz.questions.length} question
+                          {quiz.questions.length > 1 ? "s" : ""}
+                        </span>
                       </div>
-                      
                       {hasCompleted && (
-                        <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-gray-700">Meilleur score</span>
-                            <span className="text-lg font-bold text-gray-900">
-                              {score.score}/{score.totalQuestions}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${score.percentage}%` }}
-                            />
-                          </div>
-                          <div className="flex items-center justify-between mt-2 text-xs text-gray-600">
-                            <span>{score.percentage}% de réussite</span>
-                            <span>{score.attempts} tentative{score.attempts > 1 ? 's' : ''}</span>
-                          </div>
+                        <div className="flex items-center space-x-1">
+                          <Clock className="w-4 h-4" />
+                          <span>
+                            Dernière tentative:{" "}
+                            {new Date(score.completedAt).toLocaleDateString()}
+                          </span>
                         </div>
                       )}
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between gap-2">
-                    <button
-                      onClick={() => startQuiz(quiz)}
-                      className={`
-                        group/btn relative px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105
-                        ${hasCompleted 
-                          ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border-2 border-blue-200 hover:from-blue-100 hover:to-blue-200' 
-                          : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl'
-                        }
-                      `}
-                    >
-                      <span className="flex items-center space-x-2">
-                        {hasCompleted ? <RotateCcw className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
-                        <span>{hasCompleted ? 'Recommencer' : 'Commencer le quiz'}</span>
-                      </span>
-                    </button>
-                    
-                    {hasCompleted && score.percentage >= 70 && (
-                      <div className="flex items-center space-x-2 text-green-600 bg-green-50 px-3 py-2 rounded-lg">
-                        <CheckCircle className="w-5 h-5" />
-                        <span className="text-sm font-semibold">Quiz réussi</span>
+
+                    {hasCompleted && (
+                      <div className="bg-gray-50 rounded-xl p-4 mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-700">
+                            Meilleur score
+                          </span>
+                          <span className="text-lg font-bold text-gray-900">
+                            {score.score}/{score.totalQuestions}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+                            style={{ width: `${score.percentage}%` }}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between mt-2 text-xs text-gray-600">
+                          <span>{score.percentage}% de réussite</span>
+                          <span>
+                            {score.attempts} tentative
+                            {score.attempts > 1 ? "s" : ""}
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
-                </div>               
-              );
-            })}
-          </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-2">
+                  <button
+                    onClick={() => startQuiz(quiz)}
+                    className={`
+                      group/btn relative px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105
+                      ${
+                        hasCompleted
+                          ? "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border-2 border-blue-200 hover:from-blue-100 hover:to-blue-200"
+                          : "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl"
+                      }
+                    `}
+                  >
+                    <span className="flex items-center space-x-2">
+                      {hasCompleted ? (
+                        <RotateCcw className="w-4 h-4" />
+                      ) : (
+                        <Zap className="w-4 h-4" />
+                      )}
+                      <span>
+                        {hasCompleted ? "Recommencer" : "Commencer le quiz"}
+                      </span>
+                    </span>
+                  </button>
+
+                  {hasCompleted && score.percentage >= 70 && (
+                    <div className="flex items-center space-x-2 text-green-600 bg-green-50 px-3 py-2 rounded-lg">
+                      <CheckCircle className="w-5 h-5" />
+                      <span className="text-sm font-semibold">Quiz réussi</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    ))}
+  </div>
+
+
         ) : (
           <div className="text-center py-16">
             <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">

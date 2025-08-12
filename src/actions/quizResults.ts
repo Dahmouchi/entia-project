@@ -4,7 +4,7 @@
 
 import prisma from "@/lib/prisma"
 
-export async function getQuizzesForUser(userId: string) {
+export async function getQuizzesGroupedByMatiere(userId: string) {
   const userWithQuizzes = await prisma.user.findUnique({
     where: { id: userId },
     include: {
@@ -18,7 +18,7 @@ export async function getQuizzesForUser(userId: string) {
                     include: {
                       questions: {
                         include: {
-                          options: true, // include quiz options if needed
+                          options: true,
                         },
                       },
                     },
@@ -36,14 +36,16 @@ export async function getQuizzesForUser(userId: string) {
     return { data: [], message: "User not found" };
   }
 
-  // Flatten quizzes into a single array
-  const quizzes =
-    userWithQuizzes.grade?.subjects.flatMap(subject =>
-      subject.courses.flatMap(course => course.quizzes)
-    ) || [];
+  // Group quizzes by subject (matière)
+  const grouped = userWithQuizzes.grade?.subjects.map(subject => ({
+    matiereId: subject.id,
+    matiereName: subject.name,
+    quizzes: subject.courses.flatMap(course => course.quizzes)
+  })) || [];
 
-  return { data: quizzes };
+  return { data: grouped };
 }
+
 
 export const saveQuizResult = async (data: {
   quizId: string;

@@ -303,3 +303,22 @@ async function calculateVerificationDays(userId: string): Promise<number> {
 
   return daysSinceVerification >= 0 ? daysSinceVerification : 0;
 }
+
+export async function TimerStart(userId: string, sessionDuration: number) {
+  try {
+    // Update user's totalTimeSpent by incrementing with sessionDuration
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        totalTimeSpent: {
+          increment: sessionDuration,
+        },
+      },
+    });
+
+    return { userId: updatedUser.id };
+  } catch (error) {
+    console.error("Error updating user total time spent:", error);
+    throw new Error("Failed to update user total time spent.");
+  }
+}

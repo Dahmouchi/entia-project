@@ -139,6 +139,7 @@ model User {
   step             Int       @default(0)
   phone            Int?
   age              Int?
+  totalTimeSpent   Int? @default(0) // Total time spent on the platform in seconds
   password         String?
   prenom           String?
   qrSecret         String?

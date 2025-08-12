@@ -3,6 +3,7 @@ import AccessDenied from "@/components/access";
 import { authOptions } from "@/lib/nextAuth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import Timer from "../_components/Timer";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -18,6 +19,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     return <AccessDenied role={session.user.role} />;
   }
   return (
-      <div >{children}</div>
+      <div>
+        <Timer user={session.user}/>
+        {children}</div>
   );
 }

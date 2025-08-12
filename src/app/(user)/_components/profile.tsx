@@ -78,9 +78,22 @@ const Profile = ({ user }: any) => {
     const lastInitial = name ? name.charAt(0).toUpperCase() : "";
     return `${firstInitial}${lastInitial}` || "U";
   };
+  function formatDurationFromSeconds(seconds: number): string {
+    const totalMinutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    const hoursPart = hours > 0 ? `${hours}h` : "";
+    const minutesPart = minutes > 0 ? `${minutes}min` : "";
+    const secondsPart = remainingSeconds > 0 ? `${remainingSeconds}s` : "";
+
+    return `${hoursPart} ${minutesPart} ${secondsPart}`.trim();
+  }
+
   return (
     <div
-    className="min-h-screen bg-gray-100"
+      className="min-h-screen bg-gray-100"
       style={{
         backgroundImage: `url("/Board.png")`,
         backgroundSize: "cover",
@@ -167,9 +180,18 @@ const Profile = ({ user }: any) => {
                   <GraduationCap className="h-4 w-4" />
                   {user.grade?.name} - {user.grade?.niveau.name}
                 </p>
+                <div className="flex items-center justify-cente gap-2 xsm:flex-row">
+              <span className=" text-gray-600">
+                le temps passé sur la plateforme
+              </span>
+              <div className="py-1 px-2 rounded-full bg-green-400  text-white">
+                {formatDurationFromSeconds(Number(user?.totalTimeSpent))}
               </div>
             </div>
-          
+              </div>
+              
+            </div>
+            
           </div>
         </div>
 
@@ -234,10 +256,7 @@ const Profile = ({ user }: any) => {
                 </div>
               </CardContent>
             </Card>
-
-         
           </div>
-
         </div>
       </div>
     </div>

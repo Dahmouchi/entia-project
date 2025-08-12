@@ -3,7 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -28,17 +27,9 @@ import {
 
 import { toast } from "react-toastify";
 
+const handleVerify = (userId: string) => {};
 
-
-
-const handleVerify = (userId: string) => {
- 
-  
-};
-
-const handleSuspend = (userId: string) => {
- 
-};
+const handleSuspend = (userId: string) => {};
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -99,7 +90,7 @@ export const columns: ColumnDef<any>[] = [
     accessorKey: "name",
     header: "Nom",
   },
-   {
+  {
     accessorKey: "prenom",
     header: "Prenom",
   },
@@ -107,28 +98,50 @@ export const columns: ColumnDef<any>[] = [
     accessorKey: "email",
     header: "Email",
   },
-   {
+  {
     accessorKey: "phone",
     header: "Télé",
   },
+  {
+    accessorKey: "totalTimeSpent",
+    header: "Visionnage",
+    cell: ({ row }) => {
+      const user = row.original;
+      function formatDurationFromSeconds(seconds: number): string {
+        const totalMinutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
 
+        const hoursPart = hours > 0 ? `${hours}h` : "";
+        const minutesPart = minutes > 0 ? `${minutes}min` : "";
+        const secondsPart = remainingSeconds > 0 ? `${remainingSeconds}s` : "";
+
+        return `${hoursPart} ${minutesPart} ${secondsPart}`.trim();
+      }
+
+      return(
+        <div className="py-1 px-2 rounded-full bg-green-400 font-semibold text-xs text-center text-white">
+        {formatDurationFromSeconds(user.totalTimeSpent || 0) || "0s"}
+      </div>
+      )
+    },
+  },
   {
     accessorKey: "niveau",
     header: "Niveau",
-     cell: ({ row }) => {
+    cell: ({ row }) => {
       const user = row.original;
-      return (
-       <div>{user?.grade?.niveau?.name}</div>
-      );}
+      return <div>{user?.grade?.niveau?.name}</div>;
+    },
   },
   {
     accessorKey: "classes",
     header: "Classe",
-     cell: ({ row }) => {
+    cell: ({ row }) => {
       const user = row.original;
-      return (
-       <div>{user?.grade?.name}</div>
-      );}
+      return <div>{user?.grade?.name}</div>;
+    },
   },
   {
     id: "actions",
@@ -169,9 +182,7 @@ export const columns: ColumnDef<any>[] = [
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Fiche d&lsquo;utilisateur</DialogTitle>
-              <DialogDescription>
-                
-              </DialogDescription>
+              <DialogDescription></DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <Button type="submit">Confirm</Button>

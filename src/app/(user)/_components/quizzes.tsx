@@ -478,13 +478,23 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
           <p className="text-lg font-semibold text-gray-800 flex items-center justify-center"><Clock className="w-5 h-5 mr-2 text-purple-500" /> Tentatives: <span className="text-purple-600 ml-2">{currentScore.attempts}</span></p>
         </div>
 
-        <button
+      <div className='flex items-center justify-center gap-4'>
+          <button
           onClick={resetQuiz}
-          className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3"
+          className="lg:px-8 px-4 py-4 bg-blue-600 text-white lg:text-lg font-semibold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Retour</span>
+        </button>
+          <button
+           onClick={() => startQuiz(selectedQuiz)}
+          className="lg:px-8 px-4 py-4 bg-blue-600 text-white lg:text-lg font-semibold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-3"
         >
           <RotateCcw className="w-5 h-5" />
-          <span>Retour à la liste des quiz</span>
+          <span>Recommencer</span>
         </button>
+      </div>
+
       </div>
     );
   }
@@ -541,7 +551,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
         ))}
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-2">
         <button
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
@@ -553,9 +563,9 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
         <button
           onClick={handleNextQuestion}
           disabled={!isAnswerSelected && !isLastQuestion} // Disable if no answer selected and not last question
-          className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center space-x-2"
+          className="px-4 py-1 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center space-x-2"
         >
-          <span>{isLastQuestion ? 'Terminer le quiz' : 'Suivant'}</span>
+          <span>{isLastQuestion ? 'Terminer' : 'Suivant'}</span>
           {isLastQuestion ? <Award className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
         </button>
       </div>

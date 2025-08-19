@@ -2,12 +2,10 @@
 
 import type { Table } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { userStatusOptions } from "@/components/filters";
+import {  utilise } from "@/components/filters";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -27,11 +25,11 @@ export function DataTableToolbar<TData>({
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className="h-8 w-[250px]"
         />
-        {table.getColumn("status") && (
+        {table.getColumn("isUsed") && (
           <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Statut"
-            options={userStatusOptions}
+            column={table.getColumn("isUsed")}
+            title="Utilisé"
+            options={utilise}
           />
         )}
       </div>

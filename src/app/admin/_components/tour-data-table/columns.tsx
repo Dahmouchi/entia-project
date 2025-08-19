@@ -3,20 +3,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Archive,MoreHorizontal } from "lucide-react";
+import { Ban, CheckCircle, HelpCircle, MoreHorizontal, UserCheck } from "lucide-react";
 import { toast } from "react-toastify";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,39 +83,65 @@ export const columns: ColumnDef<any>[] = [
     },
   },
   {
-  id: "status", // ✅ Use 'id' instead of accessorKey since we're using accessorFn
-  accessorFn: (row) => {
-    const user = row.user;
-    if (!user) return "inactive";
+    accessorKey: "isUsed",
+    accessorFn: (row) => row.isUsed ? "true" : "false",
 
-    return user.statut === false
-      ? "suspended"
-      : user.statut === true
-      ? "active"
-      : "inactive";
+    header: "Utilisé",
+    cell: ({ row }) => {
+      const status = row.getValue("isUsed");
+
+      return (
+        <div>
+          {status ? (
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-50 border-2 border-green-600 text-green-800 dark:bg-green-900 dark:text-green-200">
+              <CheckCircle className="mr-1.5 h-3 w-3" />
+              Oui
+            </div>
+          ) : (
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 border-2 border-red-600 text-red-800 dark:bg-red-900 dark:text-red-200">
+              <Ban className="mr-1.5 h-3 w-3" />
+              Non
+            </div>
+          )}
+        </div>
+      );
+    },
   },
-  header: "Statut",
-  cell: ({ row }) => {
-    const status = row.getValue("status");
+  {
+    accessorKey: "user.archive", // Using accessorFn
+    header: "Statut",
+    cell: ({ row }) => {
+      const user = row.original.user; // Access nested user object
+      if (!user) return "—"; // default if no user
 
-    const statusOption =
-      userStatusOptions.find((opt) => opt.value === status) || userStatusOptions[0];
+      const status = row.original.user.archive || false; // Default to 'awaiting' if not set
 
-    return (
-      <div
-        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusOption.className}`}
-      >
-        <statusOption.icon className="mr-1.5 h-3 w-3" />
-        {statusOption.label}
-      </div>
-    );
+      if(status === false){
+        return (
+        <div
+          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 border-2 border-blue-600 text-blue-800 dark:bg-blue-900 dark:text-blue-200`}
+        >
+          <UserCheck className="mr-1.5 h-3 w-3" />
+          actif
+        </div>
+      );
+    }
+      else {
+        return (
+        <div>
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 border-2 border-red-600 text-red-800 dark:bg-red-900 dark:text-red-200`}
+          >
+            <HelpCircle className="mr-1.5 h-3 w-3" />
+            Suspendu
+          </div>
+        </div>)
+      }
+    }
   },
-},
-
   {
     id: "actions",
     cell: ({ row }) => {
-      const [open, setOpen] = React.useState(false);
       const code = row.original.code; // Assumes the row has a `code` field
 
       return (
@@ -158,59 +173,6 @@ export const columns: ColumnDef<any>[] = [
             >
               Copier le code
             </DropdownMenuItem>
-
-            {/* Archiver ou Suspendre */}
-            <AlertDialog open={open} onOpenChange={setOpen}>
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem
-                  className="p-2 font-medium rounded text-amber-600 hover:bg-gray-100 hover:cursor-pointer focus-visible:outline-0"
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    setOpen(true);
-                  }}
-                >
-                  Archiver / Suspendre
-                </DropdownMenuItem>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Êtes-vous sûr de vouloir archiver ou suspendre ce code ?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Cette action rendra le code inactif. Vous pourrez le
-                    réactiver plus tard si nécessaire.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setOpen(false)}>
-                    Annuler
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-amber-600 hover:bg-amber-700 focus:ring-amber-600"
-                    onClick={async () => {
-                      try {
-                        // TODO: Add your backend call here
-                        // await archiveCode(row.original.id); or suspendCode(row.original.id);
-
-                        toast.success("Code archivé ou suspendu avec succès");
-                        setOpen(false);
-                        window.location.reload();
-                      } catch (error) {
-                        toast.error(`Échec de l'action : ${String(error)}`);
-                        setOpen(false);
-                      }
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Archive className="w-4 h-4" />
-                      <span>Confirmer</span>
-                    </div>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       );

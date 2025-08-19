@@ -43,6 +43,7 @@ import {
   LogOut,
   User2,
   LayoutDashboard,
+  ChevronDown,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -51,6 +52,7 @@ import { completeCourse, getSubjectProgress } from "@/actions/progress";
 import { toast } from "react-toastify";
 import { getStudentStats } from "@/actions/client";
 import QuizDisplay from "./quizzes";
+import BadgeDropdown from "./badges";
 
 // Types de données
 interface Course {
@@ -574,7 +576,7 @@ const ModernStudentSpace = ({ user, quizzes }: any) => {
               alt=""
             />
 
-            <div className="flex items-center space-x-4 bg-white">
+            <div className="flex items-center space-x-4 ">
               <div className="relative lg:block hidden">
                 <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
@@ -585,16 +587,20 @@ const ModernStudentSpace = ({ user, quizzes }: any) => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-
+              <div>
+              <BadgeDropdown user={user} size={"1"}/>
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className="flex items-center space-x-2 cursor-pointer bg-white">
-                    <User className="w-8 h-8 text-blue-600" />
+                  <div className="flex items-center space-x-2 cursor-pointer">
                     <div className="text-sm">
                       <p className="font-medium text-gray-900">
                         {user?.name} {user?.prenom}
                       </p>
-                      <p className="text-gray-500">Étudiante</p>
+                      <div className="flex items-center space-x-1 text-gray-500">
+                        <p className="text-gray-500">Profil</p>
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
                     </div>
                   </div>
                 </DropdownMenuTrigger>
@@ -624,45 +630,46 @@ const ModernStudentSpace = ({ user, quizzes }: any) => {
         </div>
       </div>
       <div className="mt-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className={"bar-container"}>
-        
-        {/* Background blobs */}
-        <div className={"gradients-container"}>
-          <div className="g1"></div>
-          <div className="g2"></div>
-          <div className="g3"></div>
-          <div className="g4"></div>
-          <div className="g5"></div>
-        </div>
+        <div className={"bar-container"}>
+          {/* Background blobs */}
+          <div className={"gradients-container"}>
+            <div className="g1"></div>
+            <div className="g2"></div>
+            <div className="g3"></div>
+            <div className="g4"></div>
+            <div className="g5"></div>
+          </div>
 
-        {/* Foreground content */}
-        <div className={"bar-content w-full flex items-center justify-center"}>
-          <LayoutDashboard className="w-5 h-5 text-gray-500" />
-          <div className="flex bg-gray-100 rounded-full p-1 gap-2">
-            <button
-              onClick={() => setSelectedSubject(true)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                selectedSubject
-                  ? "bg-blue-600 text-white shadow"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              Les matières
-            </button>
-            <button
-              onClick={() => setSelectedSubject(false)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                !selectedSubject
-                  ? "bg-blue-600 text-white shadow"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              Quizzes
-            </button>
+          {/* Foreground content */}
+          <div
+            className={"bar-content w-full flex items-center justify-center"}
+          >
+            <LayoutDashboard className="w-5 h-5 text-gray-500" />
+            <div className="flex bg-gray-100 rounded-full p-1 gap-2">
+              <button
+                onClick={() => setSelectedSubject(true)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  selectedSubject
+                    ? "bg-blue-600 text-white shadow"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Les matières
+              </button>
+              <button
+                onClick={() => setSelectedSubject(false)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  !selectedSubject
+                    ? "bg-blue-600 text-white shadow"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Quizzes
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <AnimatePresence mode="wait">

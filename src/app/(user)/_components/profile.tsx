@@ -31,6 +31,8 @@ import {
   Shield,
   CheckCircle,
   AlertCircle,
+  Stars,
+  Clock1,
 } from "lucide-react";
 import React from "react";
 
@@ -47,6 +49,7 @@ import { LogOut, PowerOffIcon, User, User2 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Progress from "@/components/ui/progress";
 import { StatutUser, UserStats } from "@/types/product";
+import BadgeDropdown from "./badges";
 const Profile = ({ user }: any) => {
   const router = useRouter();
   const [userStats, setUserStats] = useState<UserStats | null>(null);
@@ -163,35 +166,35 @@ const Profile = ({ user }: any) => {
         <div className="mb-8 bg-white  p-6 rounded-lg shadow-md">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Avatar className="h-20 w-20">
-                <AvatarImage
-                  src={user.image}
-                  alt={`${user.prenom} ${user.name}`}
-                />
-                <AvatarFallback className="text-xl font-semibold bg-blue-100 text-blue-600">
-                  {getInitials(user.name, user.prenom)}
-                </AvatarFallback>
-              </Avatar>
+               <div className=""><BadgeDropdown size={"0"} user={user} /></div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="lg:text-3xl text-xl font-bold text-gray-900">
                   {user.prenom} {user.name}
                 </h1>
                 <p className="text-gray-600 flex items-center gap-2">
                   <GraduationCap className="h-4 w-4" />
                   {user.grade?.name} - {user.grade?.niveau.name}
                 </p>
-                <div className="flex items-center justify-cente gap-2 xsm:flex-row">
-              <span className=" text-gray-600">
-                le temps passé sur la plateforme
-              </span>
-              <div className="py-1 px-2 rounded-full bg-green-400  text-white">
-                {formatDurationFromSeconds(Number(user?.totalTimeSpent))}
               </div>
             </div>
+           
+          </div>
+          <div className="mt-4 flex flex-col items-center lg:items-start jusctify-between">
+            <span className="text-gray-600">
+              Le temps passé sur la plateforme
+            </span>
+            <div className="flex items-center justify-cente gap-2 xsm:flex-row">
+              <div className="flex items-center gap-3 mt-2">
+                {/* Time display */}
+                <div className="flex items-center gap-1 py-1 px-3 rounded-full bg-green-400 text-white font-semibold shadow-md transform transition-transform duration-300 hover:scale-105">
+                  <Clock className="w-4 h-4" />
+                  {formatDurationFromSeconds(Number(user?.totalTimeSpent))}
+                </div>
+
+                {/* Badge based on hours */}
+               
               </div>
-              
             </div>
-            
           </div>
         </div>
 

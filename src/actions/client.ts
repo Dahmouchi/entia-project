@@ -212,7 +212,6 @@ export async function updateClientProfile2(
 
 import { authOptions } from "@/lib/nextAuth";
 import { getServerSession } from "next-auth";
-import { tr } from "date-fns/locale";
 export async function getStudentById() {
   try {
     const session = await getServerSession(authOptions);
@@ -245,6 +244,20 @@ export async function getStudentById() {
 
 export async function getDashboardUsers() {
   const users = await prisma.user.findMany({
+    where: {archive: false},
+    include: {
+      grade: {
+        include:{
+          niveau:true,
+        }
+      },
+    },
+  });
+  return {data:users};
+}
+export async function getDashboardUsersArchived() {
+  const users = await prisma.user.findMany({
+    where: {archive: true},
     include: {
       grade: {
         include:{
@@ -320,5 +333,51 @@ export async function TimerStart(userId: string, sessionDuration: number) {
   } catch (error) {
     console.error("Error updating user total time spent:", error);
     throw new Error("Failed to update user total time spent.");
+  }
+}
+export async function archiveUser(userId: string) {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        archive: true, // set the archive flag to true
+      },
+    });
+
+    return {
+      success: true,
+      message: "User archived successfully",
+      user: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error archiving user:", error);
+    return {
+      success: false,
+      message: "Failed to archive user",
+      error,
+    };
+  }
+}
+export async function unarchiveUser(userId: string) {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        archive: false, // set the archive flag to false
+      },
+    });
+
+    return {
+      success: true,
+      message: "User unarchived successfully",
+      user: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error unarchiving user:", error);
+    return {
+      success: false,
+      message: "Failed to unarchive user",
+      error,
+    };
   }
 }

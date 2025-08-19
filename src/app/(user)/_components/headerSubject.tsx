@@ -11,15 +11,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User, User2 } from "lucide-react";
+import { Award, ChevronDown, LogOut, User, User2 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-const HeaderSubject = (user:any) => {
-      const router = useRouter();
-    
+import BadgeDropdown from "./badges";
+const HeaderSubject = (user: any) => {
+  const router = useRouter();
+
   return (
     <div>
-         <div className="   relative">
+      <div className="   relative">
         <div className="absolute -top-10 inset-0 z-0 overflow-hidden">
           <img
             src="/nav.png"
@@ -37,19 +38,23 @@ const HeaderSubject = (user:any) => {
               className="h-auto w-30 lg:w-40 cursor-pointer"
               alt=""
             />
-
+           
             <div className="flex items-center space-x-4 bg-white">
-              
-
+               <div>
+              <BadgeDropdown user={user} size={"1"}/>
+            </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <div className="flex items-center space-x-2 cursor-pointer bg-white">
-                    <User className="w-8 h-8 text-blue-600" />
+                    
                     <div className="text-sm">
                       <p className="font-medium text-gray-900">
                         {user.user?.name} {user.user?.prenom}
                       </p>
-                      <p className="text-gray-500">Étudiante</p>
+                        <div className="flex items-center space-x-1 text-gray-500">
+                        <p className="text-gray-500">Profil</p>
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
                     </div>
                   </div>
                 </DropdownMenuTrigger>
@@ -58,7 +63,7 @@ const HeaderSubject = (user:any) => {
                   align="end"
                   sideOffset={4}
                 >
-                   <DropdownMenuItem
+                  <DropdownMenuItem
                     onClick={() => router.push("/dashboard/profile")}
                     className="cursor-pointer"
                   >
@@ -79,7 +84,7 @@ const HeaderSubject = (user:any) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HeaderSubject
+export default HeaderSubject;

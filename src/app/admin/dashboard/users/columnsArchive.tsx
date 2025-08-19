@@ -26,24 +26,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { toast } from "react-toastify";
-import { archiveUser } from "@/actions/client";
+import { unarchiveUser } from "@/actions/client";
 
-const handleVerify = (userId: string) => {};
-
-
-const handleSuspend = async (userId: string) => {
-  try {
-    const response = await archiveUser(userId);
-
-    if (response.success) {
-      toast.success(response.message);
-      // Optionally, refresh your table or UI here
-    } else {
-      toast.error(response.message);
+const handleVerify = async (userId: string) => {
+    try {
+      const response = await unarchiveUser(userId);
+  
+      if (response.success) {
+        toast.success(response.message);
+        // Optionally, refresh your table or UI here
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error("Error updating user status:", error);
     }
-  } catch (error) {
-    console.error("Error updating user status:", error);
-  }
 };
 
 export const columns: ColumnDef<any>[] = [
@@ -164,7 +161,6 @@ export const columns: ColumnDef<any>[] = [
       const user = row.original;
 
       return (
-        <Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -178,32 +174,14 @@ export const columns: ColumnDef<any>[] = [
                 className="cursor-pointer"
                 onClick={() => handleVerify(user.id)}
               >
-                Valider
+                unarchiver
               </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleSuspend(user.id)}
-              >
-                Suspendre
-              </DropdownMenuItem>
+              
               <DropdownMenuSeparator />
-              <DialogTrigger>
-                <DropdownMenuItem>
-                  Fiche de l&lsquo;utilisateur
-                </DropdownMenuItem>
-              </DialogTrigger>
+             
             </DropdownMenuContent>
           </DropdownMenu>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Fiche d&lsquo;utilisateur</DialogTitle>
-              <DialogDescription></DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button type="submit">Confirm</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          
       );
     },
   },

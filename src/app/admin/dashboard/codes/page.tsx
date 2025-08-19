@@ -148,7 +148,7 @@ export default function BlogManagementPage() {
               <DialogContent className="">
                 <DialogHeader>
                   <DialogTitle>
-                    {currentBlog ? "Edit Code" : "Create New code"}
+                    {currentBlog ? "Edit Code" : "Créer un nouveau code"}
                   </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
@@ -172,18 +172,21 @@ export default function BlogManagementPage() {
           ) : (
             // Create mode - show number of codes to generate
             <>
-              <FormField
+              <div className="flex items-end gap-2 ">
+                <FormField
+                
                 control={form.control}
                 name="numberOfCodes"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Number of Codes to Generate</FormLabel>
-                    <FormControl>
+                  <FormItem className="w-full">
+                    <FormLabel>Nombre de codes à générer</FormLabel>
+                    <FormControl className="w-full">
                       <Input
                         type="number"
+                        className="w-full"
                         min="1"
                         max="100"
-                        placeholder="How many codes to generate?"
+                        placeholder="1-100"
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                       />
@@ -192,8 +195,9 @@ export default function BlogManagementPage() {
                   </FormItem>
                 )}
               />
-              <div className="text-sm text-muted-foreground">
-                Each code will be a unique 8-digit number
+              <Button type="submit">
+            {currentBlog ? "Update" : "Générer des codes"}
+          </Button>
               </div>
             </>
           )}
@@ -207,9 +211,7 @@ export default function BlogManagementPage() {
           >
             Cancel
           </Button>
-          <Button type="submit">
-            {currentBlog ? "Update" : "Generate Codes"}
-          </Button>
+          
         </div>
       </form>
     </Form>

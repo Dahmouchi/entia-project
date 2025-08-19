@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
-import { columns} from "./columns";
-import { DataTable } from "./data-table";
-import { getDashboardUsers } from "@/actions/client";
+import { columns} from "../columnsArchive";
+import { DataTable } from "../data-table";
+import {  getDashboardUsersArchived } from "@/actions/client";
 
 async function getUsers(): Promise<any[]> {
-  const data = await getDashboardUsers();
+  const data = await getDashboardUsersArchived();
   return data.data;
 }
 
@@ -20,8 +20,8 @@ const Users = async () => {
             <h1 className="lg:text-3xl font-bold tracking-tight text-gray-900">Utilisateurs</h1>
           </div>
           <div>
-            <Link href="/admin/dashboard/users/archive" className="text-sm text-blue-600 hover:underline">
-              Voir les utilisateurs archivés
+            <Link href="/admin/dashboard/users" className="text-sm text-blue-600 hover:underline">
+              Voir les utilisateurs actifs
               </Link>
           </div>
         </header>

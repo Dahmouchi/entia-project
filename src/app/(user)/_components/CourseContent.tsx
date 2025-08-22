@@ -10,8 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import SimplePDFViewer from "./cours-pdf";
+import dynamic from "next/dynamic";
 
+const SimplePDFViewer = dynamic(() => import("./cours-pdf"), {
+  ssr: false,
+});
 const CourseContent = ({ course, userId }: any) => {
   const handleScoreUpdate = (score: any) => {
     console.log("Nouveau score:", score);

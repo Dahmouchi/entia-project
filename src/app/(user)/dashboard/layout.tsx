@@ -1,4 +1,5 @@
-
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import AccessDenied from "@/components/access";
 import { authOptions } from "@/lib/nextAuth";
 import { getServerSession } from "next-auth";

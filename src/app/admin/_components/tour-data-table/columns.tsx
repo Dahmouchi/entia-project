@@ -16,7 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { userStatusOptions } from "@/components/filters";
 export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "code",
@@ -92,7 +91,7 @@ export const columns: ColumnDef<any>[] = [
 
       return (
         <div>
-          {status ? (
+          {status === "true" ? (
             <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-50 border-2 border-green-600 text-green-800 dark:bg-green-900 dark:text-green-200">
               <CheckCircle className="mr-1.5 h-3 w-3" />
               Oui

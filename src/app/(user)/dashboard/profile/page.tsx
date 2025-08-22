@@ -1,5 +1,5 @@
-
-import React from 'react'
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { getStudentById } from '@/actions/client';
 import Profile from '../../_components/profile';
 

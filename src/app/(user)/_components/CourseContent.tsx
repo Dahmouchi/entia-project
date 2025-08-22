@@ -107,7 +107,7 @@ const CourseContent = ({ course, userId }: any) => {
                                <DialogTitle> 
                                
                                </DialogTitle>
-                                <SimplePDFViewer pdfFilePath={document.url} />
+                              <div></div>
                               </DialogContent>
                             </DialogOverlay>
                           </Dialog>

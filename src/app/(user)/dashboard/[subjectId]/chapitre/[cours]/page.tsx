@@ -51,10 +51,10 @@ const CoursePage = async ({ params }: any) => {
           <h1 className="text-2xl font-bold text-gray-900 ">
             {course?.data?.title}
           </h1>
-          <ButtonComplete userId={user.id} course={course.data}/>
+          <ButtonComplete userId={user?.id} course={course?.data}/>
         </div>
 
-        
+        <CourseContent course={course?.data} userId={user?.id}/>
       </div>
     </div>
   );

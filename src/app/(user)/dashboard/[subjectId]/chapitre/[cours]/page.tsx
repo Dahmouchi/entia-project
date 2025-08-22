@@ -26,6 +26,25 @@ const CoursePage = async ({ params }: any) => {
 
   return (
     <div className="w-full bg-white rounded-lg p-2">
+      {/* Lecteur vidéo */}
+      <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+        {course?.data?.videoUrl ? (
+          <div>
+            <VimeoTest
+              videoUrl={course?.data?.videoUrl}
+              imageUrl={course?.data?.coverImage}
+            />
+          </div>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-800">
+            <div className="text-center text-white">
+              <Play className="w-16 h-16 mx-auto mb-4 opacity-50" />
+              <p className="text-lg">Vidéo non disponible</p>
+            </div>
+          </div>
+        )}
+      </div>
+
      
     </div>
   );

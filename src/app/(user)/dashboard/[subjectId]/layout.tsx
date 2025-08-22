@@ -25,7 +25,7 @@ const CourseLayout = async ({ children, params }: any) => {
           progress:true,
         },
         orderBy: {
-          index: "asc",
+          createdAt: "asc",
         },
       },
     },

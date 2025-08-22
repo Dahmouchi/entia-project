@@ -34,7 +34,7 @@ const CoursContainer = (params: any) => {
   }, [params.cour, userId]);
   return (
      <div className="space-y-2 w-full">
-      {params.cour.map((course: any) => {
+      {params.cour.map((course: any,index:any) => {
         const isCompleted = completedStatus[course.id] || false;
         const isActive = course.handler === cours;
 
@@ -75,7 +75,7 @@ const CoursContainer = (params: any) => {
                       : "bg-gray-100 text-gray-600"
                   }`}
                 >
-                  {course.index}
+                  {index+1}
                 </div>
 
                 <img

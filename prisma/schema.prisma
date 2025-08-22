@@ -67,7 +67,7 @@ model Course {
   documents  Document[]
   quizzes    Quiz[]
   progress   CourseProgress[]
-
+  createdAt        DateTime  @default(now())
   @@index([index])
 }
 

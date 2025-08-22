@@ -15,7 +15,7 @@ import SignUp from "@/components/Auth/SignUp";
 import { useTheme } from "next-themes";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import ThemeToggler from "./ThemeToggler";
-import { ChevronsUpDown, LogIn, LogOut } from "lucide-react";
+import { BookOpenText, ChevronsUpDown, LogIn, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -167,6 +167,13 @@ const Header = ({visible}:{visible:any}) => {
                   </DropdownMenuLabel>
 
                   <DropdownMenuSeparator />
+                   <DropdownMenuItem
+                    onClick={() => router.push("/dashboard")}
+                    className="cursor-pointer"
+                  >
+                    <BookOpenText />
+                    Espace étudiant
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => signOut({ callbackUrl: "/login" })}
                     className="cursor-pointer"

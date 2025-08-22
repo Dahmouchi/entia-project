@@ -74,9 +74,6 @@ function validateCourseData(data: CourseData): { isValid: boolean; errors: strin
     errors.push("Le titre du cours est requis");
   }
 
-  if (!data.content?.trim()) {
-    errors.push("Le contenu du cours est requis");
-  }
 
   if (!data.handler?.trim()) {
     errors.push("L'identifiant (handler) du cours est requis");

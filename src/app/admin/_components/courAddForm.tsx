@@ -531,14 +531,6 @@ const CourseCreationForm = ({grades}:any) => {
       newErrors.title = 'Le titre est requis';
     }
 
-    if (!formData.content.trim()) {
-      newErrors.content = 'Le contenu est requis';
-    }
-
-    if (!formData.handler.trim()) {
-      newErrors.handler = 'L\'identifiant est requis';
-    }
-
     if (!formData.subjectId) {
       newErrors.subjectId = 'La matière est requise';
     }
@@ -553,46 +545,69 @@ const CourseCreationForm = ({grades}:any) => {
 
   // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+  e.preventDefault();
 
-    setIsSubmitting(true);
+  if (!validateForm()) {
+    return;
+  }
 
-    try {
-      // Simulation d'envoi au backend
-      console.log('Données du formulaire:', formData);
-      const res = await createCourse(formData)
-      if(res.success){
+  setIsSubmitting(true);
+
+  try {
+    // Function to generate a random code
+    const generateRandomCode = (length: number = 6) => {
+      return Math.random().toString(36).substring(2, 2 + length);
+    };
+
+    // Function to generate a clean URL slug
+    const generateHandler = (title: string) => {
+      const randomCode = generateRandomCode();
+      return (
+        `${title}-${randomCode}`
+          .toLowerCase()
+          .normalize("NFD")                // split accents from letters
+          .replace(/[\u0300-\u036f]/g, "") // remove accents
+          .replace(/[^a-z0-9]+/g, "-")     // replace invalid chars with hyphen
+          .replace(/^-+|-+$/g, "")         // trim leading/trailing hyphens
+      );
+    };
+
+    const handler = generateHandler(formData.title);
+
+    const courseData = { ...formData, handler };
+
+    console.log("Données du formulaire:", courseData);
+
+    const res = await createCourse(courseData);
+
+    if (res.success) {
       setFormData({
-        title: '',
-        content: '',
-        videoUrl: '',
-        handler: '',
+        title: "",
+        content: "",
+        videoUrl: "",
+        handler: "",
         index: 1,
-        subjectId: '',
+        subjectId: "",
         coverImage: null,
         documents: [],
-        quizzes: []
+        quizzes: [],
       });
-      setSelectedGrade('');
+      setSelectedGrade("");
       setAvailableSubjects([]);
 
-      toast.success('Cours créé avec succès !');
-      }else{
-        toast.error("err")
-        console.log(res.error)
-      }
-
-    } catch (error) {
-      console.error('Erreur lors de la création du cours:', error);
-      toast.error('Erreur lors de la création du cours');
-    } finally {
-      setIsSubmitting(false);
+      toast.success("Cours créé avec succès !");
+    } else {
+      toast.error(res.error);
+      console.log(res.error);
     }
-  };
+  } catch (error) {
+    console.error("Erreur lors de la création du cours:", error);
+    toast.error("Erreur lors de la création du cours");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen">
@@ -638,27 +653,7 @@ const CourseCreationForm = ({grades}:any) => {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Identifiant (handler) *
-                </label>
-                <input
-                  type="text"
-                  value={formData.handler}
-                  onChange={(e) => setFormData(prev => ({ ...prev, handler: e.target.value }))}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.handler ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Ex: fractions-introduction"
-                />
-                {errors.handler && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.handler}
-                  </p>
-                )}
-              </div>
-
+             
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Classe *
@@ -704,26 +699,7 @@ const CourseCreationForm = ({grades}:any) => {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Index du cours *
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  value={formData.index}
-                  onChange={(e) => setFormData(prev => ({ ...prev, index: parseInt(e.target.value) || 1 }))}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.index ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-                {errors.index && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.index}
-                  </p>
-                )}
-              </div>
+              
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -739,26 +715,7 @@ const CourseCreationForm = ({grades}:any) => {
               </div>
             </div>
 
-            <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contenu du cours *
-              </label>
-              <textarea
-                value={formData.content}
-                onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                rows={4}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.content ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Décrivez le contenu du cours..."
-              />
-              {errors.content && (
-                <p className="text-red-500 text-sm mt-1 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {errors.content}
-                </p>
-              )}
-            </div>
+          
           </div>
 
           {/* Upload d'image de couverture */}

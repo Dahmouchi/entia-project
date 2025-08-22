@@ -45,7 +45,17 @@ const CoursePage = async ({ params }: any) => {
         )}
       </div>
 
-     
+      {/* Informations du cours */}
+      <div className="mt-4 w-full">
+        <div className="mt-4 flex lg:items-center gap-2 lg:justify-between w-full flex-col lg:flex-row py-3 px-2">
+          <h1 className="text-2xl font-bold text-gray-900 ">
+            {course?.data?.title}
+          </h1>
+          <ButtonComplete userId={user.id} course={course.data}/>
+        </div>
+
+        <CourseContent course={course.data} userId={user.id}/>
+      </div>
     </div>
   );
 };

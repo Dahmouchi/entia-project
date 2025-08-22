@@ -36,7 +36,7 @@ const CoursContainer = (params: any) => {
      <div className="space-y-2 w-full">
       {params.cour.map((course: any,index:any) => {
         const isCompleted = completedStatus[course.id] || false;
-        const isActive = course.handler === cours;
+        const isActive = course.id === cours;
 
         return (
           <Tooltip
@@ -46,7 +46,7 @@ const CoursContainer = (params: any) => {
           >
             <div
               onClick={() => {
-                router.push(`/dashboard/${params.subjectId}/chapitre/${course.handler}`);
+                router.push(`/dashboard/${params.subjectId}/chapitre/${course.id}`);
               }}
               className={`p-3 rounded-lg border w-full cursor-pointer ${
                 isActive

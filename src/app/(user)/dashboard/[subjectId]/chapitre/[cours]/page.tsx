@@ -30,10 +30,7 @@ const CoursePage = async ({ params }: any) => {
       <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
         {course?.data?.videoUrl ? (
           <div>
-            <VimeoTest
-              videoUrl={course?.data?.videoUrl}
-              imageUrl={course?.data?.coverImage}
-            />
+           
           </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-800">

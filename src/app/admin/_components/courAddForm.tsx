@@ -1,27 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  BookOpen, 
-  Upload, 
-  X, 
-  Plus, 
-  Trash2, 
-  FileText, 
-  Save, 
+import React, { useState, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  BookOpen,
+  Upload,
+  X,
+  Plus,
+  Trash2,
+  FileText,
+  Save,
   Eye,
   AlertCircle,
   Loader,
   HelpCircle,
   Check,
-  Circle
-} from 'lucide-react';
-import { createCourse } from '@/actions/cours';
-import { toast } from 'react-toastify';
-
-
+  Circle,
+} from "lucide-react";
+import { createCourse } from "@/actions/cours";
+import { toast } from "react-toastify";
 
 interface Subject {
   id: string;
@@ -35,7 +33,7 @@ interface Subject {
 interface QuizQuestion {
   id: string;
   content: string;
-   options: Option[];
+  options: Option[];
 }
 
 interface Quiz {
@@ -61,16 +59,14 @@ type Option = {
   isCorrect: boolean;
 };
 
-
-
 // Composant pour l'upload de fichiers avec drag & drop
-const FileUpload = ({ 
-  onFileSelect, 
-  accept, 
-  multiple = false, 
-  label, 
+const FileUpload = ({
+  onFileSelect,
+  accept,
+  multiple = false,
+  label,
   description,
-  currentFiles = []
+  currentFiles = [],
 }: {
   onFileSelect: (files: File[]) => void;
   accept: string;
@@ -92,49 +88,62 @@ const FileUpload = ({
     setIsDragOver(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      onFileSelect(files);
-    }
-  }, [onFileSelect]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
-      onFileSelect(files);
-    }
-  }, [onFileSelect]);
+      const files = Array.from(e.dataTransfer.files);
+      if (files.length > 0) {
+        onFileSelect(files);
+      }
+    },
+    [onFileSelect]
+  );
 
-  const removeFile = useCallback((index: number) => {
-    const newFiles = currentFiles.filter((_, i) => i !== index);
-    onFileSelect(newFiles);
-  }, [currentFiles, onFileSelect]);
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = Array.from(e.target.files || []);
+      if (files.length > 0) {
+        onFileSelect(files);
+      }
+    },
+    [onFileSelect]
+  );
+
+  const removeFile = useCallback(
+    (index: number) => {
+      const newFiles = currentFiles.filter((_, i) => i !== index);
+      onFileSelect(newFiles);
+    },
+    [currentFiles, onFileSelect]
+  );
 
   return (
     <div className="space-y-4">
       <div
         className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 cursor-pointer ${
-          isDragOver 
-            ? 'border-blue-500 bg-blue-50' 
-            : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+          isDragOver
+            ? "border-blue-500 bg-blue-50"
+            : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
       >
-        <Upload className={`w-12 h-12 mx-auto mb-4 ${isDragOver ? 'text-blue-500' : 'text-gray-400'}`} />
+        <Upload
+          className={`w-12 h-12 mx-auto mb-4 ${
+            isDragOver ? "text-blue-500" : "text-gray-400"
+          }`}
+        />
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{label}</h3>
         <p className="text-gray-600 mb-4">{description}</p>
         <button
           type="button"
           className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
         >
-          Sélectionner {multiple ? 'des fichiers' : 'un fichier'}
+          Sélectionner {multiple ? "des fichiers" : "un fichier"}
         </button>
         <input
           ref={fileInputRef}
@@ -181,28 +190,27 @@ const FileUpload = ({
   );
 };
 
-
-
-
-const QuizManager = ({ 
-  quizzes, 
-  onQuizzesChange 
-}: { 
-  quizzes: Quiz[]; 
-  onQuizzesChange: (quizzes: Quiz[]) => void; 
+const QuizManager = ({
+  quizzes,
+  onQuizzesChange,
+}: {
+  quizzes: Quiz[];
+  onQuizzesChange: (quizzes: Quiz[]) => void;
 }) => {
   const addQuiz = () => {
     const newQuiz: Quiz = {
       id: Date.now().toString(),
-      title: '',
-      questions: [{
-        id: Date.now().toString(),
-        content: '',
-        options: [
-          { id: Date.now().toString(), text: '', isCorrect: false },
-          { id: (Date.now() + 1).toString(), text: '', isCorrect: false }
-        ]
-      }]
+      title: "",
+      questions: [
+        {
+          id: Date.now().toString(),
+          content: "",
+          options: [
+            { id: Date.now().toString(), text: "", isCorrect: false },
+            { id: (Date.now() + 1).toString(), text: "", isCorrect: false },
+          ],
+        },
+      ],
     };
     onQuizzesChange([...quizzes, newQuiz]);
   };
@@ -212,7 +220,7 @@ const QuizManager = ({
   };
 
   const updateQuiz = (quizIndex: number, field: keyof Quiz, value: any) => {
-    const updatedQuizzes = quizzes.map((quiz, index) => 
+    const updatedQuizzes = quizzes.map((quiz, index) =>
       index === quizIndex ? { ...quiz, [field]: value } : quiz
     );
     onQuizzesChange(updatedQuizzes);
@@ -221,14 +229,14 @@ const QuizManager = ({
   const addQuestion = (quizIndex: number) => {
     const newQuestion: QuizQuestion = {
       id: Date.now().toString(),
-      content: '',
+      content: "",
       options: [
-        { id: Date.now().toString(), text: '', isCorrect: false },
-        { id: (Date.now() + 1).toString(), text: '', isCorrect: false }
-      ]
+        { id: Date.now().toString(), text: "", isCorrect: false },
+        { id: (Date.now() + 1).toString(), text: "", isCorrect: false },
+      ],
     };
-    const updatedQuizzes = quizzes.map((quiz, index) => 
-      index === quizIndex 
+    const updatedQuizzes = quizzes.map((quiz, index) =>
+      index === quizIndex
         ? { ...quiz, questions: [...quiz.questions, newQuestion] }
         : quiz
     );
@@ -236,22 +244,34 @@ const QuizManager = ({
   };
 
   const removeQuestion = (quizIndex: number, questionIndex: number) => {
-    const updatedQuizzes = quizzes.map((quiz, index) => 
-      index === quizIndex 
-        ? { ...quiz, questions: quiz.questions.filter((_, qIndex) => qIndex !== questionIndex) }
+    const updatedQuizzes = quizzes.map((quiz, index) =>
+      index === quizIndex
+        ? {
+            ...quiz,
+            questions: quiz.questions.filter(
+              (_, qIndex) => qIndex !== questionIndex
+            ),
+          }
         : quiz
     );
     onQuizzesChange(updatedQuizzes);
   };
 
-  const updateQuestion = (quizIndex: number, questionIndex: number, field: keyof QuizQuestion, value: string) => {
-    const updatedQuizzes = quizzes.map((quiz, index) => 
-      index === quizIndex 
+  const updateQuestion = (
+    quizIndex: number,
+    questionIndex: number,
+    field: keyof QuizQuestion,
+    value: string
+  ) => {
+    const updatedQuizzes = quizzes.map((quiz, index) =>
+      index === quizIndex
         ? {
             ...quiz,
-            questions: quiz.questions.map((question, qIndex) => 
-              qIndex === questionIndex ? { ...question, [field]: value } : question
-            )
+            questions: quiz.questions.map((question, qIndex) =>
+              qIndex === questionIndex
+                ? { ...question, [field]: value }
+                : question
+            ),
           }
         : quiz
     );
@@ -261,80 +281,98 @@ const QuizManager = ({
   const addOption = (quizIndex: number, questionIndex: number) => {
     const newOption: Option = {
       id: Date.now().toString(),
-      text: '',
-      isCorrect: false
+      text: "",
+      isCorrect: false,
     };
-    const updatedQuizzes = quizzes.map((quiz, index) => 
-      index === quizIndex 
+    const updatedQuizzes = quizzes.map((quiz, index) =>
+      index === quizIndex
         ? {
             ...quiz,
-            questions: quiz.questions.map((question, qIndex) => 
-              qIndex === questionIndex 
+            questions: quiz.questions.map((question, qIndex) =>
+              qIndex === questionIndex
                 ? { ...question, options: [...question.options, newOption] }
                 : question
-            )
+            ),
           }
         : quiz
     );
     onQuizzesChange(updatedQuizzes);
   };
 
-  const removeOption = (quizIndex: number, questionIndex: number, optionIndex: number) => {
-    const updatedQuizzes = quizzes.map((quiz, index) => 
-      index === quizIndex 
+  const removeOption = (
+    quizIndex: number,
+    questionIndex: number,
+    optionIndex: number
+  ) => {
+    const updatedQuizzes = quizzes.map((quiz, index) =>
+      index === quizIndex
         ? {
             ...quiz,
-            questions: quiz.questions.map((question, qIndex) => 
-              qIndex === questionIndex 
-                ? { 
-                    ...question, 
-                    options: question.options.filter((_, oIndex) => oIndex !== optionIndex) 
-                  }
-                : question
-            )
-          }
-        : quiz
-    );
-    onQuizzesChange(updatedQuizzes);
-  };
-
-  const updateOption = (quizIndex: number, questionIndex: number, optionIndex: number, field: keyof Option, value: any) => {
-    const updatedQuizzes = quizzes.map((quiz, index) => 
-      index === quizIndex 
-        ? {
-            ...quiz,
-            questions: quiz.questions.map((question, qIndex) => 
-              qIndex === questionIndex 
+            questions: quiz.questions.map((question, qIndex) =>
+              qIndex === questionIndex
                 ? {
                     ...question,
-                    options: question.options.map((option, oIndex) => 
-                      oIndex === optionIndex ? { ...option, [field]: value } : option
-                    )
+                    options: question.options.filter(
+                      (_, oIndex) => oIndex !== optionIndex
+                    ),
                   }
                 : question
-            )
+            ),
           }
         : quiz
     );
     onQuizzesChange(updatedQuizzes);
   };
 
-  const setCorrectOption = (quizIndex: number, questionIndex: number, optionId: string) => {
-    const updatedQuizzes = quizzes.map((quiz, index) => 
-      index === quizIndex 
+  const updateOption = (
+    quizIndex: number,
+    questionIndex: number,
+    optionIndex: number,
+    field: keyof Option,
+    value: any
+  ) => {
+    const updatedQuizzes = quizzes.map((quiz, index) =>
+      index === quizIndex
         ? {
             ...quiz,
-            questions: quiz.questions.map((question, qIndex) => 
-              qIndex === questionIndex 
+            questions: quiz.questions.map((question, qIndex) =>
+              qIndex === questionIndex
                 ? {
                     ...question,
-                    options: question.options.map(option => ({
+                    options: question.options.map((option, oIndex) =>
+                      oIndex === optionIndex
+                        ? { ...option, [field]: value }
+                        : option
+                    ),
+                  }
+                : question
+            ),
+          }
+        : quiz
+    );
+    onQuizzesChange(updatedQuizzes);
+  };
+
+  const setCorrectOption = (
+    quizIndex: number,
+    questionIndex: number,
+    optionId: string
+  ) => {
+    const updatedQuizzes = quizzes.map((quiz, index) =>
+      index === quizIndex
+        ? {
+            ...quiz,
+            questions: quiz.questions.map((question, qIndex) =>
+              qIndex === questionIndex
+                ? {
+                    ...question,
+                    options: question.options.map((option) => ({
                       ...option,
-                      isCorrect: option.id === optionId
-                    }))
+                      isCorrect: option.id === optionId,
+                    })),
                   }
                 : question
-            )
+            ),
           }
         : quiz
     );
@@ -369,7 +407,9 @@ const QuizManager = ({
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                   <HelpCircle className="w-5 h-5 text-blue-600" />
                 </div>
-                <h4 className="font-medium text-gray-900">Quiz {quizIndex + 1}</h4>
+                <h4 className="font-medium text-gray-900">
+                  Quiz {quizIndex + 1}
+                </h4>
               </div>
               <button
                 type="button"
@@ -387,7 +427,7 @@ const QuizManager = ({
               <input
                 type="text"
                 value={quiz.title}
-                onChange={(e) => updateQuiz(quizIndex, 'title', e.target.value)}
+                onChange={(e) => updateQuiz(quizIndex, "title", e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Entrez le titre du quiz"
               />
@@ -432,7 +472,14 @@ const QuizManager = ({
                     </label>
                     <textarea
                       value={question.content}
-                      onChange={(e) => updateQuestion(quizIndex, questionIndex, 'content', e.target.value)}
+                      onChange={(e) =>
+                        updateQuestion(
+                          quizIndex,
+                          questionIndex,
+                          "content",
+                          e.target.value
+                        )
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       rows={2}
                       placeholder="Entrez la question"
@@ -444,25 +491,56 @@ const QuizManager = ({
                       Options de réponse
                     </label>
                     {question.options.map((option, optionIndex) => (
-                      <div key={option.id} className="flex items-center space-x-2">
+                      <div
+                        key={option.id}
+                        className="flex items-center space-x-2"
+                      >
                         <button
                           type="button"
-                          onClick={() => setCorrectOption(quizIndex, questionIndex, option.id)}
-                          className={`p-1 rounded-full ${option.isCorrect ? 'text-green-500' : 'text-gray-400'}`}
+                          onClick={() =>
+                            setCorrectOption(
+                              quizIndex,
+                              questionIndex,
+                              option.id
+                            )
+                          }
+                          className={`p-1 rounded-full ${
+                            option.isCorrect
+                              ? "text-green-500"
+                              : "text-gray-400"
+                          }`}
                         >
-                          {option.isCorrect ? <Check className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                          {option.isCorrect ? (
+                            <Check className="w-5 h-5" />
+                          ) : (
+                            <Circle className="w-5 h-5" />
+                          )}
                         </button>
                         <input
                           type="text"
                           value={option.text}
-                          onChange={(e) => updateOption(quizIndex, questionIndex, optionIndex, 'text', e.target.value)}
+                          onChange={(e) =>
+                            updateOption(
+                              quizIndex,
+                              questionIndex,
+                              optionIndex,
+                              "text",
+                              e.target.value
+                            )
+                          }
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           placeholder="Entrez une option de réponse"
                         />
                         {question.options.length > 2 && (
                           <button
                             type="button"
-                            onClick={() => removeOption(quizIndex, questionIndex, optionIndex)}
+                            onClick={() =>
+                              removeOption(
+                                quizIndex,
+                                questionIndex,
+                                optionIndex
+                              )
+                            }
                             className="text-red-500 hover:text-red-700 p-1"
                           >
                             <X className="w-4 h-4" />
@@ -489,7 +567,10 @@ const QuizManager = ({
       {quizzes.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <HelpCircle className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-          <p>Aucun quiz ajouté. Cliquez sur &quot;Ajouter un quiz&quot; pour commencer.</p>
+          <p>
+            Aucun quiz ajouté. Cliquez sur &quot;Ajouter un quiz&quot; pour
+            commencer.
+          </p>
         </div>
       )}
     </div>
@@ -497,20 +578,20 @@ const QuizManager = ({
 };
 
 // Composant principal du formulaire
-const CourseCreationForm = ({grades}:any) => {
+const CourseCreationForm = ({ grades }: any) => {
   const [formData, setFormData] = useState<CourseFormData>({
-    title: '',
-    content: '',
-    videoUrl: '',
-    handler: '',
+    title: "",
+    content: "",
+    videoUrl: "",
+    handler: "",
     index: 1,
-    subjectId: '',
+    subjectId: "",
     coverImage: null,
     documents: [],
-    quizzes: []
+    quizzes: [],
   });
 
-  const [selectedGrade, setSelectedGrade] = useState<string>('');
+  const [selectedGrade, setSelectedGrade] = useState<string>("");
   const [availableSubjects, setAvailableSubjects] = useState<Subject[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -518,9 +599,9 @@ const CourseCreationForm = ({grades}:any) => {
   // Gestion de la sélection de classe
   const handleGradeChange = (gradeId: string) => {
     setSelectedGrade(gradeId);
-    const grade = grades.find((g:any) => g.id === gradeId);
+    const grade = grades.find((g: any) => g.id === gradeId);
     setAvailableSubjects(grade?.subjects || []);
-    setFormData(prev => ({ ...prev, subjectId: '' }));
+    setFormData((prev) => ({ ...prev, subjectId: "" }));
   };
 
   // Validation du formulaire
@@ -528,15 +609,15 @@ const CourseCreationForm = ({grades}:any) => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Le titre est requis';
+      newErrors.title = "Le titre est requis";
     }
 
     if (!formData.subjectId) {
-      newErrors.subjectId = 'La matière est requise';
+      newErrors.subjectId = "La matière est requise";
     }
 
     if (formData.index < 1) {
-      newErrors.index = 'L\'index doit être supérieur à 0';
+      newErrors.index = "L'index doit être supérieur à 0";
     }
 
     setErrors(newErrors);
@@ -545,69 +626,68 @@ const CourseCreationForm = ({grades}:any) => {
 
   // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validateForm()) {
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  try {
-    // Function to generate a random code
-    const generateRandomCode = (length: number = 6) => {
-      return Math.random().toString(36).substring(2, 2 + length);
-    };
-
-    // Function to generate a clean URL slug
-    const generateHandler = (title: string) => {
-      const randomCode = generateRandomCode();
-      return (
-        `${title}-${randomCode}`
-          .toLowerCase()
-          .normalize("NFD")                // split accents from letters
-          .replace(/[\u0300-\u036f]/g, "") // remove accents
-          .replace(/[^a-z0-9]+/g, "-")     // replace invalid chars with hyphen
-          .replace(/^-+|-+$/g, "")         // trim leading/trailing hyphens
-      );
-    };
-
-    const handler = generateHandler(formData.title);
-
-    const courseData = { ...formData, handler };
-
-    console.log("Données du formulaire:", courseData);
-
-    const res = await createCourse(courseData);
-
-    if (res.success) {
-      setFormData({
-        title: "",
-        content: "",
-        videoUrl: "",
-        handler: "",
-        index: 1,
-        subjectId: "",
-        coverImage: null,
-        documents: [],
-        quizzes: [],
-      });
-      setSelectedGrade("");
-      setAvailableSubjects([]);
-
-      toast.success("Cours créé avec succès !");
-    } else {
-      toast.error(res.error);
-      console.log(res.error);
+    if (!validateForm()) {
+      return;
     }
-  } catch (error) {
-    console.error("Erreur lors de la création du cours:", error);
-    toast.error("Erreur lors de la création du cours");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
 
+    setIsSubmitting(true);
+
+    try {
+      // Function to generate a random code
+      const generateRandomCode = (length: number = 6) => {
+        return Math.random()
+          .toString(36)
+          .substring(2, 2 + length);
+      };
+
+      // Function to generate a clean URL slug
+      const generateHandler = (title: string) => {
+        const randomCode = generateRandomCode();
+        return `${title}-${randomCode}`
+          .toLowerCase()
+          .normalize("NFD") // split accents from letters
+          .replace(/[\u0300-\u036f]/g, "") // ✅ remove accents
+          .replace(/[^a-z0-9]+/g, "-") // ✅ replace non-alphanumerics with hyphen
+          .replace(/^-+|-+$/g, ""); // ✅ trim leading/trailing hyphens // trim leading/trailing hyphens
+      };
+
+      const handler = generateHandler(formData.title);
+
+      const courseData = { ...formData, handler };
+
+      console.log("Données du formulaire:", courseData);
+
+      const res = await createCourse(courseData);
+
+      if (res.success) {
+        setFormData({
+          title: "",
+          content: "",
+          videoUrl: "",
+          handler: "",
+          index: 1,
+          subjectId: "",
+          coverImage: null,
+          documents: [],
+          quizzes: [],
+        });
+        setSelectedGrade("");
+        setAvailableSubjects([]);
+
+        toast.success("Cours créé avec succès !");
+      } else {
+        toast.error(res.error);
+        console.log(res.error);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du cours:", error);
+      toast.error("Erreur lors de la création du cours");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -619,8 +699,12 @@ const CourseCreationForm = ({grades}:any) => {
               <BookOpen className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Créer un nouveau cours</h1>
-              <p className="text-gray-600 mt-1">Ajoutez un cours avec ses documents et quiz associés</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Créer un nouveau cours
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Ajoutez un cours avec ses documents et quiz associés
+              </p>
             </div>
           </div>
         </div>
@@ -629,8 +713,10 @@ const CourseCreationForm = ({grades}:any) => {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Informations de base */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Informations de base</h2>
-            
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Informations de base
+            </h2>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -639,9 +725,11 @@ const CourseCreationForm = ({grades}:any) => {
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, title: e.target.value }))
+                  }
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.title ? 'border-red-500' : 'border-gray-300'
+                    errors.title ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Ex: Introduction aux fractions"
                 />
@@ -653,7 +741,6 @@ const CourseCreationForm = ({grades}:any) => {
                 )}
               </div>
 
-             
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Classe *
@@ -664,7 +751,7 @@ const CourseCreationForm = ({grades}:any) => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Sélectionner une classe</option>
-                  {grades.map((grade:any) => (
+                  {grades.map((grade: any) => (
                     <option key={grade.id} value={grade.id}>
                       {grade.name}
                     </option>
@@ -678,14 +765,19 @@ const CourseCreationForm = ({grades}:any) => {
                 </label>
                 <select
                   value={formData.subjectId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, subjectId: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      subjectId: e.target.value,
+                    }))
+                  }
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.subjectId ? 'border-red-500' : 'border-gray-300'
+                    errors.subjectId ? "border-red-500" : "border-gray-300"
                   }`}
                   disabled={!selectedGrade}
                 >
                   <option value="">Sélectionner une matière</option>
-                  {availableSubjects.map(subject => (
+                  {availableSubjects.map((subject) => (
                     <option key={subject.id} value={subject.id}>
                       {subject.name}
                     </option>
@@ -699,8 +791,6 @@ const CourseCreationForm = ({grades}:any) => {
                 )}
               </div>
 
-              
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   URL de la vidéo (optionnel)
@@ -708,21 +798,31 @@ const CourseCreationForm = ({grades}:any) => {
                 <input
                   type="url"
                   value={formData.videoUrl}
-                  onChange={(e) => setFormData(prev => ({ ...prev, videoUrl: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      videoUrl: e.target.value,
+                    }))
+                  }
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="https://youtube.com/watch?v=..."
                 />
               </div>
             </div>
-
-          
           </div>
 
           {/* Upload d'image de couverture */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Image de couverture</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Image de couverture
+            </h2>
             <FileUpload
-              onFileSelect={(files) => setFormData(prev => ({ ...prev, coverImage: files[0] || null }))}
+              onFileSelect={(files) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  coverImage: files[0] || null,
+                }))
+              }
               accept="image/*"
               label="Image de couverture"
               description="Glissez-déposez une image ou cliquez pour sélectionner (JPG, PNG)"
@@ -732,9 +832,16 @@ const CourseCreationForm = ({grades}:any) => {
 
           {/* Upload de documents PDF */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Documents PDF</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Documents PDF
+            </h2>
             <FileUpload
-              onFileSelect={(files) => setFormData(prev => ({ ...prev, documents: [...prev.documents, ...files] }))}
+              onFileSelect={(files) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  documents: [...prev.documents, ...files],
+                }))
+              }
               accept=".pdf"
               multiple
               label="Documents PDF"
@@ -747,7 +854,9 @@ const CourseCreationForm = ({grades}:any) => {
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
             <QuizManager
               quizzes={formData.quizzes}
-              onQuizzesChange={(quizzes) => setFormData(prev => ({ ...prev, quizzes }))}
+              onQuizzesChange={(quizzes) =>
+                setFormData((prev) => ({ ...prev, quizzes }))
+              }
             />
           </div>
 

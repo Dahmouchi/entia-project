@@ -1,14 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { usePDFSlick } from "@pdfslick/react";
 import PDFNavigation from "./PDFNavigation"
 
 import "@pdfslick/react/dist/pdf_viewer.css";
 
-type PDFViewerAppProps = {
-  pdfFilePath: string,
-};
 
-const SimplePDFViewer = ({ pdfFilePath }: PDFViewerAppProps) => {
+
+const SimplePDFViewer = ({ pdfFilePath }: any) => {
   const { viewerRef, usePDFSlickStore, PDFSlickViewer } = usePDFSlick(
     pdfFilePath,
     {

@@ -41,8 +41,8 @@ const CoursContainer = (params: any) => {
         return (
           <Tooltip
             key={course.id}
-            content={`${course.title} - ${isCompleted ? "Terminé" : "Non terminé"}`}
-            position="right"
+            content={`${isCompleted ? "Terminé" : "Non terminé"}`}
+            position="top"
           >
             <div
               onClick={() => {

@@ -64,7 +64,7 @@ const CourseLayout = async ({ children, params }: any) => {
             <div className="flex-col sm:w-[70%] h-auto mt-4 sm:mt-0">
               {children}
             </div>
-            <div className="block lg:mt-0 mt-2 rounded-xl border-[1px] border-gray-200 dark:border-gray-700 p-4 shadow-md w-full sm:w-[30%] h-auto sm:h-auto mb-3 bg-white dark:bg-slate-900">
+            <div className="block lg:mt-0 mt-2 rounded-xl border-[1px] border-gray-200 dark:border-gray-700 p-4 shadow-md w-full sm:w-[30%] h-fit sm:h-fit mb-3 bg-white dark:bg-slate-900">
               <div className="mb-2 flex-col justify-between iems-center w-full">
                 <div className="sm:flex flex items-center text-gray-500 w-full">
                   {/* 
@@ -109,7 +109,7 @@ const CourseLayout = async ({ children, params }: any) => {
                   </h1>
                 </div>
               </div>
-              <div className=" flex-col h-[50vh] md:h-screen lg:h-[90vh] overflow-y-auto ">
+              <div className=" flex-col h-[50vh] md:h-screen lg:h-[100vh] overflow-y-auto ">
                 <div className="flex-col space-y-4">
                   <CoursContainer
                     cour={matiereInfo.courses}

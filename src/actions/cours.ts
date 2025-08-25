@@ -38,7 +38,7 @@ async function uploadImage(imageURL: File): Promise<string> {
   const quality = 80;
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const filename = `${timestamp}-${image.name}`;
+  const filename = `${timestamp}`;
 
   const arrayBuffer = await image.arrayBuffer();
   const compressedBuffer = await sharp(arrayBuffer)
@@ -75,9 +75,7 @@ function validateCourseData(data: CourseData): { isValid: boolean; errors: strin
   }
 
 
-  if (!data.handler?.trim()) {
-    errors.push("L'identifiant (handler) du cours est requis");
-  }
+  
 
   if (!data.subjectId?.trim()) {
     errors.push("L'ID de la matière est requis");
@@ -371,16 +369,7 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
       errors.push("Le titre du cours ne peut pas être vide");
     }
 
-    if (data.handler !== undefined) {
-      if (!data.handler.trim()) {
-        errors.push("L'identifiant (handler) ne peut pas être vide");
-      } else {
-        const isHandlerUnique = await checkHandlerUniqueness(data.handler, courseId);
-        if (!isHandlerUnique) {
-          errors.push("L'identifiant (handler) du cours existe déjà");
-        }
-      }
-    }
+   
 
     if (data.subjectId !== undefined) {
       const isSubjectValid = await validateSubject(data.subjectId);
@@ -416,11 +405,8 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
       where: { id: courseId },
       data: {
         ...(data.title !== undefined && { title: data.title }),
-        ...(data.content !== undefined && { content: data.content }),
         ...(data.videoUrl !== undefined && { videoUrl: data.videoUrl || null }),
         ...(coverImageUrl && { coverImage: coverImageUrl }),
-        ...(data.handler !== undefined && { handler: data.handler }),
-        ...(data.index !== undefined && { index: data.index }),
         ...(data.subjectId !== undefined && { subjectId: data.subjectId })
       },
       include: {

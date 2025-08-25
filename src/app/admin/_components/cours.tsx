@@ -307,7 +307,6 @@ export default function CoursesPage({ classe, subject, coures }: any) {
                   <TableRow>
                     <TableHead>Titre</TableHead>
                     <TableHead>Matière</TableHead>
-                    <TableHead>Handler</TableHead>
                     <TableHead className="text-center">
                       <ArrowUpDown className="h-4 w-4 inline" /> Ordre
                     </TableHead>
@@ -346,11 +345,7 @@ export default function CoursesPage({ classe, subject, coures }: any) {
                             <span>{course.subject.name}</span>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <code className="bg-gray-100 px-2 py-1 rounded text-sm">
-                            {course.handler}
-                          </code>
-                        </TableCell>
+                        
                         <TableCell className="text-center">
                           <Badge variant="outline">{course.index}</Badge>
                         </TableCell>

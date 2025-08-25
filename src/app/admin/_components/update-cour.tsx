@@ -49,7 +49,6 @@ interface CourseFormData {
   title: string;
   content: string;
   videoUrl: string;
-  handler: string;
   index: number;
   subjectId: string;
   coverImage: File | null;
@@ -202,7 +201,6 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
     title: "",
     content: "",
     videoUrl: "",
-    handler: "",
     index: 1,
     subjectId: "",
     coverImage: null,
@@ -227,7 +225,6 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
         title: coure.title || "",
         content: coure.content || "",
         videoUrl: coure.videoUrl || "",
-        handler: coure.handler || "",
         index: coure.index || 1,
         subjectId: coure.subjectId || "",
         coverImage: coure.coverImage || null,
@@ -256,14 +253,6 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
 
     if (!formData.title.trim()) {
       newErrors.title = "Le titre est requis";
-    }
-
-    if (!formData.content.trim()) {
-      newErrors.content = "Le contenu est requis";
-    }
-
-    if (!formData.handler.trim()) {
-      newErrors.handler = "L'identifiant est requis";
     }
 
     if (!formData.subjectId) {
@@ -357,31 +346,7 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Identifiant (handler) *
-                </label>
-                <input
-                  type="text"
-                  value={formData.handler}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      handler: e.target.value,
-                    }))
-                  }
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.handler ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Ex: fractions-introduction"
-                />
-                {errors.handler && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.handler}
-                  </p>
-                )}
-              </div>
+              
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -433,31 +398,7 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Index du cours *
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  value={formData.index}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      index: parseInt(e.target.value) || 1,
-                    }))
-                  }
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.index ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                {errors.index && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.index}
-                  </p>
-                )}
-              </div>
+              
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -478,28 +419,7 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
               </div>
             </div>
 
-            <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contenu du cours *
-              </label>
-              <textarea
-                value={formData.content}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, content: e.target.value }))
-                }
-                rows={4}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.content ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Décrivez le contenu du cours..."
-              />
-              {errors.content && (
-                <p className="text-red-500 text-sm mt-1 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {errors.content}
-                </p>
-              )}
-            </div>
+            
              <h2 className="text-xl font-semibold text-gray-900 my-6">
               Image de couverture
             </h2>

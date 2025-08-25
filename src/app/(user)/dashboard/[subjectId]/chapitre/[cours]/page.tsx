@@ -28,7 +28,7 @@ const CoursePage = async ({ params }: any) => {
     <div className="w-full bg-white rounded-lg p-2">
       {/* Lecteur vidéo */}
       <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
-        {course?.data?.videoUrl ? (
+        {course?.data?.videoUrl && course?.data?.coverImage ? (
           <div>
             <VimeoTest
               videoUrl={course?.data?.videoUrl}

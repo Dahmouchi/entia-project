@@ -12,6 +12,42 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+enum LiveType {
+YOUTUBE
+LIVEKIT
+JITSI
+}
+
+
+enum LiveStatus {
+DRAFT
+SCHEDULED
+LIVE
+ENDED
+}
+
+
+model LiveRoom {
+id String @id @default(cuid())
+name String
+type LiveType @default(YOUTUBE)
+status LiveStatus @default(DRAFT)
+teacherId String
+// Adjust relation to match your User model name/field
+teacher User @relation(fields: [teacherId], references: [id])
+
+
+// Platform-specific fields (nullable depending on type)
+youtubeVideoId String?
+livekitRoom String?
+jitsiRoom String?
+
+
+startsAt DateTime?
+endedAt DateTime?
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+}
 
 model Niveau {
   id      String  @id @default(cuid())
@@ -156,6 +192,7 @@ model User {
   gradeId        String?
   grade          Grade?           @relation(fields: [gradeId], references: [id])
   registerCode   RegisterCode?
+  liveRooms     LiveRoom[]      
   courseProgress CourseProgress[] // 👈 Progress relation
   accounts       Account[]
   quizResult     QuizResult[]

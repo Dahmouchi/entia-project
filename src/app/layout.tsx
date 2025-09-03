@@ -31,16 +31,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} relative`}>
-        <ThemeProvider
-          attribute="class"
-          enableSystem={true}
-          defaultTheme="light"
-        >
+       
           <NextAuthProvider>
             <div className="overflow-x-hidden">{children}</div>
           </NextAuthProvider>
           <ScrollToTop />
-        </ThemeProvider>
         <AOSInit />
         <ToastContainer
           position="top-right"

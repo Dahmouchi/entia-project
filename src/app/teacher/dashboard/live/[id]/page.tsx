@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // app/(teacher)/teach/live/[id]/page.tsx
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -6,11 +7,7 @@ import { authOptions } from "@/lib/nextAuth";
 import { getServerSession } from "next-auth";
 import { isTeacher } from "@/lib/roles";
 
-export default async function TeacherLivePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function TeacherLivePage({ params }: any) {
   const session = await getServerSession(authOptions);
   if (!session?.user || !isTeacher(session.user)) return notFound();
 

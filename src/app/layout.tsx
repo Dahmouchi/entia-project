@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { Poppins } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import "@livekit/components-styles";
 
 import ScrollToTop from "@/components/ScrollToTop";
 import NextAuthProvider from "../../providers/NextAuthProvider";

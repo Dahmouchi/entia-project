@@ -69,6 +69,7 @@ export async function generateMagicNoteServer(
   courseTitle: string,
   lang: "fr" | "ar" | "en" = "fr"
 ) {
+  
   // 1. Fetch notes content
   const notes = await prisma.note.findMany({
     where: { id: { in: noteIds } },

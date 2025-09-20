@@ -101,11 +101,11 @@ type MagicNoteResultProps = {
   schema: any;
 };
 
-export default function MagicNotesButton({
+const  MagicNotesButton=({
   courseTitle,
   userId,
   coursId,
-}: MagicNotesButtonProps) {
+}: MagicNotesButtonProps)=> {
   const [isOpen, setIsOpen] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [currentNote, setCurrentNote] = useState("");
@@ -564,3 +564,5 @@ setLoading(false)
     </>
   );
 }
+
+export default MagicNotesButton;

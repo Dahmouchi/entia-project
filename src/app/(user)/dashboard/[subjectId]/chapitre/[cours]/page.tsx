@@ -9,14 +9,18 @@ import { getStudentById } from "@/actions/client"
 import ButtonComplete from "@/app/(user)/_components/buttonComplete"
 import { redirect } from "next/navigation"
 import MagicNotesButton from "@/app/(user)/_components/magic-notes-button"
+import { getNotes } from "@/actions/noteOpenAI"
 
 const CoursePage = async ({ params }: any) => {
   const course = await getCoursByHandle(params.cours)
 
   const user = await getStudentById()
-  if (!user) {
+  
+
+  if (!user || !course) {
     return redirect("/")
   }
+    const results = await getNotes(user?.id, course.data?.id);
   if (!course?.success) {
     return (
       <div className="w-full aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
@@ -53,7 +57,7 @@ const CoursePage = async ({ params }: any) => {
         <CourseContent course={course?.data} userId={user?.id} />
       </div>
 
-      <MagicNotesButton courseTitle={course?.data?.title || "Cours"} userId={user.id} coursId={course.data?.id}/>
+      <MagicNotesButton courseTitle={course?.data?.title || "Cours"} userId={user.id} coursId={course.data?.id} results={results}/>
     </div>
   )
 }

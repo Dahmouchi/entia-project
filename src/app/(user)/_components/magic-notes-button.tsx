@@ -28,11 +28,10 @@ import { cn } from "@/lib/utils";
 import {
   createNote,
   deleteNoteById,
-  generateMagicNote,
+  generateMagicNoteServer,
   getNotes,
-} from "@/actions/note";
+} from "@/actions/noteOpenAI";
 import { Note } from "@prisma/client";
-import { generateMagicNoteServer } from "@/actions/noteOpenAI";
 import ModernStudyDiagram from "./TreeView";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
@@ -95,6 +94,7 @@ interface MagicNotesButtonProps {
   courseTitle: string;
   userId: string;
   coursId?: string;
+  results:any[];
 }
 type MagicNoteResultProps = {
   summary: string;
@@ -105,11 +105,12 @@ const  MagicNotesButton=({
   courseTitle,
   userId,
   coursId,
+  results
 }: MagicNotesButtonProps)=> {
   const [isOpen, setIsOpen] = useState(false);
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<Note[]>(results);
   const [currentNote, setCurrentNote] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"📝 Résumé" | "🗂️ Schéma">(
     "📝 Résumé"
   );
@@ -120,21 +121,7 @@ const  MagicNotesButton=({
     type: "summary" | "schema" | "map" | null;
     content: string;
   }>({ type: null, content: "" });
-  useEffect(() => {
-    async function fetchNotes() {
-      try {
-        const result = await getNotes(userId, coursId);
-        setNotes(result);
-        setLoading(false)
-      } catch (err) {
-        console.error("Failed to load notes:", err);
-      }finally{
-        setLoading(false)
-      }
-    }
-
-    fetchNotes();
-  }, [userId, coursId, loading]);
+ 
 
   const addNote = async () => {
     setLoading(true)

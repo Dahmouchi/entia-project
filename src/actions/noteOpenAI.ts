@@ -69,7 +69,7 @@ export async function generateMagicNoteServer(
   courseTitle: string,
   lang: "fr" | "ar" | "en" = "fr"
 ) {
-  
+
   // 1. Fetch notes content
   const notes = await prisma.note.findMany({
     where: { id: { in: noteIds } },
@@ -190,5 +190,12 @@ export async function generateMagicNote(noteId: string, lang: "fr" | "ar" | "en"
 export async function getMagicNote(noteId: string) {
   return prisma.magicNote.findUnique({
     where: { noteId },
+  });
+}
+
+// ✅ Delete a note
+export async function deleteNoteById(noteId: string) {
+  return prisma.note.delete({
+    where: { id: noteId },
   });
 }

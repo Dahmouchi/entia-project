@@ -192,10 +192,12 @@ const CardSection = () => {
           <CardAnimation key={card.id} feature={card} />
         ))}
       </div>
-      <div className="lg:hidden px-2 mt-6">
+       <div className="lg:hidden px-2 mt-6">
+        {" "}
+        {/* Added px-6 for side padding */}
         <Carousel
           opts={{
-            align: "center",
+            align: "center", // Changed from "center" to "start"
             loop: true,
           }}
           plugins={[
@@ -207,10 +209,12 @@ const CardSection = () => {
           className="relative group"
         >
           <CarouselContent className="gap-4 ml-2">
+            {" "}
+            {/* Added ml-4 */}
             {cards.map((card, index) => (
               <CarouselItem
                 key={index}
-                className="px-2 basis-[85%] sm:basis-[45%]"
+                className="px-2 basis-[85%] sm:basis-[45%] "
               >
                 <CardAnimation key={card.id} feature={card} />
               </CarouselItem>

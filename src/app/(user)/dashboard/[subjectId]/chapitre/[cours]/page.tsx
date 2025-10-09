@@ -18,7 +18,7 @@ const CoursePage = async ({ params }: any) => {
   
 
   if (!user || !course) {
-    return redirect("/")
+    return redirect("/enita") 
   }
     const results = await getNotes(user?.id, course.data?.id);
   if (!course?.success) {

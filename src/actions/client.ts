@@ -101,7 +101,7 @@ export async function RegisterClient(
       },
     });
 
-    revalidatePath("/");
+    revalidatePath("/enita") ;
     return { success: true, data: blog };
   } catch (error) {
     console.error("Error creating category:", error);

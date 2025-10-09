@@ -16,7 +16,7 @@ export async function createBlog(formData: FormData) {
       },
     })
 
-    revalidatePath("/")
+    revalidatePath("/enita") 
     return { success: true, data: blog }
   } catch (error) {
     console.error("Error creating category:", error)
@@ -36,7 +36,7 @@ export async function updateBlog(id: string, formData: FormData) {
       },
     });
 
-    revalidatePath("/");
+    revalidatePath("/enita") ;
     return { success: true, data: updatedBlog };
   } catch (error) {
     console.error("Error updating blog:", error);
@@ -50,7 +50,7 @@ export async function deleteBlog(id: string) {
       where: { id },
     })
 
-    revalidatePath("/")
+    revalidatePath("/enita") 
     return { success: true }
   } catch (error) {
     console.error("Error deleting category:", error)

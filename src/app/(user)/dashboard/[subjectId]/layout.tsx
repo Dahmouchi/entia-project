@@ -12,7 +12,7 @@ import HeaderSubject from "../../_components/headerSubject";
 const CourseLayout = async ({ children, params }: any) => {
   const user = await getStudentById();
   if (!user) {
-    return redirect("/");
+    return redirect("/enita") ;
   }
 
   const matiereInfo = await prisma.subject.findFirst({
@@ -31,7 +31,7 @@ const CourseLayout = async ({ children, params }: any) => {
     },
   });
   if (!matiereInfo) {
-    return redirect("/");
+    return redirect("/enita") ;
   }
   const progressCount = await getSubjectProgress(user.id, matiereInfo.id);
 

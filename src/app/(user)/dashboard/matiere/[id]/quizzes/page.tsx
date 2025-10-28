@@ -8,7 +8,7 @@ import prisma from "@/lib/prisma"
 import {  getQuizzesGroupedByMatiereandUser } from "@/actions/quizResults"
 import QuizDisplay from "@/app/(user)/_components/quizzes"
 
-const QuizzesPage = async ({ params }: { params: { id: string } }) => {
+const QuizzesPage = async ({ params }:any ) => {
   const user = await getStudentById()
   if (!user) {
     return redirect("/enita")

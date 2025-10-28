@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from "next/navigation"
 import { BookOpen, FileText, HelpCircle } from "lucide-react"
 import Link from "next/link"
@@ -5,7 +6,7 @@ import Link from "next/link"
 import { getStudentById } from "@/actions/client"
 import prisma from "@/lib/prisma"
 
-const SubjectPage = async ({ params }: { params: { id: string } }) => {
+const SubjectPage = async ({ params }:any) => {
   const user = await getStudentById()
   if (!user) {
     return redirect("/enita")

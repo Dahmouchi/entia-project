@@ -10,7 +10,7 @@ import { getServerSession } from "next-auth";
 
 export default async function NewLivePage() {
   const session = await getServerSession(authOptions);
-  if (!session?.user || !isTeacher(session.user)) redirect("/enita") ;
+  if (!session?.user || !isTeacher(session.user)) redirect("/") ;
 
   async function createLive(formData: FormData) {
     "use server";

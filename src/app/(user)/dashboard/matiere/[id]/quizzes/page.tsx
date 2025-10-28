@@ -11,7 +11,7 @@ import QuizDisplay from "@/app/(user)/_components/quizzes"
 const QuizzesPage = async ({ params }:any ) => {
   const user = await getStudentById()
   if (!user) {
-    return redirect("/enita")
+    return redirect("/")
   }
 
   

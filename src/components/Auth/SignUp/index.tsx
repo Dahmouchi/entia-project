@@ -104,7 +104,7 @@ const SignUp = () => {
 
       <p className="text-body-secondary text-white text-base">
         Already have an account?
-        <Link href="/enita" className="pl-2 text-primary hover:underline">
+        <Link href="/" className="pl-2 text-primary hover:underline">
           Sign In
         </Link>
       </p>

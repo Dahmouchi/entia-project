@@ -88,7 +88,7 @@ interface Notification {
 }
 const Header = () => {
   const pathname = usePathname();
-  const lastSegment = pathname.split("/enita") .filter(Boolean).pop() || "Home"; // Extract last segment
+  const lastSegment = pathname.split("/") .filter(Boolean).pop() || "Home"; // Extract last segment
   const { data: session, update } = useSession();
   const page = navMain.find((cat) => cat.url === lastSegment);
   const router = useRouter();

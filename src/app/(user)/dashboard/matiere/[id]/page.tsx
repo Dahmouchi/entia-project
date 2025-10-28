@@ -9,7 +9,7 @@ import prisma from "@/lib/prisma"
 const SubjectPage = async ({ params }:any) => {
   const user = await getStudentById()
   if (!user) {
-    return redirect("/enita")
+    return redirect("/")
   }
 
   const subject = await prisma.subject.findFirst({

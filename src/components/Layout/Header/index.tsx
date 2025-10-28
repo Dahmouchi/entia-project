@@ -113,7 +113,7 @@ const Header = ({ visible }: { visible: any }) => {
         <div className="lg:py-0 py-0">
           <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between px-4">
             <img
-              onClick={() => router.push("/enita") }
+              onClick={() => router.push("/") }
               src="/images/logo/logo.png"
               className="h-auto w-30 lg:w-40 cursor-pointer"
               alt=""

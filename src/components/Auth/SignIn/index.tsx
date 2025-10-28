@@ -35,7 +35,7 @@ const Signin = () => {
         if (callback?.ok && !callback?.error) {
           toast.success("Login successful");
           setLoading(false);
-          router.push("/enita") ;
+          router.push("/") ;
         }
       })
       .catch((err) => {
@@ -99,7 +99,7 @@ const Signin = () => {
       </Link>
       <p className="text-body-secondary text-white text-base">
         Not a member yet?{" "}
-        <Link href="/enita" className="text-primary hover:underline">
+        <Link href="/" className="text-primary hover:underline">
           Sign Up
         </Link>
       </p>

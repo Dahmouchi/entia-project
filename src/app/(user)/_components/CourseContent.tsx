@@ -16,10 +16,7 @@ const SimplePDFViewer = dynamic(() => import("./cours-pdf"), {
   ssr: false,
 });
 const CourseContent = ({ course, userId }: any) => {
-  const handleScoreUpdate = (score: any) => {
-    console.log("Nouveau score:", score);
-    // Ici vous pouvez envoyer le score à votre API ou mettre à jour votre état global
-  };
+  
   if (!course) {
     return (
       <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -30,7 +27,6 @@ const CourseContent = ({ course, userId }: any) => {
     );
   }
   const documents = course.documents;
-  const quizzes = course.quizzes;
 
   return (
     <>
@@ -134,15 +130,6 @@ const CourseContent = ({ course, userId }: any) => {
                   </p>
                 </div>
               )}
-            </div>
-
-            {/* Section Quiz */}
-            <div className="space-y-4 border-t border-gray-200 pt-6">
-              <QuizDisplay
-                quizzes={quizzes}
-                userId={userId}
-                onScoreUpdate={handleScoreUpdate}
-              />
             </div>
           </div>
         </div>

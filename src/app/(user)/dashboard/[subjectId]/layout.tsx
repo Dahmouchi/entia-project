@@ -12,7 +12,7 @@ import HeaderSubject from "../../_components/headerSubject";
 const CourseLayout = async ({ children, params }: any) => {
   const user = await getStudentById();
   if (!user) {
-    return redirect("/") ;
+    return redirect("/enita") ;
   }
 
   const matiereInfo = await prisma.subject.findFirst({
@@ -31,7 +31,7 @@ const CourseLayout = async ({ children, params }: any) => {
     },
   });
   if (!matiereInfo) {
-    return redirect("/") ;
+    return redirect("/enita") ;
   }
   const progressCount = await getSubjectProgress(user.id, matiereInfo.id);
 
@@ -49,7 +49,7 @@ const CourseLayout = async ({ children, params }: any) => {
         <div className=" lg:p-4 p-2">
           <div className=" flex-row items-center gap-2 lg:hidden flex p-2 dark:bg-slate-700 bg-white rounded-md shadow-sm">
             <Link
-              href="/dashboard"
+              href={`/dashboard/matiere/${matiereInfo.handler}`}
               className="flex items-center text-center gap-2  rounded-md hover:bg-main"
             >
               <div className="rounded-md flex items-center justify-center h-12 bg-slate-200 w-12 p-2 dark:bg-slate-900 dark:hover:bg-slate-700  text-main hover:text-white">
@@ -61,7 +61,7 @@ const CourseLayout = async ({ children, params }: any) => {
             </div>
           </div>
           <div className="flex-col-reverse sm:flex sm:flex-row-reverse sm:space-x-4 w-full gap-3">
-            <div className="flex-col sm:w-[70%] h-auto mt-4 sm:mt-0">
+            <div className="flex-col sm:w-[70%] mt-4 sm:mt-0 h-fit sticky top-0">
               {children}
             </div>
             <div className="block lg:mt-0 mt-2 rounded-xl border-[1px] border-gray-200 dark:border-gray-700 p-4 shadow-md w-full sm:w-[30%] h-fit sm:h-fit mb-3 bg-white dark:bg-slate-900">
@@ -74,7 +74,7 @@ const CourseLayout = async ({ children, params }: any) => {
                 </div>
                 <div className=" flex-row items-center gap-2 lg:flex hidden">
                   <Link
-                    href="/dashboard"
+                    href={`/dashboard/matiere/${matiereInfo.handler}`}
                     className="flex items-center text-center gap-2 bg-gray-200 rounded-md hover:bg-blue-600 dark:bg-slate-950 dark:hover:bg-slate-700"
                   >
                     <div className="rounded-md flex items-center justify-center h-12 w-12 p-2  text-blue-600f hover:text-white">

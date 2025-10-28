@@ -12,13 +12,13 @@ import MagicNotesButton from "@/app/(user)/_components/magic-notes-button"
 import { getNotes } from "@/actions/noteOpenAI"
 
 const CoursePage = async ({ params }: any) => {
-  const course = await getCoursByHandle(params.id)
+  const course = await getCoursByHandle(params.cours)
 
   const user = await getStudentById()
   
 
   if (!user || !course) {
-    return redirect("/") 
+    return redirect("/enita") 
   }
     const results = await getNotes(user?.id, course.data?.id);
   if (!course?.success) {

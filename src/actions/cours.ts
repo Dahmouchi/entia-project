@@ -579,7 +579,7 @@ export async function getCoursByHandle(courseId: string) {
 export async function getAllDocumentsBySubjectId(subjectId: string) {
   try {
     const subject = await prisma.subject.findUnique({
-      where: { id: subjectId },
+      where: { handler: subjectId },
       include: {
         courses: {
           include: {

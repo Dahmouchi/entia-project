@@ -170,181 +170,112 @@ async function validateSubject(subjectId: string): Promise<boolean> {
 // Fonction principale pour créer un cours
 export async function createCourse(data: CourseData) {
   try {
-    // 1. Validation des données d'entrée
+    // 1. Validation des données
     const validation = validateCourseData(data);
     if (!validation.isValid) {
-      return {
-        success: false,
-        error: "Données invalides",
-        details: validation.errors
-      };
+      return { success: false, error: "Données invalides", details: validation.errors };
     }
 
-    // 2. Vérification de l'unicité du handler
+    // 2. Vérif unicité du handler
     const isHandlerUnique = await checkHandlerUniqueness(data.handler);
     if (!isHandlerUnique) {
-      return {
-        success: false,
-        error: "L'identifiant (handler) du cours existe déjà"
-      };
+      return { success: false, error: "L'identifiant (handler) du cours existe déjà" };
     }
 
-    // 3. Vérification que la matière existe
+    // 3. Vérif matière
     const isSubjectValid = await validateSubject(data.subjectId);
     if (!isSubjectValid) {
-      return {
-        success: false,
-        error: "La matière spécifiée n'existe pas"
-      };
+      return { success: false, error: "La matière spécifiée n'existe pas" };
     }
 
-    // 4. Upload de l'image de couverture si fournie
+    // 4. Upload cover
     let coverImageUrl: string | null = null;
     if (data.coverImage) {
-      try {
-        coverImageUrl = await uploadImage(data.coverImage);
-      } catch (error) {
-        console.error("Erreur lors de l'upload de l'image de couverture:", error);
-        return {
-          success: false,
-          error: "Erreur lors de l'upload de l'image de couverture"
-        };
-      }
+      coverImageUrl = await uploadImage(data.coverImage);
     }
 
-    // 5. Upload des documents PDF si fournis
+    // 5. Upload documents
     const documentUrls: { name: string; url: string }[] = [];
-    if (data.documents && data.documents.length > 0) {
-      try {
-        for (const document of data.documents) {
-          const documentUrl = await uploadDocument(document);
-          documentUrls.push({
-            name: document.name,
-            url: documentUrl
-          });
-        }
-      } catch (error) {
-        console.error("Erreur lors de l'upload des documents:", error);
-        return {
-          success: false,
-          error: "Erreur lors de l'upload des documents"
-        };
+    if (data.documents?.length) {
+      for (const doc of data.documents) {
+        const documentUrl = await uploadDocument(doc);
+        documentUrls.push({ name: doc.name, url: documentUrl });
       }
     }
 
-    // 6. Création du cours avec transaction Prisma
-    const cours = await prisma.$transaction(async (tx) => {
-      // Créer le cours principal
-      const newCourse = await tx.course.create({
-        data: {
-          title: data.title,
-          content: data.content,
-          videoUrl: data.videoUrl || null,
-          coverImage: coverImageUrl,
-          handler: data.handler,
-          index: data.index,
-          subjectId: data.subjectId
-        }
-      });
-
-      // Créer les documents associés
-      if (documentUrls.length > 0) {
-        await tx.document.createMany({
-          data: documentUrls.map(doc => ({
-            name: doc.name,
-            url: doc.url,
-            courseId: newCourse.id
-          }))
-        });
-      }
-
-      // Créer les quiz et questions associés
-     if (data.quizzes && data.quizzes.length > 0) {
-  for (const quizData of data.quizzes) {
-    const quiz = await tx.quiz.create({
+    // 6. Créer le cours principal
+    const newCourse = await prisma.course.create({
       data: {
-        title: quizData.title,
-        courseId: newCourse.id
-      }
+        title: data.title,
+        content: data.content,
+        videoUrl: data.videoUrl || null,
+        coverImage: coverImageUrl,
+        handler: data.handler,
+        index: data.index,
+        subjectId: data.subjectId,
+      },
     });
 
-    // Créer les questions et options pour ce quiz
-    if (quizData.questions && quizData.questions.length > 0) {
-      for (const questionData of quizData.questions) {
-        const question = await tx.question.create({
-          data: {
-            content: questionData.content,
-            quizId: quiz.id,
-            // Store the correct answer text for backward compatibility
-            answer: questionData.options.find(opt => opt.isCorrect)?.text || ''
-          }
-        });
-
-        // Create options if you want to store them separately
-        // You'll need an Option model in your Prisma schema
-        await tx.option.createMany({
-          data: questionData.options.map(option => ({
-            text: option.text,
-            isCorrect: option.isCorrect,
-            questionId: question.id
-          }))
-        });
-      }
+    // 7. Créer les documents (en dehors de transaction)
+    if (documentUrls.length > 0) {
+      await prisma.document.createMany({
+        data: documentUrls.map((doc) => ({
+          name: doc.name,
+          url: doc.url,
+          courseId: newCourse.id,
+        })),
+      });
     }
-  }
-}
 
-      // Retourner le cours complet avec ses relations
-      return await tx.course.findUnique({
-        where: { id: newCourse.id },
-        include: {
-          subject: {
-            include: {
-              grade: true
-            }
-          },
-          documents: true,
-          quizzes: {
-            include: {
-              questions: true
+    // 8. Créer les quiz, questions et options
+    if (data.quizzes?.length) {
+      for (const quizData of data.quizzes) {
+        const quiz = await prisma.quiz.create({
+          data: { title: quizData.title, courseId: newCourse.id },
+        });
+
+        if (quizData.questions?.length) {
+          for (const questionData of quizData.questions) {
+            const question = await prisma.question.create({
+              data: {
+                content: questionData.content,
+                quizId: quiz.id,
+                answer: questionData.options.find((opt) => opt.isCorrect)?.text || "",
+              },
+            });
+
+            // Créer les options sans transaction (plus rapide)
+            if (questionData.options?.length) {
+              await prisma.option.createMany({
+                data: questionData.options.map((opt) => ({
+                  text: opt.text,
+                  isCorrect: opt.isCorrect,
+                  questionId: question.id,
+                })),
+              });
             }
           }
         }
-      });
+      }
+    }
+
+    // 9. Retourner le cours complet
+    const cours = await prisma.course.findUnique({
+      where: { id: newCourse.id },
+      include: {
+        subject: { include: { grade: true } },
+        documents: true,
+        quizzes: { include: { questions: true } },
+      },
     });
 
-    return {
-      success: true,
-      data: cours,
-      message: "Cours créé avec succès"
-    };
-
+    return { success: true, data: cours, message: "Cours créé avec succès" };
   } catch (error) {
     console.error("Erreur lors de la création du cours:", error);
-    
-    // Gestion spécifique des erreurs Prisma
-    if (error instanceof Error) {
-      if (error.message.includes('Unique constraint')) {
-        return {
-          success: false,
-          error: "Un cours avec cet identifiant existe déjà"
-        };
-      }
-      
-      if (error.message.includes('Foreign key constraint')) {
-        return {
-          success: false,
-          error: "La matière spécifiée n'existe pas"
-        };
-      }
-    }
-
-    return {
-      success: false,
-      error: "Erreur interne du serveur lors de la création du cours"
-    };
+    return { success: false, error: "Erreur interne du serveur lors de la création du cours" };
   }
 }
+
 
 // Fonction helper pour mettre à jour un cours existant
 export async function updateCourse(courseId: string, data: Partial<CourseData>) {
@@ -642,6 +573,45 @@ export async function getCoursByHandle(courseId: string) {
     return {
       success: false,
       error: "Erreur interne du serveur lors de la récupération du cours"
+    };
+  }
+}
+export async function getAllDocumentsBySubjectId(subjectId: string) {
+  try {
+    const subject = await prisma.subject.findUnique({
+      where: { id: subjectId },
+      include: {
+        courses: {
+          include: {
+            documents: true, // include all documents of each course in this subject
+          },
+        },
+      },
+    });
+
+    if (!subject) {
+      return {
+        success: false,
+        error: "Sujet non trouvé",
+      };
+    }
+
+    // Flatten all documents into a single array (optional)
+    const allDocuments = subject.courses.flatMap((course) => course.documents);
+
+    return {
+      success: true,
+      data: {
+        subject: subject.name,
+        documents: allDocuments,
+      },
+    };
+  } catch (error) {
+    console.error("Erreur lors de la récupération des documents:", error);
+    return {
+      success: false,
+      error:
+        "Erreur interne du serveur lors de la récupération des documents du sujet",
     };
   }
 }

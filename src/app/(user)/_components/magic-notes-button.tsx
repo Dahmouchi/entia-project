@@ -218,7 +218,7 @@ setLoading(false)
             }</h1>
              <img
              
-              src="/enita/enitaLogo.jpeg"
+              src="/images/logo/logo.png"
               class="imgg"
               alt=""
             />

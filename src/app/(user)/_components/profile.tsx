@@ -118,7 +118,7 @@ const Profile = ({ user }: any) => {
           <div className="flex items-center justify-between h-24">
             <img
               onClick={() => router.push("/dashboard")}
-              src="/enita/enitaLogo.jpeg"
+              src="/images/logo/logo.png"
               className="h-auto w-30 lg:w-40 cursor-pointer"
               alt=""
             />

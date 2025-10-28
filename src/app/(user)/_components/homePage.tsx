@@ -312,7 +312,7 @@ const SubjectCard = ({
     <motion.div
       onClick={() =>
         router.push(
-          `/dashboard/${subject.handler}/chapitre/${subject.courses[0].id}`
+          `/dashboard/matiere/${subject.handler}`
         )
       }
       className="bg-white h-full rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer group"
@@ -571,7 +571,7 @@ const ModernStudentSpace = ({ user, quizzes }: any) => {
           <div className="flex items-center justify-between h-24">
             <img
               onClick={() => router.push("/dashboard")}
-              src="/enita/enitaLogo.jpeg"
+              src="/images/logo/logo.png"
               className="h-auto w-30 lg:w-40 cursor-pointer"
               alt=""
             />

@@ -46,6 +46,48 @@ export async function getQuizzesGroupedByMatiere(userId: string) {
   return { data: grouped };
 }
 
+export async function getQuizzesGroupedByMatiereandUser(userId: string,subjectId:string) {
+  const userWithQuizzes = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      grade: {
+        include: {
+          subjects: {
+            where: { handler: subjectId }, // ✅ Filter by subjectId
+            include: {
+              courses: {
+                include: {
+                  quizzes: {
+                    include: {
+                      questions: {
+                        include: {
+                          options: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!userWithQuizzes) {
+    return { data: [], message: "User not found" };
+  }
+
+  // Group quizzes by subject (matière)
+  const grouped = userWithQuizzes.grade?.subjects.map(subject => ({
+    matiereId: subject.id,
+    matiereName: subject.name,
+    quizzes: subject.courses.flatMap(course => course.quizzes)
+  })) || [];
+
+  return { data: grouped };
+}
 
 export const saveQuizResult = async (data: {
   quizId: string;

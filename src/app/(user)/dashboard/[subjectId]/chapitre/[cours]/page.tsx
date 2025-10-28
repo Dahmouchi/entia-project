@@ -12,7 +12,7 @@ import MagicNotesButton from "@/app/(user)/_components/magic-notes-button"
 import { getNotes } from "@/actions/noteOpenAI"
 
 const CoursePage = async ({ params }: any) => {
-  const course = await getCoursByHandle(params.cours)
+  const course = await getCoursByHandle(params.id)
 
   const user = await getStudentById()
   
@@ -54,7 +54,7 @@ const CoursePage = async ({ params }: any) => {
           <ButtonComplete userId={user?.id} course={course?.data} />
         </div>
 
-        <CourseContent course={course?.data} userId={user?.id} />
+       {/*  <CourseContent course={course?.data} userId={user?.id} />*/}
       </div>
 
       <MagicNotesButton courseTitle={course?.data?.title || "Cours"} userId={user.id} coursId={course.data?.id} results={results}/>

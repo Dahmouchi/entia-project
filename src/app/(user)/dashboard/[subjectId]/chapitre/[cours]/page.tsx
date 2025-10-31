@@ -10,6 +10,7 @@ import ButtonComplete from "@/app/(user)/_components/buttonComplete"
 import { redirect } from "next/navigation"
 import MagicNotesButton from "@/app/(user)/_components/magic-notes-button"
 import { getNotes } from "@/actions/noteOpenAI"
+import ButtonSynthese from "@/app/(user)/_components/ButtonSynthese"
 
 const CoursePage = async ({ params }: any) => {
   const course = await getCoursByHandle(params.cours)
@@ -49,11 +50,14 @@ const CoursePage = async ({ params }: any) => {
 
       {/* Informations du cours */}
       <div className="mt-4 w-full">
-        <div className="mt-4 flex lg:items-center gap-2 lg:justify-between w-full flex-col lg:flex-row py-3 px-2">
+        <div className="mt-4 flex  gap-2 lg:justify-between w-full flex-col lg:flex-row py-3 px-2">
           <h1 className="text-2xl font-bold text-gray-900 ">{course?.data?.title}</h1>
-          <ButtonComplete userId={user?.id} course={course?.data} />
+          <div className="flex flex-col gap-3">
+            <ButtonComplete userId={user?.id} course={course?.data} />
+          <ButtonSynthese course={course?.data} userId={user?.id}/>
+          </div>
         </div>
-
+         
        {/*  <CourseContent course={course?.data} userId={user?.id} />*/}
       </div>
 

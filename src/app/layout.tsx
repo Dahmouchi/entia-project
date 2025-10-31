@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { Poppins } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import "@livekit/components-styles";
 
 import ScrollToTop from "@/components/ScrollToTop";
@@ -21,8 +20,8 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.png",
   },
-  title: "Scoolia",
-  description: "Welcome to Scoolia website",
+  title: "Enita",
+  description: "Welcome to Enita website",
 };
 export default function RootLayout({
   children,

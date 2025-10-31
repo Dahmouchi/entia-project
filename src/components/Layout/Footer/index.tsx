@@ -98,8 +98,8 @@ const footer = () => {
         <div className='mt-10 lg:flex items-center justify-between'>
           <h4 className='text-black/50 text-sm text-center lg:text-start font-normal'>@2025 Agency. All Rights Reserved by <Link href="https://getnextjstemplates.com/" target="_blank" className="hover:text-primary"> GetNextJsTemplates.com</Link></h4>
           <div className="flex gap-5 mt-5 lg:mt-0 justify-center lg:justify-start">
-            <Link href="/enita" target="_blank" className='text-black/50 text-sm font-normal hover:text-primary'>Privacy policy</Link>
-            <Link href="/enita" target="_blank" className='text-black/50 text-sm font-normal hover:text-primary'>Terms & conditions</Link>
+            <Link href="/" target="_blank" className='text-black/50 text-sm font-normal hover:text-primary'>Privacy policy</Link>
+            <Link href="/" target="_blank" className='text-black/50 text-sm font-normal hover:text-primary'>Terms & conditions</Link>
           </div>
         </div>
       </div>

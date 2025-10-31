@@ -54,7 +54,6 @@ interface QuizScore {
 interface QuizDisplayProps {
   quizzes: Quiz[];
   userId: string;
-  onScoreUpdate?: (score: QuizScore) => void;
 }
 
 // Composant Badge amélioré pour les scores
@@ -183,7 +182,7 @@ const CircularProgress: React.FC<{ percentage: number; size?: number; strokeWidt
 };
 
 // Composant principal QuizDisplay amélioré
-const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdate }) => {
+const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId }) => {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
@@ -256,9 +255,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({ quizzes, userId, onScoreUpdat
 
       setCurrentScore(score);
 
-      if (onScoreUpdate) {
-        onScoreUpdate(score);
-      }
+    
     } catch (error) {
       console.error("Error saving quiz result:", error);
       // Fallback to localStorage

@@ -571,7 +571,7 @@ const ModernStudentSpace = ({ user, quizzes }: any) => {
           <div className="flex items-center justify-between h-24">
             <img
               onClick={() => router.push("/dashboard")}
-              src="/images/logo/logo.png"
+              src="/enita/enitaLogo.jpeg"
               className="h-auto w-30 lg:w-40 cursor-pointer"
               alt=""
             />

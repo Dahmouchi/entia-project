@@ -141,7 +141,7 @@ const CourseContent = ({ course, userId }: any) => {
               <QuizDisplay
                 quizzes={quizzes}
                 userId={userId}
-                onScoreUpdate={handleScoreUpdate}
+                
               />
             </div>
           </div>

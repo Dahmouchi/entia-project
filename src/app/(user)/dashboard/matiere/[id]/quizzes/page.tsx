@@ -11,7 +11,7 @@ import QuizDisplay from "@/app/(user)/_components/quizzes"
 const QuizzesPage = async ({ params }:any ) => {
   const user = await getStudentById()
   if (!user) {
-    return redirect("/enita")
+    return redirect("/")
   }
 
   
@@ -22,10 +22,7 @@ const QuizzesPage = async ({ params }:any ) => {
       handler: params.id,
     },
   })
-const handleScoreUpdate = (score: any) => {
-    console.log("Nouveau score:", score);
-    // Ici vous pouvez envoyer le score à votre API ou mettre à jour votre état global
-  };
+
   if (!subject) {
     return redirect("/dashboard")
   }
@@ -52,7 +49,7 @@ const handleScoreUpdate = (score: any) => {
         </Link>
         {/* Quizzes list */}
        
-              <QuizDisplay quizzes={quizzes.data as any} userId={user.id} onScoreUpdate={handleScoreUpdate} />
+              <QuizDisplay quizzes={quizzes.data as any} userId={user.id}  />
       </div>
     </div>
   )

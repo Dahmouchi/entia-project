@@ -34,6 +34,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { LanguageSelector } from "@/components/LangSwitcher";
 const Header = ({ visible }: { visible: any }) => {
   const { data: session } = useSession();
 
@@ -127,7 +128,8 @@ const Header = ({ visible }: { visible: any }) => {
             )}
 
             {/* Button content */}
-            {session?.user ? (
+            <div className="flex gap-2 items-center">
+              {session?.user ? (
               <div className=" flex items-center gap-2">
                 <motion.button
                   onClick={() => router.push("/dashboard")}
@@ -264,8 +266,11 @@ const Header = ({ visible }: { visible: any }) => {
                   <LogIn className="lg:text-lg text-sm" />
                   <span>Connexion</span>
                 </div>{" "}
+                
               </motion.button>
             )}
+            <LanguageSelector />
+            </div>
           </div>
         </div>
       </div>

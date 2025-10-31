@@ -65,7 +65,7 @@ export async function SendSynthese(formData: FormData) {
 </html>
       `;
     await sendEmail(
-      "hassandahmouchi0@gmail.com", // Replace with your email
+      "belfort.center@gmail.com", // Replace with your email
       `New Service Application:`,
       emailContentAnalyst,
     );

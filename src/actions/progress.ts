@@ -1,10 +1,9 @@
-"use server"
+"use server";
 
-import prisma from "@/lib/prisma"
-
+import prisma from "@/lib/prisma";
 
 export async function completeCourse(userId: string, courseId: string) {
-  if (!userId || !courseId) throw new Error('User et Course requis.')
+  if (!userId || !courseId) throw new Error("User et Course requis.");
 
   await prisma.courseProgress.upsert({
     where: {
@@ -20,16 +19,24 @@ export async function completeCourse(userId: string, courseId: string) {
       completed: true,
       completedAt: new Date(),
     },
-  })
+  });
+  await prisma.userActivity.create({
+    data: {
+      userId,
+      courseId,
+      type: "COMPLETE_COURSE",
+      description: "Cours terminé",
+    },
+  });
 
-  return { success: true }
+  return { success: true };
 }
 
 export async function getSubjectProgress(userId: string, subjectId: string) {
   // Total courses in the subject
-  const totalCourses = await prisma.course.count({ where: { subjectId } })
+  const totalCourses = await prisma.course.count({ where: { subjectId } });
 
-  if (totalCourses === 0) return { completed: 0, total: 0, percentage: 0 }
+  if (totalCourses === 0) return { completed: 0, total: 0, percentage: 0 };
 
   // Completed courses for the user in that subject
   const completedCourses = await prisma.courseProgress.count({
@@ -40,17 +47,20 @@ export async function getSubjectProgress(userId: string, subjectId: string) {
         subjectId,
       },
     },
-  })
+  });
 
   return {
     completed: completedCourses,
     total: totalCourses,
     percentage: Math.round((completedCourses / totalCourses) * 100),
-  }
+  };
 }
 
-export async function getCourseCompletionStatus(userId: string, courseId: string) {
- const progress = await prisma.courseProgress.findUnique({
+export async function getCourseCompletionStatus(
+  userId: string,
+  courseId: string
+) {
+  const progress = await prisma.courseProgress.findUnique({
     where: {
       userId_courseId: {
         userId,

@@ -1,80 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import axios from "axios";
-import Loading from "@/components/Loading";
-import { Button } from "@/components/ui/button";
-import {
-  Award,
-  BookOpen,
-  ChevronRight,
-  Eye,
-  EyeOff,
-  GraduationCap,
-  Users,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { toast } from "react-toastify";
-import { getSession, signIn, useSession } from "next-auth/react";
-import Link from "next/link";
+import { Award, BookOpen, ChevronRight, Users } from "lucide-react";
+import { signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { RegisterClient } from "@/actions/client";
 import { motion } from "framer-motion";
-// Define both schemas
-const loginSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-});
-
-const registerSchema = z.object({
-  nom: z.string().min(2, {
-    message: "nom must be at least 2 characters.",
-  }),
-  prenom: z.string().min(2, {
-    message: "prenom must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  phone: z
-    .string()
-    .min(10, {
-      // Changed from number to string
-      message: "Phone number must be at least 10 characters.",
-    })
-    .regex(/^[0-9]+$/, {
-      message: "Please enter a valid phone number",
-    }),
-  passwordr: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-  confirmPassword: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-});
 
 const AuthForm = () => {
-
   const [loading, setLoading] = useState(false);
 
- 
   const GoogleLoginButton = ({ onClick }: { onClick: () => void }) => {
     return (
       <motion.button
@@ -131,11 +64,14 @@ const AuthForm = () => {
     );
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 flex"   style={{
-            backgroundImage: `url("/Board.png")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}>
+    <div
+      className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 flex"
+      style={{
+        backgroundImage: `url("/Board.png")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       {/* Section gauche - Informations */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-center lg:p-12 p-4 text-white">
         <motion.div
@@ -144,11 +80,11 @@ const AuthForm = () => {
           transition={{ duration: 0.8 }}
         >
           {/* Logo et titre */}
-         
 
           {/* Titre principal */}
           <h2 className="text-5xl font-bold mb-6 leading-tight">
-            Votre parcours d&apos;apprentissage <span className="text-blue-500 uppercase">commence ici</span>
+            Votre parcours d&apos;apprentissage{" "}
+            <span className="text-blue-500 uppercase">commence ici</span>
           </h2>
 
           <p className="text-xl text-blue-100 mb-12 leading-relaxed">
@@ -176,10 +112,10 @@ const AuthForm = () => {
           {/* Carte de connexion */}
           <div className="bg-white rounded-2xl shadow-2xl p-8 backdrop-blur-sm">
             {/* Header mobile */}
-            <div className=" text-center mb-4 flex items-center justify-center " >
+            <div className=" text-center mb-4 flex items-center justify-center ">
               <div className=" bg-gradient-to-r rounded-xl flex items-center justify-center mx-auto mb-4">
                 <img
-                onClick={()=>redirect("/") }
+                  onClick={() => redirect("/")}
                   src="/enita/enitaLogo.jpeg"
                   alt=""
                   className="w-52 h-auto cursor-pointer"
@@ -189,7 +125,6 @@ const AuthForm = () => {
 
             {/* Titre */}
             <div className="text-center mb-8">
-             
               <p className="text-gray-600">
                 Connectez-vous pour continuer votre apprentissage
               </p>

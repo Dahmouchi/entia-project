@@ -1,33 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { redirect } from "next/navigation"
-import { ChevronLeft } from "lucide-react"
-import Link from "next/link"
+import { redirect } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
-import { getStudentById } from "@/actions/client"
-import prisma from "@/lib/prisma"
-import {  getQuizzesGroupedByMatiereandUser } from "@/actions/quizResults"
-import QuizDisplay from "@/app/(user)/_components/quizzes"
+import { getStudentById } from "@/actions/client";
+import prisma from "@/lib/prisma";
+import { getQuizzesGroupedByMatiereandUser } from "@/actions/quizResults";
+import QuizDisplay from "@/app/(user)/_components/quizzes";
 
-const QuizzesPage = async ({ params }:any ) => {
-  const user = await getStudentById()
+const QuizzesPage = async ({ params }: any) => {
+  const user = await getStudentById();
   if (!user) {
-    return redirect("/")
+    return redirect("/");
   }
 
-  
-  const quizzes = await getQuizzesGroupedByMatiereandUser(user.id,params.id);
-  
+  const quizzes = await getQuizzesGroupedByMatiereandUser(user.id, params.id);
+
   const subject = await prisma.subject.findFirst({
     where: {
       handler: params.id,
     },
-  })
+  });
 
   if (!subject) {
-    return redirect("/dashboard")
+    return redirect("/dashboard");
   }
-
-
 
   return (
     <div
@@ -48,11 +45,15 @@ const QuizzesPage = async ({ params }:any ) => {
           <span>Retour à {subject.name}</span>
         </Link>
         {/* Quizzes list */}
-       
-              <QuizDisplay quizzes={quizzes.data as any} userId={user.id}  />
+
+        <QuizDisplay
+          quizzes={quizzes.data as any}
+          userId={user.id}
+          all={true}
+        />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default QuizzesPage
+export default QuizzesPage;

@@ -97,11 +97,11 @@ export async function RegisterClient(
         prenom: prenom || null,
         email: email || "",
         password: hashedPassword,
-        phone: parseInt(phone),
+        phone: phone,
       },
     });
 
-    revalidatePath("/") ;
+    revalidatePath("/");
     return { success: true, data: blog };
   } catch (error) {
     console.error("Error creating category:", error);
@@ -140,8 +140,8 @@ export async function updateClientProfile1(
       data: {
         name: formData.personal.nom,
         prenom: formData.personal.prenom,
-        phone: parseInt(formData.personal.phone), // assuming phone is number in schema
-        StatutUser:"subscribed",
+        phone: formData.personal.phone, // assuming phone is number in schema
+        StatutUser: "subscribed",
         step: 1, // Set step = 1 to mark profile as completed
       },
     });
@@ -197,8 +197,8 @@ export async function updateClientProfile2(
       where: { id },
       data: {
         gradeId: formData.study.gradeId,
-        emailVerified:new Date(),
-        StatutUser:"verified",
+        emailVerified: new Date(),
+        StatutUser: "verified",
         step: 2,
       },
     });
@@ -219,14 +219,24 @@ export async function getStudentById() {
       const client = await prisma.user.findUnique({
         where: { id: session.user.id },
         include: {
-          
+          activities: {
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+          badges: true,
           grade: {
             include: {
               niveau: true,
               subjects: {
                 include: {
                   courses: {
-                    orderBy:{ index: "asc" },
+                    include: {
+                      progress: true,
+                    },
+                    orderBy: {
+                      createdAt: "asc",
+                    },
                   },
                 },
               },
@@ -244,29 +254,29 @@ export async function getStudentById() {
 
 export async function getDashboardUsers() {
   const users = await prisma.user.findMany({
-    where: {archive: false},
+    where: { archive: false },
     include: {
       grade: {
-        include:{
-          niveau:true,
-        }
+        include: {
+          niveau: true,
+        },
       },
     },
   });
-  return {data:users};
+  return { data: users };
 }
 export async function getDashboardUsersArchived() {
   const users = await prisma.user.findMany({
-    where: {archive: true},
+    where: { archive: true },
     include: {
       grade: {
-        include:{
-          niveau:true,
-        }
+        include: {
+          niveau: true,
+        },
       },
     },
   });
-  return {data:users};
+  return { data: users };
 }
 
 export async function getStudentStats(userId: string) {
@@ -278,7 +288,6 @@ export async function getStudentStats(userId: string) {
   // 2. Heures d'étude (estimate from completed courses or logs if you track time)
   // For now, let's say each course = 3 hours
   const studyHours = completedCourses * 3;
-
 
   // 4. Streak actuel (track login streak, fallback dummy for now)
   // You can implement based on login dates (last 7 consecutive days)
@@ -295,7 +304,7 @@ async function calculateVerificationDays(userId: string): Promise<number> {
   // Get the user with emailVerified date
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { emailVerified: true }
+    select: { emailVerified: true },
   });
 
   if (!user || !user.emailVerified) {
@@ -305,14 +314,16 @@ async function calculateVerificationDays(userId: string): Promise<number> {
   // Calculate days since verification
   const verificationDate = new Date(user.emailVerified);
   const currentDate = new Date();
-  
+
   // Reset time components to compare just dates
   verificationDate.setHours(0, 0, 0, 0);
   currentDate.setHours(0, 0, 0, 0);
 
   // Calculate difference in days
   const timeDifference = currentDate.getTime() - verificationDate.getTime();
-  const daysSinceVerification = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const daysSinceVerification = Math.floor(
+    timeDifference / (1000 * 60 * 60 * 24)
+  );
 
   return daysSinceVerification >= 0 ? daysSinceVerification : 0;
 }
@@ -340,6 +351,7 @@ export async function archiveUser(userId: string) {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
+        StatutUser: "awaiting",
         archive: true, // set the archive flag to true
       },
     });
@@ -377,6 +389,30 @@ export async function unarchiveUser(userId: string) {
     return {
       success: false,
       message: "Failed to unarchive user",
+      error,
+    };
+  }
+}
+
+export async function verifyUser(userId: string) {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        StatutUser: "verified",
+      },
+    });
+
+    return {
+      success: true,
+      message: "User verified successfully",
+      user: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error verifying user:", error);
+    return {
+      success: false,
+      message: "Failed to archive user",
       error,
     };
   }

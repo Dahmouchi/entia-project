@@ -88,7 +88,7 @@ interface Notification {
 }
 const Header = () => {
   const pathname = usePathname();
-  const lastSegment = pathname.split("/") .filter(Boolean).pop() || "Home"; // Extract last segment
+  const lastSegment = pathname.split("/").filter(Boolean).pop() || "Home"; // Extract last segment
   const { data: session, update } = useSession();
   const page = navMain.find((cat) => cat.url === lastSegment);
   const router = useRouter();
@@ -100,7 +100,6 @@ const Header = () => {
   // Filter unread notifications or limit to 5
 
   const [unreadNewslettersCount, setUnreadNewslettersCount] = useState(0);
-
 
   function formatDate(date: Date): string {
     return date.toLocaleDateString("fr-FR", {
@@ -120,7 +119,7 @@ const Header = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="">
-              <BreadcrumbLink href="/">Scoolia</BreadcrumbLink>
+              <BreadcrumbLink href="/">Enita</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem>
@@ -149,7 +148,6 @@ const Header = () => {
           <DropdownMenuContent className="w-80 p-0" align="end" forceMount>
             <div className="flex items-center justify-between px-4 py-2 border-b">
               <h3 className="font-semibold">Newsletters</h3>
-             
             </div>
 
             {loading ? (
@@ -170,9 +168,9 @@ const Header = () => {
                       <div
                         key={newsletter.id}
                         className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-accent"
-                        onClick={()=>{
-                           setIsOpen(false)
-                           redirect("/admin/dashboard/news")
+                        onClick={() => {
+                          setIsOpen(false);
+                          redirect("/admin/dashboard/news");
                         }}
                       >
                         <div className="flex justify-between w-full">

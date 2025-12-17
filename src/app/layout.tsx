@@ -31,7 +31,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} relative`}>
-       
           <NextAuthProvider>
             <div className="overflow-x-hidden">{children}</div>
           </NextAuthProvider>

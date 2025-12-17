@@ -193,8 +193,6 @@ const FileUpload = ({
   );
 };
 
-
-
 // Composant principal du formulaire
 const CourseUpdateForm = ({ grades, coure }: any) => {
   const [formData, setFormData] = useState<CourseFormData>({
@@ -346,8 +344,6 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                 )}
               </div>
 
-              
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Classe *
@@ -398,8 +394,6 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                 )}
               </div>
 
-              
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   URL de la vidéo (optionnel)
@@ -418,9 +412,25 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                 />
               </div>
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mt-4 mb-2">
+                Description (optionnel)
+              </label>
+              <textarea
+                value={formData.content}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    content: e.target.value,
+                  }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows={4}
+                placeholder="Description du cours"
+              />
+            </div>
 
-            
-             <h2 className="text-xl font-semibold text-gray-900 my-6">
+            <h2 className="text-xl font-semibold text-gray-900 my-6">
               Image de couverture
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -455,7 +465,7 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                 </div>
               )}
             </div>
-             <div className="flex items-center justify-between my-3">
+            <div className="flex items-center justify-between my-3">
               <div></div>
               <div className="flex items-center space-x-4">
                 <button
@@ -475,32 +485,24 @@ const CourseUpdateForm = ({ grades, coure }: any) => {
                     </>
                   )}
                 </button>
-              
+              </div>
             </div>
           </div>
-          </div>
-
-         
 
           {/* Upload de documents PDF */}
 
           {/* Boutons d'action */}
-          
-           
         </form>
         {/* Gestion des documents PDF */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mt-6">
-          <DocumentManagement
-            initialDocuments={coure.documents}
-           
-          />
+          <DocumentManagement initialDocuments={coure.documents} />
         </div>
         {/* Gestion des quiz */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mt-6">
           <QuizManager
             courseId={coure.id}
-            onQuizzesUpdate={()=>console.log("Quizzes updated")}
-            quizzes={coure.quizzes}          
+            onQuizzesUpdate={() => console.log("Quizzes updated")}
+            quizzes={coure.quizzes}
           />
         </div>
       </div>

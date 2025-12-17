@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "LevelLanding" ADD COLUMN     "order" INTEGER NOT NULL DEFAULT 0;

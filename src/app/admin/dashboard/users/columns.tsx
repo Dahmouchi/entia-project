@@ -26,10 +26,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { toast } from "react-toastify";
-import { archiveUser } from "@/actions/client";
+import { archiveUser, verifyUser } from "@/actions/client";
 
-const handleVerify = (userId: string) => {};
+const handleVerify = async (userId: string) => {
+  try {
+    const response = await verifyUser(userId);
 
+    if (response.success) {
+      toast.success(response.message);
+      // Optionally, refresh your table or UI here
+      window.location.reload();
+    } else {
+      toast.error(response.message);
+    }
+  } catch (error) {
+    console.error("Error updating user status:", error);
+  }
+};
 
 const handleSuspend = async (userId: string) => {
   try {
@@ -38,6 +51,7 @@ const handleSuspend = async (userId: string) => {
     if (response.success) {
       toast.success(response.message);
       // Optionally, refresh your table or UI here
+      window.location.reload();
     } else {
       toast.error(response.message);
     }
@@ -135,11 +149,11 @@ export const columns: ColumnDef<any>[] = [
         return `${hoursPart} ${minutesPart} ${secondsPart}`.trim();
       }
 
-      return(
+      return (
         <div className="py-1 px-2 rounded-full bg-green-400 font-semibold text-xs text-center text-white">
-        {formatDurationFromSeconds(user.totalTimeSpent || 0) || "0s"}
-      </div>
-      )
+          {formatDurationFromSeconds(user.totalTimeSpent || 0) || "0s"}
+        </div>
+      );
     },
   },
   {

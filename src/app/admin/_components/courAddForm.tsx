@@ -46,6 +46,7 @@ interface CourseFormData {
   title: string;
   content: string;
   videoUrl: string;
+  description: string;
   handler: string;
   index: number;
   subjectId: string;
@@ -60,7 +61,7 @@ type Option = {
 };
 
 // Composant pour l'upload de fichiers avec drag & drop
-const FileUpload = ({
+export const FileUpload = ({
   onFileSelect,
   accept,
   multiple = false,
@@ -583,6 +584,7 @@ const CourseCreationForm = ({ grades }: any) => {
     title: "",
     content: "",
     videoUrl: "",
+    description: "",
     handler: "",
     index: 1,
     subjectId: "",
@@ -665,6 +667,7 @@ const CourseCreationForm = ({ grades }: any) => {
         setFormData({
           title: "",
           content: "",
+          description: "",
           videoUrl: "",
           handler: "",
           index: 1,
@@ -808,6 +811,23 @@ const CourseCreationForm = ({ grades }: any) => {
                   placeholder="https://youtube.com/watch?v=..."
                 />
               </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mt-4 mb-2">
+                Description (optionnel)
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows={4}
+                placeholder="Description du cours"
+              />
             </div>
           </div>
 

@@ -27,20 +27,22 @@ import {
 
 import { toast } from "react-toastify";
 import { unarchiveUser } from "@/actions/client";
+import { redirect } from "next/navigation";
 
 const handleVerify = async (userId: string) => {
-    try {
-      const response = await unarchiveUser(userId);
-  
-      if (response.success) {
-        toast.success(response.message);
-        // Optionally, refresh your table or UI here
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      console.error("Error updating user status:", error);
+  try {
+    const response = await unarchiveUser(userId);
+
+    if (response.success) {
+      toast.success(response.message);
+      window.location.reload();
+      // Optionally, refresh your table or UI here
+    } else {
+      toast.error(response.message);
     }
+  } catch (error) {
+    console.error("Error updating user status:", error);
+  }
 };
 
 export const columns: ColumnDef<any>[] = [
@@ -132,11 +134,11 @@ export const columns: ColumnDef<any>[] = [
         return `${hoursPart} ${minutesPart} ${secondsPart}`.trim();
       }
 
-      return(
+      return (
         <div className="py-1 px-2 rounded-full bg-green-400 font-semibold text-xs text-center text-white">
-        {formatDurationFromSeconds(user.totalTimeSpent || 0) || "0s"}
-      </div>
-      )
+          {formatDurationFromSeconds(user.totalTimeSpent || 0) || "0s"}
+        </div>
+      );
     },
   },
   {
@@ -161,27 +163,25 @@ export const columns: ColumnDef<any>[] = [
       const user = row.original;
 
       return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions rapides</DropdownMenuLabel>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleVerify(user.id)}
-              >
-                unarchiver
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator />
-             
-            </DropdownMenuContent>
-          </DropdownMenu>
-          
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions rapides</DropdownMenuLabel>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => handleVerify(user.id)}
+            >
+              unarchiver
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

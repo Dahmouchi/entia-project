@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use server"
+"use server";
 
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
 
 export async function getQuizzesGroupedByMatiere(userId: string) {
   const userWithQuizzes = await prisma.user.findUnique({
@@ -37,16 +37,20 @@ export async function getQuizzesGroupedByMatiere(userId: string) {
   }
 
   // Group quizzes by subject (matière)
-  const grouped = userWithQuizzes.grade?.subjects.map(subject => ({
-    matiereId: subject.id,
-    matiereName: subject.name,
-    quizzes: subject.courses.flatMap(course => course.quizzes)
-  })) || [];
+  const grouped =
+    userWithQuizzes.grade?.subjects.map((subject) => ({
+      matiereId: subject.id,
+      matiereName: subject.name,
+      quizzes: subject.courses.flatMap((course) => course.quizzes),
+    })) || [];
 
   return { data: grouped };
 }
 
-export async function getQuizzesGroupedByMatiereandUser(userId: string,subjectId:string) {
+export async function getQuizzesGroupedByMatiereandUser(
+  userId: string,
+  subjectId: string
+) {
   const userWithQuizzes = await prisma.user.findUnique({
     where: { id: userId },
     include: {
@@ -80,11 +84,12 @@ export async function getQuizzesGroupedByMatiereandUser(userId: string,subjectId
   }
 
   // Group quizzes by subject (matière)
-  const grouped = userWithQuizzes.grade?.subjects.map(subject => ({
-    matiereId: subject.id,
-    matiereName: subject.name,
-    quizzes: subject.courses.flatMap(course => course.quizzes)
-  })) || [];
+  const grouped =
+    userWithQuizzes.grade?.subjects.map((subject) => ({
+      matiereId: subject.id,
+      matiereName: subject.name,
+      quizzes: subject.courses.flatMap((course) => course.quizzes),
+    })) || [];
 
   return { data: grouped };
 }
@@ -110,6 +115,14 @@ export const saveQuizResult = async (data: {
     },
   });
 
+  await prisma.userActivity.create({
+    data: {
+      userId: data.userId,
+      type: "COMPLETE_QUIZ",
+      description: "Quiz terminé",
+    },
+  });
+
   return result;
 };
 export async function getQuizScores(userId: string, quizId?: string) {
@@ -121,11 +134,11 @@ export async function getQuizScores(userId: string, quizId?: string) {
   const results = await prisma.quizResult.findMany({
     where: whereClause,
     orderBy: {
-      completedAt: 'desc',
+      completedAt: "desc",
     },
   });
 
-  return results.map(result => ({
+  return results.map((result) => ({
     quizId: result.quizId,
     score: result.score,
     totalQuestions: result.totalQuestions,
@@ -142,7 +155,6 @@ export const getUserQuizResults = async (userId: string) => {
 };
 
 //------------------------------------------------
-
 
 interface Option {
   id?: string;
@@ -201,7 +213,10 @@ interface QuizResult {
 }
 
 // Fonction pour valider les données d'un quiz
-function validateQuizData(data: QuizCreateData): { isValid: boolean; errors: string[] } {
+function validateQuizData(data: QuizCreateData): {
+  isValid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   // Validation du titre
@@ -233,14 +248,20 @@ function validateQuizData(data: QuizCreateData): { isValid: boolean; errors: str
       if (!question.options || question.options.length < 2) {
         errors.push(`La question ${qIndex + 1} doit avoir au moins 2 options`);
       } else {
-        const correctOptions = question.options.filter(opt => opt.isCorrect);
+        const correctOptions = question.options.filter((opt) => opt.isCorrect);
         if (correctOptions.length === 0) {
-          errors.push(`La question ${qIndex + 1} doit avoir au moins une option correcte`);
+          errors.push(
+            `La question ${qIndex + 1} doit avoir au moins une option correcte`
+          );
         }
 
         question.options.forEach((option, oIndex) => {
           if (!option.text || !option.text.trim()) {
-            errors.push(`L'option ${oIndex + 1} de la question ${qIndex + 1} doit avoir un texte`);
+            errors.push(
+              `L'option ${oIndex + 1} de la question ${
+                qIndex + 1
+              } doit avoir un texte`
+            );
           }
         });
       }
@@ -249,7 +270,7 @@ function validateQuizData(data: QuizCreateData): { isValid: boolean; errors: str
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
@@ -258,11 +279,11 @@ async function validateCourseExists(courseId: string): Promise<boolean> {
   try {
     const course = await prisma.course.findUnique({
       where: { id: courseId },
-      select: { id: true }
+      select: { id: true },
     });
     return !!course;
   } catch (error) {
-    console.error('Erreur lors de la validation du cours:', error);
+    console.error("Erreur lors de la validation du cours:", error);
     return false;
   }
 }
@@ -276,7 +297,7 @@ export async function createQuiz(data: QuizCreateData): Promise<QuizResult> {
       return {
         success: false,
         error: "Données invalides",
-        details: validation.errors
+        details: validation.errors,
       };
     }
 
@@ -285,7 +306,7 @@ export async function createQuiz(data: QuizCreateData): Promise<QuizResult> {
     if (!courseExists) {
       return {
         success: false,
-        error: "Le cours spécifié n'existe pas"
+        error: "Le cours spécifié n'existe pas",
       };
     }
 
@@ -295,8 +316,8 @@ export async function createQuiz(data: QuizCreateData): Promise<QuizResult> {
       const createdQuiz = await tx.quiz.create({
         data: {
           title: data.title.trim(),
-          courseId: data.courseId
-        }
+          courseId: data.courseId,
+        },
       });
 
       // Créer les questions avec leurs options
@@ -305,17 +326,17 @@ export async function createQuiz(data: QuizCreateData): Promise<QuizResult> {
           data: {
             content: questionData.content.trim(),
             answer: questionData.answer.trim(),
-            quizId: createdQuiz.id
-          }
+            quizId: createdQuiz.id,
+          },
         });
 
         // Créer les options pour cette question
         await tx.option.createMany({
-          data: questionData.options.map(option => ({
+          data: questionData.options.map((option) => ({
             text: option.text.trim(),
             isCorrect: option.isCorrect,
-            questionId: createdQuestion.id
-          }))
+            questionId: createdQuestion.id,
+          })),
         });
       }
 
@@ -325,35 +346,34 @@ export async function createQuiz(data: QuizCreateData): Promise<QuizResult> {
         include: {
           questions: {
             include: {
-              options: true
+              options: true,
             },
-            orderBy: { id: 'asc' }
-          }
-        }
+            orderBy: { id: "asc" },
+          },
+        },
       });
     });
 
     return {
       success: true,
-      data: quiz
+      data: quiz,
     };
-
   } catch (error) {
     console.error("Erreur lors de la création du quiz:", error);
-    
+
     // Gestion spécifique des erreurs Prisma
     if (error instanceof Error) {
-      if (error.message.includes('Foreign key constraint')) {
+      if (error.message.includes("Foreign key constraint")) {
         return {
           success: false,
-          error: "Le cours spécifié n'existe pas"
+          error: "Le cours spécifié n'existe pas",
         };
       }
     }
 
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la création du quiz"
+      error: "Erreur interne du serveur lors de la création du quiz",
     };
   }
 }
@@ -364,7 +384,7 @@ export async function getQuizById(quizId: string): Promise<QuizResult> {
     if (!quizId || !quizId.trim()) {
       return {
         success: false,
-        error: "L'ID du quiz est requis"
+        error: "L'ID du quiz est requis",
       };
     }
 
@@ -374,48 +394,49 @@ export async function getQuizById(quizId: string): Promise<QuizResult> {
         questions: {
           include: {
             options: {
-              orderBy: { id: 'asc' }
-            }
+              orderBy: { id: "asc" },
+            },
           },
-          orderBy: { id: 'asc' }
+          orderBy: { id: "asc" },
         },
         course: {
           select: {
             id: true,
-            title: true
-          }
-        }
-      }
+            title: true,
+          },
+        },
+      },
     });
 
     if (!quiz) {
       return {
         success: false,
-        error: "Quiz non trouvé"
+        error: "Quiz non trouvé",
       };
     }
 
     return {
       success: true,
-      data: quiz
+      data: quiz,
     };
-
   } catch (error) {
     console.error("Erreur lors de la récupération du quiz:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la récupération du quiz"
+      error: "Erreur interne du serveur lors de la récupération du quiz",
     };
   }
 }
 
 // Fonction pour récupérer tous les quiz d'un cours
-export async function getQuizzesByCourse(courseId: string): Promise<QuizResult> {
+export async function getQuizzesByCourse(
+  courseId: string
+): Promise<QuizResult> {
   try {
     if (!courseId || !courseId.trim()) {
       return {
         success: false,
-        error: "L'ID du cours est requis"
+        error: "L'ID du cours est requis",
       };
     }
 
@@ -424,39 +445,41 @@ export async function getQuizzesByCourse(courseId: string): Promise<QuizResult> 
       include: {
         questions: {
           include: {
-            options: true
-          }
+            options: true,
+          },
         },
         _count: {
           select: {
-            questions: true
-          }
-        }
+            questions: true,
+          },
+        },
       },
-      orderBy: { id: 'asc' }
+      orderBy: { id: "asc" },
     });
 
     return {
       success: true,
-      data: quizzes
+      data: quizzes,
     };
-
   } catch (error) {
     console.error("Erreur lors de la récupération des quiz:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la récupération des quiz"
+      error: "Erreur interne du serveur lors de la récupération des quiz",
     };
   }
 }
 
 // Fonction pour mettre à jour un quiz
-export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<QuizResult> {
+export async function updateQuiz(
+  quizId: string,
+  data: QuizUpdateData
+): Promise<QuizResult> {
   try {
     if (!quizId || !quizId.trim()) {
       return {
         success: false,
-        error: "L'ID du quiz est requis"
+        error: "L'ID du quiz est requis",
       };
     }
 
@@ -466,16 +489,16 @@ export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<
       include: {
         questions: {
           include: {
-            options: true
-          }
-        }
-      }
+            options: true,
+          },
+        },
+      },
     });
 
     if (!existingQuiz) {
       return {
         success: false,
-        error: "Quiz non trouvé"
+        error: "Quiz non trouvé",
       };
     }
 
@@ -485,23 +508,27 @@ export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<
       if (data.title) {
         await tx.quiz.update({
           where: { id: quizId },
-          data: { title: data.title.trim() }
+          data: { title: data.title.trim() },
         });
       }
 
       // Mettre à jour les questions si fournies
       if (data.questions) {
         // Récupérer les IDs des questions existantes
-        const existingQuestionIds = existingQuiz.questions.map(q => q.id);
-        const updatedQuestionIds = data.questions.filter(q => q.id).map(q => q.id!);
+        const existingQuestionIds = existingQuiz.questions.map((q) => q.id);
+        const updatedQuestionIds = data.questions
+          .filter((q) => q.id)
+          .map((q) => q.id!);
 
         // Supprimer les questions qui ne sont plus dans la liste
-        const questionsToDelete = existingQuestionIds.filter(id => !updatedQuestionIds.includes(id));
+        const questionsToDelete = existingQuestionIds.filter(
+          (id) => !updatedQuestionIds.includes(id)
+        );
         if (questionsToDelete.length > 0) {
           await tx.question.deleteMany({
             where: {
-              id: { in: questionsToDelete }
-            }
+              id: { in: questionsToDelete },
+            },
           });
         }
 
@@ -513,23 +540,31 @@ export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<
               where: { id: questionData.id },
               data: {
                 content: questionData.content.trim(),
-                answer: questionData.answer.trim()
-              }
+                answer: questionData.answer.trim(),
+              },
             });
 
             // Gérer les options de cette question
-            const existingQuestion = existingQuiz.questions.find(q => q.id === questionData.id);
+            const existingQuestion = existingQuiz.questions.find(
+              (q) => q.id === questionData.id
+            );
             if (existingQuestion) {
-              const existingOptionIds = existingQuestion.options.map(o => o.id);
-              const updatedOptionIds = questionData.options.filter(o => o.id).map(o => o.id!);
+              const existingOptionIds = existingQuestion.options.map(
+                (o) => o.id
+              );
+              const updatedOptionIds = questionData.options
+                .filter((o) => o.id)
+                .map((o) => o.id!);
 
               // Supprimer les options qui ne sont plus dans la liste
-              const optionsToDelete = existingOptionIds.filter(id => !updatedOptionIds.includes(id));
+              const optionsToDelete = existingOptionIds.filter(
+                (id) => !updatedOptionIds.includes(id)
+              );
               if (optionsToDelete.length > 0) {
                 await tx.option.deleteMany({
                   where: {
-                    id: { in: optionsToDelete }
-                  }
+                    id: { in: optionsToDelete },
+                  },
                 });
               }
 
@@ -541,8 +576,8 @@ export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<
                     where: { id: optionData.id },
                     data: {
                       text: optionData.text.trim(),
-                      isCorrect: optionData.isCorrect
-                    }
+                      isCorrect: optionData.isCorrect,
+                    },
                   });
                 } else {
                   // Créer une nouvelle option
@@ -550,8 +585,8 @@ export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<
                     data: {
                       text: optionData.text.trim(),
                       isCorrect: optionData.isCorrect,
-                      questionId: questionData.id
-                    }
+                      questionId: questionData.id,
+                    },
                   });
                 }
               }
@@ -562,17 +597,17 @@ export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<
               data: {
                 content: questionData.content.trim(),
                 answer: questionData.answer.trim(),
-                quizId: quizId
-              }
+                quizId: quizId,
+              },
             });
 
             // Créer les options pour cette nouvelle question
             await tx.option.createMany({
-              data: questionData.options.map(option => ({
+              data: questionData.options.map((option) => ({
                 text: option.text.trim(),
                 isCorrect: option.isCorrect,
-                questionId: createdQuestion.id
-              }))
+                questionId: createdQuestion.id,
+              })),
             });
           }
         }
@@ -585,25 +620,24 @@ export async function updateQuiz(quizId: string, data: QuizUpdateData): Promise<
           questions: {
             include: {
               options: {
-                orderBy: { id: 'asc' }
-              }
+                orderBy: { id: "asc" },
+              },
             },
-            orderBy: { id: 'asc' }
-          }
-        }
+            orderBy: { id: "asc" },
+          },
+        },
       });
     });
 
     return {
       success: true,
-      data: updatedQuiz
+      data: updatedQuiz,
     };
-
   } catch (error) {
     console.error("Erreur lors de la mise à jour du quiz:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la mise à jour du quiz"
+      error: "Erreur interne du serveur lors de la mise à jour du quiz",
     };
   }
 }
@@ -614,7 +648,7 @@ export async function deleteQuiz(quizId: string): Promise<QuizResult> {
     if (!quizId || !quizId.trim()) {
       return {
         success: false,
-        error: "L'ID du quiz est requis"
+        error: "L'ID du quiz est requis",
       };
     }
 
@@ -626,48 +660,50 @@ export async function deleteQuiz(quizId: string): Promise<QuizResult> {
         title: true,
         _count: {
           select: {
-            questions: true
-          }
-        }
-      }
+            questions: true,
+          },
+        },
+      },
     });
 
     if (!existingQuiz) {
       return {
         success: false,
-        error: "Quiz non trouvé"
+        error: "Quiz non trouvé",
       };
     }
 
     // Supprimer le quiz (cascade supprimera automatiquement les questions et options)
     await prisma.quiz.delete({
-      where: { id: quizId }
+      where: { id: quizId },
     });
 
     return {
       success: true,
       data: {
         message: `Quiz "${existingQuiz.title}" supprimé avec succès`,
-        deletedQuestions: existingQuiz._count.questions
-      }
+        deletedQuestions: existingQuiz._count.questions,
+      },
     };
-
   } catch (error) {
     console.error("Erreur lors de la suppression du quiz:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la suppression du quiz"
+      error: "Erreur interne du serveur lors de la suppression du quiz",
     };
   }
 }
 
 // Fonction pour dupliquer un quiz
-export async function duplicateQuiz(quizId: string, newTitle?: string): Promise<QuizResult> {
+export async function duplicateQuiz(
+  quizId: string,
+  newTitle?: string
+): Promise<QuizResult> {
   try {
     if (!quizId || !quizId.trim()) {
       return {
         success: false,
-        error: "L'ID du quiz est requis"
+        error: "L'ID du quiz est requis",
       };
     }
 
@@ -677,16 +713,16 @@ export async function duplicateQuiz(quizId: string, newTitle?: string): Promise<
       include: {
         questions: {
           include: {
-            options: true
-          }
-        }
-      }
+            options: true,
+          },
+        },
+      },
     });
 
     if (!originalQuiz) {
       return {
         success: false,
-        error: "Quiz original non trouvé"
+        error: "Quiz original non trouvé",
       };
     }
 
@@ -696,8 +732,8 @@ export async function duplicateQuiz(quizId: string, newTitle?: string): Promise<
       const createdQuiz = await tx.quiz.create({
         data: {
           title: newTitle || `${originalQuiz.title} (Copie)`,
-          courseId: originalQuiz.courseId
-        }
+          courseId: originalQuiz.courseId,
+        },
       });
 
       // Dupliquer les questions et options
@@ -706,17 +742,17 @@ export async function duplicateQuiz(quizId: string, newTitle?: string): Promise<
           data: {
             content: question.content,
             answer: question.answer,
-            quizId: createdQuiz.id
-          }
+            quizId: createdQuiz.id,
+          },
         });
 
         // Dupliquer les options
         await tx.option.createMany({
-          data: question.options.map(option => ({
+          data: question.options.map((option) => ({
             text: option.text,
             isCorrect: option.isCorrect,
-            questionId: createdQuestion.id
-          }))
+            questionId: createdQuestion.id,
+          })),
         });
       }
 
@@ -727,25 +763,24 @@ export async function duplicateQuiz(quizId: string, newTitle?: string): Promise<
           questions: {
             include: {
               options: {
-                orderBy: { id: 'asc' }
-              }
+                orderBy: { id: "asc" },
+              },
             },
-            orderBy: { id: 'asc' }
-          }
-        }
+            orderBy: { id: "asc" },
+          },
+        },
       });
     });
 
     return {
       success: true,
-      data: duplicatedQuiz
+      data: duplicatedQuiz,
     };
-
   } catch (error) {
     console.error("Erreur lors de la duplication du quiz:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la duplication du quiz"
+      error: "Erreur interne du serveur lors de la duplication du quiz",
     };
   }
 }
@@ -756,7 +791,7 @@ export async function getQuizStats(quizId: string): Promise<QuizResult> {
     if (!quizId || !quizId.trim()) {
       return {
         success: false,
-        error: "L'ID du quiz est requis"
+        error: "L'ID du quiz est requis",
       };
     }
 
@@ -765,36 +800,43 @@ export async function getQuizStats(quizId: string): Promise<QuizResult> {
       include: {
         questions: {
           include: {
-            options: true
-          }
+            options: true,
+          },
         },
         _count: {
           select: {
             questions: true,
-            quizResult: true
-          }
-        }
-      }
+            quizResult: true,
+          },
+        },
+      },
     });
 
     if (!quiz) {
       return {
         success: false,
-        error: "Quiz non trouvé"
+        error: "Quiz non trouvé",
       };
     }
 
     // Calculer les statistiques
     const stats = {
       totalQuestions: quiz._count.questions,
-      totalOptions: quiz.questions.reduce((sum, q) => sum + q.options.length, 0),
-      averageOptionsPerQuestion: quiz.questions.length > 0 
-        ? (quiz.questions.reduce((sum, q) => sum + q.options.length, 0) / quiz.questions.length).toFixed(1)
-        : 0,
+      totalOptions: quiz.questions.reduce(
+        (sum, q) => sum + q.options.length,
+        0
+      ),
+      averageOptionsPerQuestion:
+        quiz.questions.length > 0
+          ? (
+              quiz.questions.reduce((sum, q) => sum + q.options.length, 0) /
+              quiz.questions.length
+            ).toFixed(1)
+          : 0,
       totalAttempts: quiz._count.quizResult,
-      questionsWithMultipleCorrectAnswers: quiz.questions.filter(q => 
-        q.options.filter(o => o.isCorrect).length > 1
-      ).length
+      questionsWithMultipleCorrectAnswers: quiz.questions.filter(
+        (q) => q.options.filter((o) => o.isCorrect).length > 1
+      ).length,
     };
 
     return {
@@ -803,82 +845,82 @@ export async function getQuizStats(quizId: string): Promise<QuizResult> {
         quiz: {
           id: quiz.id,
           title: quiz.title,
-          courseId: quiz.courseId
+          courseId: quiz.courseId,
         },
-        stats
-      }
+        stats,
+      },
     };
-
   } catch (error) {
     console.error("Erreur lors du calcul des statistiques:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors du calcul des statistiques"
+      error: "Erreur interne du serveur lors du calcul des statistiques",
     };
   }
 }
 
 // Fonction pour supprimer tous les quiz d'un cours
-export async function deleteAllCourseQuizzes(courseId: string): Promise<QuizResult> {
+export async function deleteAllCourseQuizzes(
+  courseId: string
+): Promise<QuizResult> {
   try {
     if (!courseId || !courseId.trim()) {
       return {
         success: false,
-        error: "L'ID du cours est requis"
+        error: "L'ID du cours est requis",
       };
     }
 
     // Compter les quiz avant suppression
     const quizCount = await prisma.quiz.count({
-      where: { courseId }
+      where: { courseId },
     });
 
     if (quizCount === 0) {
       return {
         success: true,
-        data: { message: "Aucun quiz à supprimer" }
+        data: { message: "Aucun quiz à supprimer" },
       };
     }
 
     // Supprimer tous les quiz du cours
     const deleteResult = await prisma.quiz.deleteMany({
-      where: { courseId }
+      where: { courseId },
     });
 
     return {
       success: true,
       data: {
         message: `${deleteResult.count} quiz supprimé(s) avec succès`,
-        deletedCount: deleteResult.count
-      }
+        deletedCount: deleteResult.count,
+      },
     };
-
   } catch (error) {
     console.error("Erreur lors de la suppression des quiz:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la suppression des quiz"
+      error: "Erreur interne du serveur lors de la suppression des quiz",
     };
   }
 }
 
 // Fonction pour valider les réponses d'un quiz (pour les résultats)
 export async function validateQuizAnswers(
-  quizId: string, 
+  quizId: string,
   answers: { questionId: string; selectedOptionIds: string[] }[]
 ): Promise<QuizResult> {
   try {
     if (!quizId || !quizId.trim()) {
       return {
         success: false,
-        error: "L'ID du quiz est requis"
+        error: "L'ID du quiz est requis",
       };
     }
 
     if (!answers || answers.length === 0) {
       return {
         success: false,
-        error: "Les réponses sont requises"
+        error: "Les réponses sont requises",
       };
     }
 
@@ -888,39 +930,39 @@ export async function validateQuizAnswers(
       include: {
         questions: {
           include: {
-            options: true
-          }
-        }
-      }
+            options: true,
+          },
+        },
+      },
     });
 
     if (!quiz) {
       return {
         success: false,
-        error: "Quiz non trouvé"
+        error: "Quiz non trouvé",
       };
     }
 
     // Valider les réponses
-    const results = answers.map(answer => {
-      const question = quiz.questions.find(q => q.id === answer.questionId);
-      
+    const results = answers.map((answer) => {
+      const question = quiz.questions.find((q) => q.id === answer.questionId);
+
       if (!question) {
         return {
           questionId: answer.questionId,
           isCorrect: false,
-          error: "Question non trouvée"
+          error: "Question non trouvée",
         };
       }
 
-      const correctOptions = question.options.filter(o => o.isCorrect);
-      const correctOptionIds = correctOptions.map(o => o.id);
-      
+      const correctOptions = question.options.filter((o) => o.isCorrect);
+      const correctOptionIds = correctOptions.map((o) => o.id);
+
       // Vérifier si les réponses sélectionnées correspondent aux bonnes réponses
-      const isCorrect = 
+      const isCorrect =
         answer.selectedOptionIds.length === correctOptionIds.length &&
-        answer.selectedOptionIds.every(id => correctOptionIds.includes(id)) &&
-        correctOptionIds.every(id => answer.selectedOptionIds.includes(id));
+        answer.selectedOptionIds.every((id) => correctOptionIds.includes(id)) &&
+        correctOptionIds.every((id) => answer.selectedOptionIds.includes(id));
 
       return {
         questionId: answer.questionId,
@@ -928,13 +970,14 @@ export async function validateQuizAnswers(
         selectedOptionIds: answer.selectedOptionIds,
         correctOptionIds,
         isCorrect,
-        explanation: question.answer
+        explanation: question.answer,
       };
     });
 
     const totalQuestions = results.length;
-    const correctAnswers = results.filter(r => r.isCorrect).length;
-    const score = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+    const correctAnswers = results.filter((r) => r.isCorrect).length;
+    const score =
+      totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
 
     return {
       success: true,
@@ -943,15 +986,14 @@ export async function validateQuizAnswers(
         totalQuestions,
         correctAnswers,
         score: Math.round(score * 100) / 100, // Arrondir à 2 décimales
-        results
-      }
+        results,
+      },
     };
-
   } catch (error) {
     console.error("Erreur lors de la validation des réponses:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la validation des réponses"
+      error: "Erreur interne du serveur lors de la validation des réponses",
     };
   }
 }

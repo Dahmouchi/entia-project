@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import ReactPlayer from 'react-player/lazy';
+import ReactPlayer from "react-player/lazy";
 import LoadingPlayer from "./loading";
+import { Play } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface VimeoPlayerProps {
   url: string;
@@ -24,15 +26,23 @@ const VimeoPlayer = (params: VimeoPlayerProps) => {
         config={{
           vimeo: {
             playerOptions: {
+              dnt: true,
+              byline: false,
+              title: false,
+              portrait: false,
               playsinline: false, // Enables inline playback on iOS Safari
-              autopause: false,  // Prevents auto-pause
+              autopause: false, // Prevents auto-pause
             },
           },
         }}
         playIcon={
-          <div className="flex items-center justify-center p-6 bg-slate-50 rounded-full bg-opacity-40 shadow-md hover:shadow-lg cursor-pointer">
-           <img src="/jouer.png" alt="" className='w-10 h-10' />
-          </div>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-20 h-20 rounded-full cursor-pointer bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30"
+          >
+            <Play className="w-8 h-8 text-white ml-1" />
+          </motion.button>
         }
       />
     </div>

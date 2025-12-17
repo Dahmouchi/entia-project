@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
+import { updateLoginStreak } from "@/actions/student";
 
 export const authOptions: NextAuthOptions = {
   secret: "18f105de83a4db48a323a67b4077dbe1",
@@ -94,13 +95,25 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  events: {
+    async signIn({ user }) {
+      // Save login activity
+      await updateLoginStreak(user.id);
+      await prisma.userActivity.create({
+        data: {
+          userId: user.id,
+          type: "LOGIN",
+          description: "User logged in",
+        },
+      });
+    },
+  },
   session: {
     strategy: "jwt",
     maxAge: 10 * 60 * 60, // 10 hours in seconds
     updateAge: 60 * 60, // optional: refresh token every 1 hour
   },
   callbacks: {
-    
     async signIn({ user, account }) {
       if (account?.provider === "google" && user.email) {
         let dbUser = await prisma.user.findUnique({
@@ -110,7 +123,7 @@ export const authOptions: NextAuthOptions = {
         if (!dbUser) {
           dbUser = await prisma.user.create({
             data: {
-              email: user.email,              
+              email: user.email,
               step: 0,
               username: user.email?.split("@")[0], // ensure uniqueness in production
               role: "USER",
@@ -127,17 +140,16 @@ export const authOptions: NextAuthOptions = {
         user.statut = dbUser.statut;
 
         return true;
-      }
-      else if (account?.provider === "username-only") {
-         const dbUser = await prisma.user.findUnique({
-        where: { username: user.username },
-      });
+      } else if (account?.provider === "username-only") {
+        const dbUser = await prisma.user.findUnique({
+          where: { username: user.username },
+        });
 
-      if (dbUser) {
-        user.twoFactorEnabled = dbUser.twoFactorEnabled;
-      }
+        if (dbUser) {
+          user.twoFactorEnabled = dbUser.twoFactorEnabled;
+        }
 
-      return true;
+        return true;
       }
 
       return true;

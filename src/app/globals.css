@@ -41,6 +41,13 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /* Note colors */
+  --note-yellow: 45 100% 88%;
+  --note-pink: 330 100% 92%;
+  --note-blue: 210 100% 92%;
+  --note-green: 150 60% 88%;
+  --note-orange: 25 100% 90%;
+  --note-purple: 270 100% 94%;
 }
 
 :root {
@@ -49,11 +56,11 @@
   --color-bg2: rgb(174, 168, 248); /* soft grass green */
 
   /* Accent colors - playful & nature inspired */
-  --color1: 255, 183, 3;   /* warm sunny yellow */
+  --color1: 255, 183, 3; /* warm sunny yellow */
   --color2: 255, 138, 128; /* coral pink */
   --color3: 144, 202, 249; /* pastel blue */
   --color4: 129, 199, 132; /* soft green */
-  --color5: 255, 213, 79;  /* sunflower yellow */
+  --color5: 255, 213, 79; /* sunflower yellow */
 
   /* Interactive color - friendly orange */
   --color-interactive: 255, 167, 38;
@@ -92,6 +99,13 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Note colors */
+  --note-yellow: 45 100% 88%;
+  --note-pink: 330 100% 92%;
+  --note-blue: 210 100% 92%;
+  --note-green: 150 60% 88%;
+  --note-orange: 25 100% 90%;
+  --note-purple: 270 100% 94%;
 }
 
 .dark {
@@ -139,7 +153,6 @@
 
 /* In your global CSS */
 
-
 /* Ensure sections don't have pointer events when not active */
 section {
   pointer-events: none;
@@ -168,9 +181,8 @@ section.active {
 
 .tes {
   position: relative; /* or absolute/fixed if needed */
-  z-index: 9999;       /* higher than other sections */
+  z-index: 9999; /* higher than other sections */
 }
-
 
 @layer utilities {
   @keyframes border {
@@ -196,29 +208,62 @@ section.active {
   }
 }
 @layer utilities {
-
-  .animate-border { animation: border 4s linear infinite; }
-  .animate-typing { animation: typing 2s steps(20) infinite alternate, blink 0.7s infinite; }
-  .animate-typewriter { animation: typewriter 2s steps(11) forwards; }
-  .animate-linspin { animation: linspin 1568.2353ms linear infinite; }
-  .animate-easespin { animation: easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
-  .animate-left-spin { animation: left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
-  .animate-right-spin { animation: right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
-  .animate-ping-once { animation: ping 5s cubic-bezier(0, 0, 0.2, 1); }
-  .animate-rotating { animation: rotating 30s linear infinite; }
-  .animate-topbottom { animation: topbottom 60s infinite alternate linear; }
-  .animate-bottomtop { animation: bottomtop 60s infinite alternate linear; }
-  .animate-spin-1\.5 { animation: spin 1.5s linear infinite; }
-  .animate-spin-2 { animation: spin 2s linear infinite; }
-  .animate-spin-3 { animation: spin 3s linear infinite; }
-  .animate-line1 { animation: line 10s infinite linear; }
-  .animate-line2 { animation: line-revert 8s infinite linear; }
-  .animate-line3 { animation: line 7s infinite linear; }
+  .animate-border {
+    animation: border 4s linear infinite;
+  }
+  .animate-typing {
+    animation: typing 2s steps(20) infinite alternate, blink 0.7s infinite;
+  }
+  .animate-typewriter {
+    animation: typewriter 2s steps(11) forwards;
+  }
+  .animate-linspin {
+    animation: linspin 1568.2353ms linear infinite;
+  }
+  .animate-easespin {
+    animation: easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+  }
+  .animate-left-spin {
+    animation: left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+  }
+  .animate-right-spin {
+    animation: right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+  }
+  .animate-ping-once {
+    animation: ping 5s cubic-bezier(0, 0, 0.2, 1);
+  }
+  .animate-rotating {
+    animation: rotating 30s linear infinite;
+  }
+  .animate-topbottom {
+    animation: topbottom 60s infinite alternate linear;
+  }
+  .animate-bottomtop {
+    animation: bottomtop 60s infinite alternate linear;
+  }
+  .animate-spin-1\.5 {
+    animation: spin 1.5s linear infinite;
+  }
+  .animate-spin-2 {
+    animation: spin 2s linear infinite;
+  }
+  .animate-spin-3 {
+    animation: spin 3s linear infinite;
+  }
+  .animate-line1 {
+    animation: line 10s infinite linear;
+  }
+  .animate-line2 {
+    animation: line-revert 8s infinite linear;
+  }
+  .animate-line3 {
+    animation: line 7s infinite linear;
+  }
 }
 
-
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
   }
   50% {
@@ -311,7 +356,8 @@ section.active {
 
 /* Animation de pulsation pour les éléments sélectionnés */
 @keyframes selected-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
   }
@@ -347,7 +393,12 @@ section.active {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   background-size: 200px 100%;
   animation: shimmer 2s infinite;
 }
@@ -407,7 +458,8 @@ section.active {
 }
 
 @keyframes blink-caret {
-  from, to {
+  from,
+  to {
     border-color: transparent;
   }
   50% {
@@ -433,24 +485,40 @@ section.active {
   }
 }
 
-
-
 @keyframes moveInCircle {
-  0% { transform: rotate(0deg); }
-  50% { transform: rotate(180deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes moveVertical {
-  0% { transform: translateY(-20%); }
-  50% { transform: translateY(20%); }
-  100% { transform: translateY(-20%); }
+  0% {
+    transform: translateY(-20%);
+  }
+  50% {
+    transform: translateY(20%);
+  }
+  100% {
+    transform: translateY(-20%);
+  }
 }
 
 @keyframes moveHorizontal {
-  0% { transform: translateX(-20%) translateY(-5%); }
-  50% { transform: translateX(20%) translateY(5%); }
-  100% { transform: translateX(-20%) translateY(-5%); }
+  0% {
+    transform: translateX(-20%) translateY(-5%);
+  }
+  50% {
+    transform: translateX(20%) translateY(5%);
+  }
+  100% {
+    transform: translateX(-20%) translateY(-5%);
+  }
 }
 
 .bar-container {
@@ -468,14 +536,22 @@ section.active {
   filter: blur(20px);
 }
 
-.g1, .g2, .g3, .g4, .g5 {
+.g1,
+.g2,
+.g3,
+.g4,
+.g5 {
   position: absolute;
   mix-blend-mode: var(--blending);
   border-radius: 50%;
 }
 
 .g1 {
-  background: radial-gradient(circle, rgba(var(--color1), 0.5) 0%, transparent 50%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--color1), 0.5) 0%,
+    transparent 50%
+  );
   width: var(--circle-size);
   height: var(--circle-size);
   top: -25%;
@@ -484,7 +560,11 @@ section.active {
 }
 
 .g2 {
-  background: radial-gradient(circle, rgba(var(--color2), 0.5) 0%, transparent 50%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--color2), 0.5) 0%,
+    transparent 50%
+  );
   width: var(--circle-size);
   height: var(--circle-size);
   top: -25%;
@@ -493,7 +573,11 @@ section.active {
 }
 
 .g3 {
-  background: radial-gradient(circle, rgba(var(--color3), 0.5) 0%, transparent 50%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--color3), 0.5) 0%,
+    transparent 50%
+  );
   width: var(--circle-size);
   height: var(--circle-size);
   top: 0;
@@ -502,7 +586,11 @@ section.active {
 }
 
 .g4 {
-  background: radial-gradient(circle, rgba(var(--color4), 0.5) 0%, transparent 50%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--color4), 0.5) 0%,
+    transparent 50%
+  );
   width: var(--circle-size);
   height: var(--circle-size);
   top: -25%;
@@ -511,7 +599,11 @@ section.active {
 }
 
 .g5 {
-  background: radial-gradient(circle, rgba(var(--color5), 0.5) 0%, transparent 50%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--color5), 0.5) 0%,
+    transparent 50%
+  );
   width: calc(var(--circle-size) * 1.5);
   height: calc(var(--circle-size) * 1.5);
   top: -50%;

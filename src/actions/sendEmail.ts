@@ -7,35 +7,33 @@ import prisma from "@/lib/prisma";
 import sendEmail from "@/lib/sendemail";
 import { uploadDocument } from "./cours";
 
-
-
 export async function SendSynthese(formData: FormData) {
   try {
-    const file = formData.get("file") as File
-    const userId = formData.get("userId") as string
-    const courseId = formData.get("courseId") as string
+    const file = formData.get("file") as File;
+    const userId = formData.get("userId") as string;
+    const courseId = formData.get("courseId") as string;
 
     if (!file || !userId || !courseId) {
-      throw new Error("Missing required fields")
+      throw new Error("Missing required fields");
     }
 
     // 1️⃣ Upload the document
-    const fileUrl = await uploadDocument(file)
+    const fileUrl = await uploadDocument(file);
 
     // 2️⃣ Get course + student info
     const course = await prisma.course.findUnique({
       where: { id: courseId },
-    })
+    });
 
     const student = await prisma.user.findUnique({
       where: { id: userId },
-    })
+    });
 
-    if (!course || !student) throw new Error("Invalid course or student")
+    if (!course || !student) throw new Error("Invalid course or student");
 
     // 3️⃣ Send email to the teacher
-   
-  const emailContentAnalyst = `
+
+    const emailContentAnalyst = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +47,11 @@ export async function SendSynthese(formData: FormData) {
     <div style="font-family: Arial, sans-serif; color: #222;">
         <h2>Nouvelle Synthèse Reçue</h2>
         <p>Bonjour,</p>
-        <p>L'étudiant <strong>${student.name} ${student.prenom} </strong> a déposé une nouvelle synthèse pour le cours <strong>${course.title}</strong>.</p>
+        <p>L'étudiant <strong>${student.name} ${
+      student.prenom
+    } </strong> a déposé une nouvelle synthèse pour le cours <strong>${
+      course.title
+    }</strong>.</p>
         <p>
            Le cours : ${course.title} <br/>
           🔗 <a href="${fileUrl}" target="_blank">Télécharger la synthèse</a>
@@ -65,13 +67,21 @@ export async function SendSynthese(formData: FormData) {
 </html>
       `;
     await sendEmail(
-      "belfort.center@gmail.com", // Replace with your email
+      "", // Replace with your emailbelfort.center@gmail.com
       `New Service Application:`,
-      emailContentAnalyst,
+      emailContentAnalyst
     );
-      return { success: true, fileUrl }
+    await prisma.userActivity.create({
+      data: {
+        userId,
+        courseId,
+        type: "OTHER",
+        description: "Synthèse déposée",
+      },
+    });
+    return { success: true, fileUrl };
   } catch (error) {
-    console.error("Erreur upload synthèse:", error)
-    return { success: false, error: "Erreur lors du traitement." }
+    console.error("Erreur upload synthèse:", error);
+    return { success: false, error: "Erreur lors du traitement." };
   }
 }

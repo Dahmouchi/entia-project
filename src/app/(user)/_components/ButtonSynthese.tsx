@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,23 +14,25 @@ import { Label } from "@/components/ui/label";
 import React from "react";
 import { SendSynthese } from "@/actions/sendEmail";
 import { toast } from "react-toastify";
-import { NotebookText } from "lucide-react";
+import { Check, FileText, NotebookText, Upload } from "lucide-react";
 
 const ButtonSynthese = ({ course, userId }: any) => {
-  const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      setSelectedFile(e.target.files[0]);
     }
   };
 
   const handleSubmit = async () => {
-    if (!file) return toast.error("Veuillez sélectionner un fichier PDF.");
+    if (!selectedFile)
+      return toast.error("Veuillez sélectionner un fichier PDF.");
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", selectedFile);
     formData.append("userId", userId);
     formData.append("courseId", course?.id);
 
@@ -38,7 +40,7 @@ const ButtonSynthese = ({ course, userId }: any) => {
       setLoading(true);
       await SendSynthese(formData);
       toast.success("Synthèse envoyée avec succès !");
-      setFile(null);
+      setSelectedFile(null);
     } catch (error) {
       console.error(error);
       toast.error("Erreur lors de l’envoi du fichier.");
@@ -47,53 +49,59 @@ const ButtonSynthese = ({ course, userId }: any) => {
     }
   };
   return (
-    <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="relative py-6 w-full cursor-pointer overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:from-indigo-500 hover:to-blue-500 hover:shadow-lg hover:scale-[1.03] focus:ring-2 focus:ring-blue-300">
-            <span className="relative z-10 flex items-center justify-center gap-3"> Déposer Synthèse <NotebookText /></span>
-            <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 transition-opacity duration-300 hover:opacity-30" />
-          </Button>
-        </DialogTrigger>
+    <div className="bg-gradient-to-br from-purple-600/5 to-blue-500/5 border border-purple-600/20 rounded-2xl p-6">
+      <h3 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+        <FileText className="w-5 h-5 text-purple-600" />
+        Déposer la Synthèse
+      </h3>
+      <p className="text-muted-foreground text-sm mb-4">
+        Téléchargez votre synthèse au format PDF pour validation par
+        l&apos;instructeur.
+      </p>
 
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">
-              Déposer la Synthèse
-            </DialogTitle>
-          </DialogHeader>
+      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+        <input
+          type="file"
+          accept=".pdf,application/pdf"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
 
-          <div className="space-y-4 mt-3">
-            <div>
-              <p>
-                <strong>Cours :</strong> {course?.title}
-              </p>
-              <p>
-                <strong>Professeur :</strong>{" "}
-                {course?.data?.teacher?.name || "N/A"}
-              </p>
-            </div>
+        <Button
+          variant="outline"
+          onClick={() => fileInputRef.current?.click()}
+          className="gap-2 border-dashed border-2 hover:border-perfrom-purple-600 hover:bg-perfrom-purple-600/5"
+        >
+          <Upload className="w-4 h-4" />
+          Choisir un PDF
+        </Button>
 
-            <div className="space-y-2">
-              <Label htmlFor="file">Choisir un fichier PDF</Label>
-              <Input
-                id="file"
-                type="file"
-                accept="application/pdf"
-                onChange={handleFileChange}
-              />
-            </div>
-
-            <Button
-              onClick={handleSubmit}
-              disabled={!file || loading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
-            >
-              {loading ? "Envoi en cours..." : "Envoyer"}
-            </Button>
+        {selectedFile && (
+          <div className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg border">
+            <FileText className="w-4 h-4 text-perfrom-purple-600" />
+            <span className="text-sm text-foreground truncate max-w-[200px]">
+              {selectedFile.name}
+            </span>
+            {isUploaded && <Check className="w-4 h-4 text-green-500" />}
           </div>
-        </DialogContent>
-      </Dialog>
+        )}
+
+        <Button
+          onClick={handleSubmit}
+          disabled={!selectedFile || loading}
+          className="gap-2"
+        >
+          {loading ? (
+            <>
+              <Check className="w-4 h-4" />
+              Envoyé
+            </>
+          ) : (
+            "Envoyer"
+          )}
+        </Button>
+      </div>
     </div>
   );
 };

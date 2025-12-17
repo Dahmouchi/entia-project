@@ -1,9 +1,17 @@
-import React from 'react'
+import { getStudentById } from "@/actions/client";
+import StudentSubjects from "../../_components/AllSubjects";
 
-const PageMatiere = () => {
+const MatierePage = async () => {
+  const user = await getStudentById();
+  if (!user) {
+    return <div className="text-center">User not found</div>;
+  }
+
   return (
-    <div>PageMatiere</div>
-  )
-}
+    <div>
+      <StudentSubjects subjects={user.grade?.subjects} userName={user.name} />
+    </div>
+  );
+};
 
-export default PageMatiere
+export default MatierePage;

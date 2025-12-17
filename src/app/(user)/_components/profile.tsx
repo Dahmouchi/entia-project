@@ -166,7 +166,9 @@ const Profile = ({ user }: any) => {
         <div className="mb-8 bg-white  p-6 rounded-lg shadow-md">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-               <div className=""><BadgeDropdown size={"0"} user={user} /></div>
+              <div className="">
+                <BadgeDropdown size={"0"} user={user} />
+              </div>
               <div>
                 <h1 className="lg:text-3xl text-xl font-bold text-gray-900">
                   {user.prenom} {user.name}
@@ -177,7 +179,6 @@ const Profile = ({ user }: any) => {
                 </p>
               </div>
             </div>
-           
           </div>
           <div className="mt-4 flex flex-col items-center lg:items-start jusctify-between">
             <span className="text-gray-600">
@@ -192,7 +193,6 @@ const Profile = ({ user }: any) => {
                 </div>
 
                 {/* Badge based on hours */}
-               
               </div>
             </div>
           </div>

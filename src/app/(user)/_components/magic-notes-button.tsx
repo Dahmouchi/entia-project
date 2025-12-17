@@ -94,19 +94,19 @@ interface MagicNotesButtonProps {
   courseTitle: string;
   userId: string;
   coursId?: string;
-  results:any[];
+  results: any[];
 }
 type MagicNoteResultProps = {
   summary: string;
   schema: any;
 };
 
-const  MagicNotesButton=({
+const MagicNotesButton = ({
   courseTitle,
   userId,
   coursId,
-  results
-}: MagicNotesButtonProps)=> {
+  results,
+}: MagicNotesButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notes, setNotes] = useState<Note[]>(results);
   const [currentNote, setCurrentNote] = useState("");
@@ -121,10 +121,9 @@ const  MagicNotesButton=({
     type: "summary" | "schema" | "map" | null;
     content: string;
   }>({ type: null, content: "" });
- 
 
   const addNote = async () => {
-    setLoading(true)
+    setLoading(true);
     if (currentNote.trim() && coursId) {
       // Call Prisma via server action
       const newNote = await createNote(userId, coursId, currentNote);
@@ -138,7 +137,7 @@ const  MagicNotesButton=({
           courseTitle,
         } as Note & { timestamp: string; courseTitle: string },
       ]);
-setLoading(false)
+      setLoading(false);
       setCurrentNote("");
     }
   };
@@ -364,15 +363,18 @@ setLoading(false)
           <Button
             size="lg"
             className={cn(
-              "fixed bottom-6 right-6 z-50 h-16 w-16 rounded-full shadow-2xl",
+              "fixed right-0 top-2/3 -translate-y-1/2  z-50 h-16 rounded-l-2xl shadow-medium",
               "bg-blue-500 hover:bg-yellow-400 transition-all duration-300",
               "float-animation hover:scale-110 active:scale-95",
-              "border-2 border-white/20"
+              "border-2 border-white/20",
+              "transition-all duration-300 ease-out",
+              "hover:pr-5 hover:shadow-lg",
+              "group"
             )}
             aria-label="Ouvrir les notes magiques"
           >
             <div className="relative">
-              <Wand2 className="h-6 w-6 text-primary-foreground" />
+              <Wand2 className="h-6 w-3 text-primary-foreground" />
               <Sparkles className="absolute -top-1 -right-1 h-3 w-3 text-yellow-300 sparkle-animation" />
             </div>
           </Button>
@@ -550,6 +552,6 @@ setLoading(false)
       </Dialog>
     </>
   );
-}
+};
 
 export default MagicNotesButton;

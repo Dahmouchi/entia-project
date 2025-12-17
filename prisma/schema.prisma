@@ -12,23 +12,186 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 enum LiveType {
-YOUTUBE
-LIVEKIT
-JITSI
+  YOUTUBE
+  LIVEKIT
+  JITSI
 }
 
-
 enum LiveStatus {
-DRAFT
-SCHEDULED
-LIVE
-ENDED
+  DRAFT
+  SCHEDULED
+  LIVE
+  ENDED
+}
+
+model NotesGlobal {
+  id        String   @id @default(uuid())
+  content   String
+  color     String
+  emoji     String? // optional
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String   @unique // Add this
+  description String
+  icon        String
+  condition   Json
+  createdAt   DateTime @default(now())
+
+  earnedBy EarnedBadge[]
+}
+
+model EarnedBadge {
+  id       String   @id @default(cuid())
+  userId   String
+  badgeId  String
+  earnedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId]) // user can earn it only once
+}
+
+model UserActivity {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  type        ActivityType // 👈 "login", "course_completed", etc.
+  description String? // Optional text to add details
+
+  courseId String? // Optional: when activity relates to a course
+  quizId   String? // Optional: when activity relates to a quiz
+  meta     Json? // 👈 Save extra dynamic data (duration, score, device...)
+
+  createdAt DateTime @default(now())
+}
+
+enum ActivityType {
+  LOGIN
+  LOGOUT
+  VIEW_PAGE
+  START_COURSE
+  COMPLETE_COURSE
+  START_LESSON
+  COMPLETE_LESSON
+  START_QUIZ
+  COMPLETE_QUIZ
+  PASS_QUIZ
+  FAIL_QUIZ
+  UPDATE_PROFILE
+  OTHER
+}
+
+// file: prisma/schema.prisma
+
+// 1. Landing Page Section Model
+// Represents a major content block on the landing page (like 'ExampleSection2')
+model Section {
+  id                 String         @id @default(uuid())
+  // A unique identifier for the section (e.g., 'why_choose_enita', 'hero_banner', 'testimonials')
+  key                String         @unique
+  // The main title for the section (e.g., "Pourquoi choisir ENITA ?")
+  title              String
+  // The main subtitle/description for the section
+  subtitle           String?
+  description        String?
+  levels             LevelLanding[]
+  // Optional: The background image URL or asset path (e.g., '/Board.png')
+  backgroundImageUrl String?
+  heroImageUrl       String?
+  layoutType         String?
+  checklistItems     String?
+  // Optional: A class name or style key to define the overall look of the section
+  designStyleKey     String?
+
+  // Optional: An array of feature items associated with this section
+  featureItems FeatureItem[]
+  // Optional: A number to control the display order on the page
+  order        Int           @default(0)
+  visible      Boolean       @default(true)
+  // Timestamps
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model LevelLanding {
+  id        String         @id @default(uuid())
+  name      String
+  grades    GradeLanding[]
+  order     Int            @default(0)
+  sectionId String
+  section   Section        @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sectionId, order])
+}
+
+model GradeLanding {
+  id       String           @id @default(uuid())
+  name     String
+  order    Int              @default(0)
+  subjects SubjectLanding[]
+  levelId  String
+  level    LevelLanding     @relation(fields: [levelId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([levelId, order])
+}
+
+model SubjectLanding {
+  id        String       @id @default(uuid())
+  name      String
+  color     String // Tailwind color
+  gradeId   String
+  grade     GradeLanding @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+// 2. Individual Feature Item Model
+// Represents one bullet point or card within a Section
+model FeatureItem {
+  id          String @id @default(uuid())
+  // The text content of the feature (e.g., "Diplômes Français Reconnus")
+  title       String
+  // The detailed description (e.g., "Formations diplômantes de Bac+2 à Bac+5...")
+  description String
+  // The class name or identifier for the icon (e.g., 'Award', 'Briefcase')
+  // This helps the frontend render the correct icon component.
+  iconName    String
+  // A number to control the display order within the section
+  order       Int    @default(0)
+
+  // Relationship to the parent Section
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Ensures the combination of sectionId and order is unique
+  @@unique([sectionId, order])
 }
 
 model Note {
   id        String   @id @default(cuid())
-  content   String   // Raw text from student
+  content   String // Raw text from student
   userId    String
   courseId  String
   createdAt DateTime @default(now())
@@ -41,47 +204,45 @@ model Note {
 }
 
 model MagicNote {
-  id        String   @id @default(cuid())
-  noteId    String   @unique // one magic note per raw note
-  summary   String   // AI-generated summary
-  schema    Json     // hierarchical schema (mindmap JSON)
-  flashcards Json    // flashcards [{q, a}, ...]
+  id         String @id @default(cuid())
+  noteId     String @unique // one magic note per raw note
+  summary    String // AI-generated summary
+  schema     Json // hierarchical schema (mindmap JSON)
+  flashcards Json // flashcards [{q, a}, ...]
 
   createdAt DateTime @default(now())
 
-  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  note      Note        @relation(fields: [noteId], references: [id], onDelete: Cascade)
   flashCard Flashcard[]
 }
+
 model Flashcard {
-  id         String   @id @default(cuid())
-  question   String
-  answer     String
+  id          String @id @default(cuid())
+  question    String
+  answer      String
   magicNoteId String
 
   magicNote MagicNote @relation(fields: [magicNoteId], references: [id], onDelete: Cascade)
 }
 
-
 model LiveRoom {
-id String @id @default(cuid())
-name String
-type LiveType @default(YOUTUBE)
-status LiveStatus @default(DRAFT)
-teacherId String
-// Adjust relation to match your User model name/field
-teacher User @relation(fields: [teacherId], references: [id])
+  id        String     @id @default(cuid())
+  name      String
+  type      LiveType   @default(YOUTUBE)
+  status    LiveStatus @default(DRAFT)
+  teacherId String
+  // Adjust relation to match your User model name/field
+  teacher   User       @relation(fields: [teacherId], references: [id])
 
+  // Platform-specific fields (nullable depending on type)
+  youtubeVideoId String?
+  livekitRoom    String?
+  jitsiRoom      String?
 
-// Platform-specific fields (nullable depending on type)
-youtubeVideoId String?
-livekitRoom String?
-jitsiRoom String?
-
-
-startsAt DateTime?
-endedAt DateTime?
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
+  startsAt  DateTime?
+  endedAt   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Niveau {
@@ -138,9 +299,10 @@ model Course {
   documents  Document[]
   quizzes    Quiz[]
   progress   CourseProgress[]
-  notes     Note[]
+  notes      Note[]
 
-  createdAt        DateTime  @default(now())
+  createdAt DateTime @default(now())
+
   @@index([index])
 }
 
@@ -153,22 +315,23 @@ model Document {
 }
 
 model Quiz {
-  id        String     @id @default(cuid())
-  title     String
-  courseId  String
-  course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  questions Question[]
-  quizResult     QuizResult[]
+  id         String       @id @default(cuid())
+  title      String
+  courseId   String
+  course     Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions  Question[]
+  quizResult QuizResult[]
 }
 
 model Question {
-  id      String @id @default(cuid())
+  id      String   @id @default(cuid())
   content String
   answer  String
   quizId  String
-  quiz    Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-   options Option[] // New relation
+  quiz    Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options Option[] // New relation
 }
+
 model Option {
   id         String   @id @default(cuid())
   text       String
@@ -176,6 +339,7 @@ model Option {
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
+
 model QuizResult {
   id             String   @id @default(cuid())
   quizId         String
@@ -186,10 +350,9 @@ model QuizResult {
   completedAt    DateTime @default(now())
   attempts       Int
 
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  quiz           Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
 }
-
 
 model RegisterCode {
   id        String    @id @default(cuid())
@@ -202,41 +365,45 @@ model RegisterCode {
 }
 
 model User {
-  id               String    @id @default(cuid())
+  id               String     @id @default(cuid())
   name             String?
-  email            String    @unique
-  archive          Boolean   @default(false)
-  createdAt        DateTime  @default(now())
+  email            String     @unique
+  archive          Boolean    @default(false)
+  createdAt        DateTime   @default(now())
   emailVerified    DateTime?
   image            String?
-  step             Int       @default(0)
-  phone            Int?
+  step             Int        @default(0)
+  phone            String?
   age              Int?
-  totalTimeSpent   Int? @default(0) // Total time spent on the platform in seconds
+  totalTimeSpent   Int?       @default(0) // Total time spent on the platform in seconds
   password         String?
   prenom           String?
   qrSecret         String?
-  role             Role      @default(USER)
-  statut           Boolean   @default(true)
+  role             Role       @default(USER)
+  statut           Boolean    @default(true)
   StatutUser       StatutUser @default(awaiting)
-  twoFactorEnabled Boolean   @default(true)
+  twoFactorEnabled Boolean    @default(true)
   twoFactorSecret  String?
-  updatedAt        DateTime  @updatedAt
-  username         String    @unique
+  updatedAt        DateTime   @updatedAt
+  username         String     @unique
   verified_email   String?
+  streak           Int        @default(0)
+  lastLoginDate    DateTime?
 
   // Relations
   gradeId        String?
   grade          Grade?           @relation(fields: [gradeId], references: [id])
   registerCode   RegisterCode?
-  liveRooms     LiveRoom[]      
+  liveRooms      LiveRoom[]
   courseProgress CourseProgress[] // 👈 Progress relation
   accounts       Account[]
   quizResult     QuizResult[]
   Authenticator  Authenticator[]
   sessions       Session[]
-  notes     Note[]
-
+  notes          Note[]
+  activities     UserActivity[]
+  badges         EarnedBadge[]
+  notesGlobal    NotesGlobal[]
 }
 
 model Account {
@@ -293,6 +460,7 @@ enum Role {
   USER
   ADMIN
 }
+
 enum StatutUser {
   subscribed
   awaiting

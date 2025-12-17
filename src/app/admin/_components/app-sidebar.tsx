@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
- 
+
 "use client";
 
 import type * as React from "react";
@@ -24,21 +24,23 @@ import {
   Key,
   Shapes,
   LibraryBig,
-  BookText
+  BookText,
+  Box,
+  Boxes,
+  Heart,
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarRail,
   useSidebar,
-  
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import { title } from "process";
-
 
 // This is sample data.
 const datas = {
@@ -70,7 +72,7 @@ const datas = {
       url: "/admin/dashboard/niveaux",
       icon: Route,
     },
-  {
+    {
       title: "Classes",
       url: "/admin/dashboard/classes",
       icon: Shapes,
@@ -86,11 +88,16 @@ const datas = {
       icon: BookText,
     },
     {
+      title: "Landing Page",
+      url: "/admin/dashboard/landing",
+      icon: Boxes,
+    },
+    {
       title: "Utilisateurs",
       url: "/admin/dashboard/users",
       icon: Users,
     },
-     
+
     {
       title: "Settings",
       url: "/admin/dashboard/settings",
@@ -100,16 +107,32 @@ const datas = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {state} = useSidebar()
+  const { state } = useSidebar();
 
   return (
-    <Sidebar collapsible="icon" {...props} className="bg-white dark:bg-slate-800 p-2 flex flex-col items-center justify-center bg ">
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      className="bg-white dark:bg-slate-800 p-2 flex flex-col items-center justify-center bg "
+    >
       <SidebarHeader className="dark:bg-slate-900 flex items-center bg-white justify-center rounded-t-xl ">
-        <Image src={`${state === "expanded" ? '/enita/enitaLogo.jpeg':'/logo.png'}`} alt="logo" width={state === "expanded" ? 300 : 500 } height={state === "expanded" ? 200 : 500 }/>
+        <Image
+          src={`${
+            state === "expanded" ? "/enita/enitaLogo.jpeg" : "/logo.png"
+          }`}
+          alt="logo"
+          width={state === "expanded" ? 300 : 500}
+          height={state === "expanded" ? 200 : 500}
+        />
       </SidebarHeader>
       <SidebarContent className="dark:bg-slate-900 pl-0 bg-white rounded-b-xl mt-3">
         <NavMain items={datas.navMain} />
       </SidebarContent>
+      <SidebarFooter>
+        <div className="text-center flex items-center gap-1 text-xs text-gray-500">
+          Powered by <span className="font-bold">Scoolia</span>
+        </div>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

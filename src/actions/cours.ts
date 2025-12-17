@@ -1,8 +1,8 @@
-"use server"
+"use server";
 
 import { getFileUrl, uploadFile } from "@/lib/cloudeFlare";
-import prisma from "@/lib/prisma"
-import sharp from "sharp"
+import prisma from "@/lib/prisma";
+import sharp from "sharp";
 
 // Types pour les données du formulaire
 interface QuizQuestion {
@@ -18,6 +18,7 @@ interface Quiz {
 interface CourseData {
   title: string;
   content: string;
+  description: string;
   videoUrl?: string;
   handler: string;
   index: number;
@@ -33,22 +34,27 @@ type Option = {
 };
 
 // Fonction d'upload d'image existante (fournie par l'utilisateur)
-async function uploadImage(imageURL: File): Promise<string> {
+export async function uploadImage(imageURL: File): Promise<string> {
   const image = imageURL;
-  const quality = 80;
-
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const filename = `${timestamp}`;
+  const ext = image.name.split(".").pop()?.toLowerCase() || "png";
+  const filename = `${timestamp}.${ext}`;
 
   const arrayBuffer = await image.arrayBuffer();
-  const compressedBuffer = await sharp(arrayBuffer)
-    .resize(1200)
-    .jpeg({ quality })
-    .toBuffer();
+  const sharpInstance = sharp(arrayBuffer).resize(1200);
+
+  // If PNG -> keep PNG
+  // If JPG/JPEG -> keep JPEG
+  let compressedBuffer;
+  if (ext === "png") {
+    compressedBuffer = await sharpInstance.png({ quality: 90 }).toBuffer();
+  } else {
+    compressedBuffer = await sharpInstance.jpeg({ quality: 80 }).toBuffer();
+  }
 
   const fileContent = Buffer.from(compressedBuffer);
-  await uploadFile(fileContent, filename, image.type);
 
+  await uploadFile(fileContent, filename, image.type);
   return getFileUrl(filename);
 }
 
@@ -59,7 +65,7 @@ export async function uploadDocument(document: File): Promise<string> {
 
   const arrayBuffer = await document.arrayBuffer();
   const fileContent = Buffer.from(arrayBuffer);
-  
+
   // Upload du PDF sans compression (contrairement aux images)
   await uploadFile(fileContent, filename, document.type);
 
@@ -67,21 +73,21 @@ export async function uploadDocument(document: File): Promise<string> {
 }
 
 // Fonction helper pour valider les données d'entrée
-function validateCourseData(data: CourseData): { isValid: boolean; errors: string[] } {
+function validateCourseData(data: CourseData): {
+  isValid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   if (!data.title?.trim()) {
     errors.push("Le titre du cours est requis");
   }
 
-
-  
-
   if (!data.subjectId?.trim()) {
     errors.push("L'ID de la matière est requis");
   }
 
-  if (typeof data.index !== 'number' || data.index < 1) {
+  if (typeof data.index !== "number" || data.index < 1) {
     errors.push("L'index du cours doit être un nombre positif");
   }
 
@@ -95,53 +101,74 @@ function validateCourseData(data: CourseData): { isValid: boolean; errors: strin
   }
 
   // Validation des quiz
-  
-  // Validation des quiz
-if (data.quizzes && data.quizzes.length > 0) {
-  data.quizzes.forEach((quiz, quizIndex) => {
-    if (!quiz.title?.trim()) {
-      errors.push(`Le titre du quiz ${quizIndex + 1} est requis`);
-    }
 
-    if (!quiz.questions || quiz.questions.length === 0) {
-      errors.push(`Le quiz ${quizIndex + 1} doit contenir au moins une question`);
-    } else {
-      quiz.questions.forEach((question, questionIndex) => {
-        if (!question.content?.trim()) {
-          errors.push(`La question ${questionIndex + 1} du quiz ${quizIndex + 1} est requise`);
-        }
-        
-        // Validate options instead of single answer
-        if (!question.options || question.options.length < 2) {
-          errors.push(`La question ${questionIndex + 1} doit avoir au moins 2 options`);
-        } else {
-          const correctOptions = question.options.filter(opt => opt.isCorrect);
-          if (correctOptions.length !== 1) {
-            errors.push(`La question ${questionIndex + 1} doit avoir exactement une option correcte`);
+  // Validation des quiz
+  if (data.quizzes && data.quizzes.length > 0) {
+    data.quizzes.forEach((quiz, quizIndex) => {
+      if (!quiz.title?.trim()) {
+        errors.push(`Le titre du quiz ${quizIndex + 1} est requis`);
+      }
+
+      if (!quiz.questions || quiz.questions.length === 0) {
+        errors.push(
+          `Le quiz ${quizIndex + 1} doit contenir au moins une question`
+        );
+      } else {
+        quiz.questions.forEach((question, questionIndex) => {
+          if (!question.content?.trim()) {
+            errors.push(
+              `La question ${questionIndex + 1} du quiz ${
+                quizIndex + 1
+              } est requise`
+            );
           }
-          
-          question.options.forEach((option, optionIndex) => {
-            if (!option.text?.trim()) {
-              errors.push(`L'option ${optionIndex + 1} de la question ${questionIndex + 1} est requise`);
+
+          // Validate options instead of single answer
+          if (!question.options || question.options.length < 2) {
+            errors.push(
+              `La question ${questionIndex + 1} doit avoir au moins 2 options`
+            );
+          } else {
+            const correctOptions = question.options.filter(
+              (opt) => opt.isCorrect
+            );
+            if (correctOptions.length !== 1) {
+              errors.push(
+                `La question ${
+                  questionIndex + 1
+                } doit avoir exactement une option correcte`
+              );
             }
-          });
-        }
-      });
-    }
-  });
-}
+
+            question.options.forEach((option, optionIndex) => {
+              if (!option.text?.trim()) {
+                errors.push(
+                  `L'option ${optionIndex + 1} de la question ${
+                    questionIndex + 1
+                  } est requise`
+                );
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
 // Fonction helper pour vérifier l'unicité du handler
-async function checkHandlerUniqueness(handler: string, excludeId?: string): Promise<boolean> {
+async function checkHandlerUniqueness(
+  handler: string,
+  excludeId?: string
+): Promise<boolean> {
   const existingCourse = await prisma.course.findUnique({
     where: { handler },
-    select: { id: true }
+    select: { id: true },
   });
 
   // Si aucun cours trouvé, le handler est unique
@@ -161,7 +188,7 @@ async function checkHandlerUniqueness(handler: string, excludeId?: string): Prom
 async function validateSubject(subjectId: string): Promise<boolean> {
   const subject = await prisma.subject.findUnique({
     where: { id: subjectId },
-    select: { id: true }
+    select: { id: true },
   });
 
   return !!subject;
@@ -173,13 +200,20 @@ export async function createCourse(data: CourseData) {
     // 1. Validation des données
     const validation = validateCourseData(data);
     if (!validation.isValid) {
-      return { success: false, error: "Données invalides", details: validation.errors };
+      return {
+        success: false,
+        error: "Données invalides",
+        details: validation.errors,
+      };
     }
 
     // 2. Vérif unicité du handler
     const isHandlerUnique = await checkHandlerUniqueness(data.handler);
     if (!isHandlerUnique) {
-      return { success: false, error: "L'identifiant (handler) du cours existe déjà" };
+      return {
+        success: false,
+        error: "L'identifiant (handler) du cours existe déjà",
+      };
     }
 
     // 3. Vérif matière
@@ -207,7 +241,7 @@ export async function createCourse(data: CourseData) {
     const newCourse = await prisma.course.create({
       data: {
         title: data.title,
-        content: data.content,
+        content: data.description,
         videoUrl: data.videoUrl || null,
         coverImage: coverImageUrl,
         handler: data.handler,
@@ -240,7 +274,8 @@ export async function createCourse(data: CourseData) {
               data: {
                 content: questionData.content,
                 quizId: quiz.id,
-                answer: questionData.options.find((opt) => opt.isCorrect)?.text || "",
+                answer:
+                  questionData.options.find((opt) => opt.isCorrect)?.text || "",
               },
             });
 
@@ -272,35 +307,38 @@ export async function createCourse(data: CourseData) {
     return { success: true, data: cours, message: "Cours créé avec succès" };
   } catch (error) {
     console.error("Erreur lors de la création du cours:", error);
-    return { success: false, error: "Erreur interne du serveur lors de la création du cours" };
+    return {
+      success: false,
+      error: "Erreur interne du serveur lors de la création du cours",
+    };
   }
 }
 
-
 // Fonction helper pour mettre à jour un cours existant
-export async function updateCourse(courseId: string, data: Partial<CourseData>) {
+export async function updateCourse(
+  courseId: string,
+  data: Partial<CourseData>
+) {
   try {
     // Vérifier que le cours existe
     const existingCourse = await prisma.course.findUnique({
       where: { id: courseId },
-      select: { id: true, handler: true,coverImage:true }
+      select: { id: true, handler: true, coverImage: true },
     });
 
     if (!existingCourse) {
       return {
         success: false,
-        error: "Cours non trouvé"
+        error: "Cours non trouvé",
       };
     }
 
     // Validation partielle des données
     const errors: string[] = [];
-    
+
     if (data.title !== undefined && !data.title.trim()) {
       errors.push("Le titre du cours ne peut pas être vide");
     }
-
-   
 
     if (data.subjectId !== undefined) {
       const isSubjectValid = await validateSubject(data.subjectId);
@@ -313,7 +351,7 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
       return {
         success: false,
         error: "Données invalides",
-        details: errors
+        details: errors,
       };
     }
 
@@ -323,10 +361,13 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
       try {
         coverImageUrl = await uploadImage(data.coverImage);
       } catch (error) {
-        console.error("Erreur lors de l'upload de l'image de couverture:", error);
+        console.error(
+          "Erreur lors de l'upload de l'image de couverture:",
+          error
+        );
         return {
           success: false,
-          error: "Erreur lors de l'upload de l'image de couverture"
+          error: "Erreur lors de l'upload de l'image de couverture",
         };
       }
     }
@@ -338,43 +379,49 @@ export async function updateCourse(courseId: string, data: Partial<CourseData>) 
         ...(data.title !== undefined && { title: data.title }),
         ...(data.videoUrl !== undefined && { videoUrl: data.videoUrl || null }),
         ...(coverImageUrl && { coverImage: coverImageUrl }),
-        ...(data.subjectId !== undefined && { subjectId: data.subjectId })
+        ...(data.subjectId !== undefined && { subjectId: data.subjectId }),
       },
       include: {
         subject: {
           include: {
-            grade: true
-          }
-        },        
-      }
+            grade: true,
+          },
+        },
+      },
     });
 
     return {
       success: true,
       data: updatedCourse,
-      message: "Cours mis à jour avec succès"
+      message: "Cours mis à jour avec succès",
     };
-
   } catch (error) {
     console.error("Erreur lors de la mise à jour du cours:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la mise à jour du cours"
+      error: "Erreur interne du serveur lors de la mise à jour du cours",
     };
   }
 }
 // Example in /actions/cours.ts
-export async function updateCourseDocuments(courseId: string, docs: { name: string; url: string; courseId: string; id?: string }[]) {
+export async function updateCourseDocuments(
+  courseId: string,
+  docs: { name: string; url: string; courseId: string; id?: string }[]
+) {
   try {
     // Get current documents from DB
-    const existingDocs = await prisma.document.findMany({ where: { courseId } });
+    const existingDocs = await prisma.document.findMany({
+      where: { courseId },
+    });
 
     // Find docs to delete (in DB but not in the new list)
-    const toDelete = existingDocs.filter(dbDoc => !docs.some(d => d.id === dbDoc.id));
+    const toDelete = existingDocs.filter(
+      (dbDoc) => !docs.some((d) => d.id === dbDoc.id)
+    );
 
     // Delete removed docs
     await prisma.document.deleteMany({
-      where: { id: { in: toDelete.map(d => d.id) } }
+      where: { id: { in: toDelete.map((d) => d.id) } },
     });
 
     // Upsert all docs (update if id exists, create otherwise)
@@ -382,11 +429,11 @@ export async function updateCourseDocuments(courseId: string, docs: { name: stri
       if (doc.id) {
         await prisma.document.update({
           where: { id: doc.id },
-          data: { name: doc.name, url: doc.url }
+          data: { name: doc.name, url: doc.url },
         });
       } else {
         await prisma.document.create({
-          data: { name: doc.name, url: doc.url, courseId }
+          data: { name: doc.name, url: doc.url, courseId },
         });
       }
     }
@@ -394,7 +441,7 @@ export async function updateCourseDocuments(courseId: string, docs: { name: stri
     // Return updated course
     const updatedCourse = await prisma.course.findUnique({
       where: { id: courseId },
-      include: { documents: true }
+      include: { documents: true },
     });
 
     return { success: true, updatedCourse };
@@ -410,32 +457,31 @@ export async function deleteCourse(courseId: string) {
     // Vérifier que le cours existe
     const existingCourse = await prisma.course.findUnique({
       where: { id: courseId },
-      select: { id: true }
+      select: { id: true },
     });
 
     if (!existingCourse) {
       return {
         success: false,
-        error: "Cours non trouvé"
+        error: "Cours non trouvé",
       };
     }
 
     // Suppression en cascade (les documents, quiz et questions seront supprimés automatiquement
     // si vous avez configuré les relations avec onDelete: Cascade dans votre schéma Prisma)
     await prisma.course.delete({
-      where: { id: courseId }
+      where: { id: courseId },
     });
 
     return {
       success: true,
-      message: "Cours supprimé avec succès"
+      message: "Cours supprimé avec succès",
     };
-
   } catch (error) {
     console.error("Erreur lors de la suppression du cours:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la suppression du cours"
+      error: "Erreur interne du serveur lors de la suppression du cours",
     };
   }
 }
@@ -448,14 +494,14 @@ export async function getCourseById(courseId: string) {
       include: {
         subject: {
           include: {
-            grade: true
-          }
+            grade: true,
+          },
         },
         documents: true,
         quizzes: {
           include: {
-            questions: true
-          }
+            questions: true,
+          },
         },
         progress: {
           include: {
@@ -463,31 +509,30 @@ export async function getCourseById(courseId: string) {
               select: {
                 id: true,
                 name: true,
-                email: true
-              }
-            }
-          }
-        }
-      }
+                email: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!course) {
       return {
         success: false,
-        error: "Cours non trouvé"
+        error: "Cours non trouvé",
       };
     }
 
     return {
       success: true,
-      data: course
+      data: course,
     };
-
   } catch (error) {
     console.error("Erreur lors de la récupération du cours:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la récupération du cours"
+      error: "Erreur interne du serveur lors de la récupération du cours",
     };
   }
 }
@@ -497,27 +542,26 @@ export async function getCoursesBySubject(subjectId: string) {
   try {
     const courses = await prisma.course.findMany({
       where: { subjectId },
-      orderBy: { index: 'asc' },
+      orderBy: { index: "asc" },
       include: {
         documents: true,
         quizzes: {
           include: {
-            questions: true
-          }
-        }
-      }
+            questions: true,
+          },
+        },
+      },
     });
 
     return {
       success: true,
-      data: courses
+      data: courses,
     };
-
   } catch (error) {
     console.error("Erreur lors de la récupération des cours:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la récupération des cours"
+      error: "Erreur interne du serveur lors de la récupération des cours",
     };
   }
 }
@@ -529,18 +573,18 @@ export async function getCoursByHandle(courseId: string) {
       include: {
         subject: {
           include: {
-            grade: true
-          }
+            grade: true,
+          },
         },
         documents: true,
         quizzes: {
           include: {
             questions: {
-              include:{
+              include: {
                 options: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         progress: {
           include: {
@@ -548,31 +592,30 @@ export async function getCoursByHandle(courseId: string) {
               select: {
                 id: true,
                 name: true,
-                email: true
-              }
-            }
-          }
-        }
-      }
+                email: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!course) {
       return {
         success: false,
-        error: "Cours non trouvé"
+        error: "Cours non trouvé",
       };
     }
 
     return {
       success: true,
-      data: course
+      data: course,
     };
-
   } catch (error) {
     console.error("Erreur lors de la récupération du cours:", error);
     return {
       success: false,
-      error: "Erreur interne du serveur lors de la récupération du cours"
+      error: "Erreur interne du serveur lors de la récupération du cours",
     };
   }
 }

@@ -180,11 +180,12 @@ const CardSection = () => {
         className="text-center"
       >
         <h2 className="text-2xl md:text-5xl font-bold text-white px-2">
-          Des <span className="text-yellow-400">Formations Adaptées</span>{" "}
-          à Vos Besoins
+          Des <span className="text-yellow-400">Formations Adaptées</span> à Vos
+          Besoins
         </h2>
         <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
-          Spécialisation en Génie Civil, BTP et Travaux Publics avec des partenariats internationaux prestigieux.
+          Spécialisation en Génie Civil, BTP et Travaux Publics avec des
+          partenariats internationaux prestigieux.
         </p>
       </motion.div>
       <div className="lg:flex justify-center gap-8 mt-6 flex-wrap hidden">
@@ -192,7 +193,7 @@ const CardSection = () => {
           <CardAnimation key={card.id} feature={card} />
         ))}
       </div>
-       <div className="lg:hidden px-2 mt-6">
+      <div className="lg:hidden px-2 mt-6">
         {" "}
         {/* Added px-6 for side padding */}
         <Carousel

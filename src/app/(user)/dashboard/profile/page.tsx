@@ -1,17 +1,21 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-import { getStudentById } from '@/actions/client';
-import Profile from '../../_components/profile';
+import { getStudentById } from "@/actions/client";
+import { getStudentDashboardStats } from "@/actions/student";
+//import Profile from "../../_components/profile";
+import StudentProfile from "@/components/student/StudentProfile";
 
 const page = async () => {
-
- 
   const user = await getStudentById();
+  if (!user) {
+    return <div>Utilisateur non trouvé</div>;
+  }
+  const stats = await getStudentDashboardStats(user.id);
   return (
-    <div>
-      <Profile user = {user}/>
+    <div className="">
+      <StudentProfile user={user} stats={stats} />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

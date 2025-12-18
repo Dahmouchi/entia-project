@@ -31,6 +31,7 @@ import {
 import SimplePDFViewer from "./cours-pdf";
 import QuizDisplay from "./quizSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CourseChat } from "./course-chat";
 
 const StudentCourse = ({ subject, user, progressCount }: any) => {
   const { handler } = useParams();
@@ -228,7 +229,15 @@ const StudentCourse = ({ subject, user, progressCount }: any) => {
                   </TabsContent>
 
                   <TabsContent value="discussions" className="mt-6">
-                    <div className="text-center py-12 text-muted-foreground"></div>
+                    <div className="bg-card rounded-2xl border border-border p-6 text-center">
+                      <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">coming soon</p>
+                    </div>
+                    {/*<CourseChat
+                      courseId={selectedCourse.id}
+                      currentUserId={user.id}
+                      currentUserRole={user.role}
+                    />*/}
                   </TabsContent>
                   <TabsContent value="notes" className="mt-4">
                     {selectedCourse?.quizzes.length > 0 ? (

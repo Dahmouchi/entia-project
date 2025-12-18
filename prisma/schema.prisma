@@ -286,26 +286,84 @@ model Subject {
   courses     Course[]
 }
 
+model CourseChatNotification {
+  id        String   @id @default(cuid())
+  
+  messageId String
+  message   CourseChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  
+  userId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  isRead    Boolean  @default(false)
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+  
+  @@unique([messageId, userId])
+  @@index([userId, isRead])
+}
+
+model CourseChatMessageRead {
+  id        String   @id @default(cuid())
+
+  messageId String
+  message   CourseChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  readAt    DateTime @default(now())
+
+  @@unique([messageId, userId])
+  @@index([userId])
+  @@index([messageId, readAt])
+}
+
+model CourseChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+
+  parentId  String?
+  parent    CourseChatMessage? @relation("MessageReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   CourseChatMessage[] @relation("MessageReplies")
+
+  courseId  String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  senderId  String
+  sender    User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  reads         CourseChatMessageRead[]
+  notifications CourseChatNotification[]  // ✅ ADDED THIS!
+
+  createdAt DateTime @default(now())
+
+  @@index([parentId])
+  @@index([courseId])
+  @@index([courseId, createdAt])
+  @@index([senderId, courseId])
+}
+
 model Course {
   id         String           @id @default(cuid())
   title      String
-  content    String? // description or summary
-  videoUrl   String? // Video (optional)
-  coverImage String? // Cover image (optional)
-  handler    String           @unique // short readable identifier (e.g. "fractions-course")
-  index      Int // order of the course in a subject
+  content    String?
+  videoUrl   String?
+  coverImage String?
+  handler    String           @unique
+  index      Int
   subjectId  String
   subject    Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   documents  Document[]
   quizzes    Quiz[]
   progress   CourseProgress[]
   notes      Note[]
+  chat       CourseChatMessage[]
 
   createdAt DateTime @default(now())
 
   @@index([index])
 }
-
 model Document {
   id       String @id @default(cuid())
   name     String
@@ -404,6 +462,10 @@ model User {
   activities     UserActivity[]
   badges         EarnedBadge[]
   notesGlobal    NotesGlobal[]
+  
+  messages            CourseChatMessage[]       // existing
+  chatReads           CourseChatMessageRead[]    // ✅ ADD THIS
+  chatNotifications   CourseChatNotification[]  // ✅ ADD THIS
 }
 
 model Account {
@@ -459,6 +521,7 @@ model Authenticator {
 enum Role {
   USER
   ADMIN
+  TEACHER
 }
 
 enum StatutUser {

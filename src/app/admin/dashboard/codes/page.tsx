@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // app/dashboard/blogs/page.tsx
 "use client";
 
@@ -8,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-
 
 import {
   Dialog,
@@ -37,10 +35,10 @@ import { Button } from "@/components/ui/button";
 import { columns } from "../../_components/tour-data-table/columns";
 import { DataTable } from "../../_components/tour-data-table/data-table";
 import { Shell } from "@/components/shells/shell";
- const formSchema = z.object({
-    title: z.string().min(1, "Code is required"),
-    numberOfCodes: z.number().min(1).max(100, "Maximum 100 codes at once"),
-  });
+const formSchema = z.object({
+  title: z.string().min(1, "Code is required"),
+  numberOfCodes: z.number().min(1).max(100, "Maximum 100 codes at once"),
+});
 
 export default function BlogManagementPage() {
   const [blogs, setBlogs] = useState<RegisterCode[]>([]);
@@ -49,7 +47,7 @@ export default function BlogManagementPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentBlog, setCurrentBlog] = useState<RegisterCode | null>(null);
 
-   const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       title: "",
       numberOfCodes: 1,
@@ -99,14 +97,14 @@ export default function BlogManagementPage() {
       } else {
         // Handle multiple code creation
         const codesToCreate = generateMultipleCodes(values.numberOfCodes);
-        
+
         // Create all codes (you'll need to implement batch creation in your API)
-        const creationPromises = codesToCreate.map(code => {
+        const creationPromises = codesToCreate.map((code) => {
           const formData = new FormData();
           formData.append("title", code);
           return createBlog(formData);
         });
-        
+
         await Promise.all(creationPromises);
         toast.success(`Successfully created ${values.numberOfCodes} codes`);
       }
@@ -137,7 +135,6 @@ export default function BlogManagementPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <h1 className="text-3xl font-bold">Gestion des Codes</h1>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-           
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button onClick={openCreateDialog}>
@@ -152,69 +149,76 @@ export default function BlogManagementPage() {
                   </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 gap-4">
-          {currentBlog ? (
-            // Edit mode - show single code field
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ) : (
-            // Create mode - show number of codes to generate
-            <>
-              <div className="flex items-end gap-2 ">
-                <FormField
-                
-                control={form.control}
-                name="numberOfCodes"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Nombre de codes à générer</FormLabel>
-                    <FormControl className="w-full">
-                      <Input
-                        type="number"
-                        className="w-full"
-                        min="1"
-                        max="100"
-                        placeholder="1-100"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">
-            {currentBlog ? "Update" : "Générer des codes"}
-          </Button>
-              </div>
-            </>
-          )}
-        </div>
+                  <form
+                    onSubmit={form.handleSubmit(handleSubmit)}
+                    className="space-y-6"
+                  >
+                    <div className="grid grid-cols-1 gap-4">
+                      {currentBlog ? (
+                        // Edit mode - show single code field
+                        <FormField
+                          control={form.control}
+                          name="title"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Code</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Enter code" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ) : (
+                        // Create mode - show number of codes to generate
+                        <>
+                          <div className="flex items-end gap-2 ">
+                            <FormField
+                              control={form.control}
+                              name="numberOfCodes"
+                              render={({ field }) => (
+                                <FormItem className="w-full">
+                                  <FormLabel>
+                                    Nombre de codes à générer
+                                  </FormLabel>
+                                  <FormControl className="w-full">
+                                    <Input
+                                      type="number"
+                                      className="w-full"
+                                      min="1"
+                                      max="100"
+                                      placeholder="1-100"
+                                      {...field}
+                                      onChange={(e) =>
+                                        field.onChange(
+                                          parseInt(e.target.value) || 1
+                                        )
+                                      }
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <Button type="submit">
+                              {currentBlog ? "Update" : "Générer des codes"}
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </div>
 
-        <div className="flex justify-end gap-2 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsDialogOpen(false)}
-          >
-            Cancel
-          </Button>
-          
-        </div>
-      </form>
-    </Form>
+                    <div className="flex justify-end gap-2 pt-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsDialogOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
               </DialogContent>
             </Dialog>
           </div>
@@ -236,12 +240,12 @@ export default function BlogManagementPage() {
             )}
           </div>
         ) : (
-            <ScrollArea className="w-full rounded-md border">
-          <Shell className="p-0 sm:p-4">
-            <DataTable data={blogs || []} columns={columns} />
-          </Shell>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+          <ScrollArea className="w-full rounded-md border">
+            <Shell className="p-0 sm:p-4">
+              <DataTable data={blogs || []} columns={columns} />
+            </Shell>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         )}
       </div>
     </div>

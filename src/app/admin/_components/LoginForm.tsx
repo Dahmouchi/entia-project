@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,7 +57,7 @@ const LoginForm = () => {
     } else {
       await update();
       setLoading(false);
-      redirect("/admin/dashboard")
+      redirect("/admin/dashboard");
     }
   }
 

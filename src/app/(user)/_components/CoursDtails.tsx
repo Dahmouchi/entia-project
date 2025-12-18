@@ -4,43 +4,23 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
   FileText,
-  Download,
-  CheckCircle,
-  Clock,
   BookOpen,
-  ChevronRight,
-  File,
-  FileImage,
-  FileSpreadsheet,
   Eye,
-  Star,
-  Calendar,
   CheckCircle2,
   MessageSquare,
-  HelpCircle,
-  Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { StudentHeader } from "@/components/student/StudentHeader";
 import { useParams, useRouter } from "next/navigation";
 import Progress from "@/components/ui/progress";
 import VimeoTest from "@/app/(user)/_components/vimeoPlayer";
-import {
-  getCourseCompletionStatus,
-  getSubjectProgress,
-} from "@/actions/progress";
+import { getCourseCompletionStatus } from "@/actions/progress";
 import { getNotes } from "@/actions/noteOpenAI";
 
 import ButtonComplete from "./buttonComplete";
 import ButtonSynthese from "./ButtonSynthese";
-import MagicNotesButton from "./magic-notes-button";
 import {
   Dialog,
   DialogContent,
@@ -50,7 +30,6 @@ import {
 } from "@/components/ui/dialog";
 import SimplePDFViewer from "./cours-pdf";
 import QuizDisplay from "./quizSection";
-import { Avatar } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const StudentCourse = ({ subject, user, progressCount }: any) => {

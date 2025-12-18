@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";

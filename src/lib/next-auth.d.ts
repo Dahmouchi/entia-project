@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ 
 import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
@@ -9,20 +8,20 @@ declare module "next-auth" {
       username?: string; // Add username here
       twoFactorEnabled: boolean;
       twoFactorVerified: boolean;
-      step:number;
-      role:string;
-      statut?:boolean;
+      step: number;
+      role: string;
+      statut?: boolean;
     } & DefaultSession["user"];
   }
-  
+
   interface User extends DefaultUser {
     id: string;
     username?: string; // Add username here
     twoFactorEnabled: boolean;
     twoFactorVerified?: boolean;
-    role:string;
-    step:number;
-    statut?:boolean;
+    role: string;
+    step: number;
+    statut?: boolean;
   }
 }
 
@@ -32,8 +31,8 @@ declare module "next-auth/jwt" {
     username?: string; // Add username here
     twoFactorEnabled: boolean;
     twoFactorVerified: boolean;
-    role:string;
-    step:number;
-    statut?:boolean;
+    role: string;
+    step: number;
+    statut?: boolean;
   }
 }

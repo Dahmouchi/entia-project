@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -81,7 +80,7 @@ export function DataTable<TData, TValue>({
     const rows = table.getFilteredRowModel().rows;
 
     const rowData = rows.map((row) => row.renderValue);
-    
+
     exportToCsv("persons_data", headers, rows);
   };
 
@@ -98,7 +97,9 @@ export function DataTable<TData, TValue>({
         />
         <Select
           defaultValue=""
-          value={(table.getColumn("StatutUser")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("StatutUser")?.getFilterValue() as string) ?? ""
+          }
           onValueChange={(event) =>
             event == "all"
               ? table.resetColumnFilters()
@@ -120,7 +121,6 @@ export function DataTable<TData, TValue>({
         <Button
           type="button"
           variant="default"
-
           className="ml-4 shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400 hover:bg-yellow-600 cursor-pointer"
           onClick={handleExportToCsv}
         >

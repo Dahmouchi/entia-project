@@ -35,17 +35,14 @@ import {
 } from "lucide-react";
 import { WelcomeHeader } from "@/components/student/WelcomeHeader";
 import { StatsCard } from "@/components/student/StatsCard";
-import { CourseCard } from "@/components/student/CourseCard";
 import { ProgressRing } from "@/components/student/ProgressRing";
 import { RecentActivity } from "@/components/student/RecentActivity";
 import { Subject, Course, StudentStats } from "@/types/student";
-import { StudentHeader } from "@/components/student/StudentHeader";
 import { toast } from "react-toastify";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSubjectProgress } from "@/actions/progress";
-import { mapUserActivityToUI } from "@/actions/student";
 import QuizDisplay from "./quizzes";
 
 const subjectIcons = [

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getStudentById } from "@/actions/client";
 import prisma from "@/lib/prisma";
-import StudentCourse from "@/app/(user)/_components/CoursDtails";
+//import StudentCourse from "@/app/(user)/_components/CoursDtails";
 import { getSubjectProgress } from "@/actions/progress";
 
 const SubjectPage = async ({ params }: any) => {
@@ -35,15 +35,7 @@ const SubjectPage = async ({ params }: any) => {
     return redirect("/dashboard");
   }
   const progressCount = await getSubjectProgress(user.id, subject.id);
-  return (
-    <div>
-      <StudentCourse
-        subject={subject}
-        user={user}
-        progressCount={progressCount}
-      />
-    </div>
-  );
+  return <div></div>;
 };
 
 export default SubjectPage;

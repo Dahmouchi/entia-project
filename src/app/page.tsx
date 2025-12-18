@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { getSectionsIsVisible } from "@/actions/landing";
 import FullPageScrollExample from "@/components/HomePage";
 

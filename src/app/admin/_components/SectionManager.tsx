@@ -30,6 +30,7 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
     useState<SectionWithFeatures | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "preview">("list");
   const router = useRouter();
+
   const handleSave = async (data: Partial<SectionWithFeatures>) => {
     if (editingSection) {
       setSections(
@@ -39,9 +40,13 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
             : s
         )
       );
-      await updateSection(editingSection.id, data);
-      toast.success("Section updated successfully");
-      window.location.reload();
+      const res = await updateSection(editingSection.id, data);
+      if (res.success) {
+        toast.success("Section updated successfully");
+        window.location.reload();
+      } else {
+        toast.error("Section update failed");
+      }
     } else {
       const newSection: SectionWithFeatures = {
         id: crypto.randomUUID(),

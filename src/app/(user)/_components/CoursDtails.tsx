@@ -18,7 +18,6 @@ import Progress from "@/components/ui/progress";
 import VimeoTest from "@/app/(user)/_components/vimeoPlayer";
 import { getCourseCompletionStatus } from "@/actions/progress";
 import { getNotes } from "@/actions/noteOpenAI";
-
 import ButtonComplete from "./buttonComplete";
 import ButtonSynthese from "./ButtonSynthese";
 import {
@@ -33,8 +32,8 @@ import QuizDisplay from "./quizSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CourseChat } from "./course-chat";
 
-const StudentCourse = ({ subject, user, progressCount }: any) => {
-  const { handler } = useParams();
+const CoursDetails = ({ subject, user, progressCount }: any) => {
+  const { id } = useParams();
   const navigate = useRouter();
   const [isPlaying, setIsPlaying] = useState(false);
   const [results, setResults] = useState<any>();
@@ -44,14 +43,12 @@ const StudentCourse = ({ subject, user, progressCount }: any) => {
     [key: string]: boolean;
   }>({});
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
-  // Initialize with the first course or find by handler
+  // Initialize with the first course or find by id
   useEffect(() => {
     const fetchNotes = async () => {
       if (subject?.courses && subject.courses.length > 0) {
-        if (handler) {
-          const course = subject.courses.find(
-            (c: any) => c.handler === handler
-          );
+        if (id) {
+          const course = subject.courses.find((c: any) => c.id === id);
 
           setSelectedCourse(course || subject.courses[0]);
 
@@ -67,7 +64,7 @@ const StudentCourse = ({ subject, user, progressCount }: any) => {
     };
 
     fetchNotes();
-  }, [subject, handler]);
+  }, [subject, id]);
 
   useEffect(() => {
     const fetchCompletionStatus = async () => {
@@ -86,7 +83,8 @@ const StudentCourse = ({ subject, user, progressCount }: any) => {
     };
 
     fetchCompletionStatus();
-  }, [subject, handler]);
+  }, [subject, id]);
+
   const handleCourseSelect = async (course: any) => {
     setSelectedCourse(course);
     const res = await getNotes(user?.id, course?.id);
@@ -96,7 +94,7 @@ const StudentCourse = ({ subject, user, progressCount }: any) => {
     setIsPlaying(false);
 
     // Optionally update URL
-    // navigate.push(`/student/course/${course.handler}`);
+    // navigate.push(`/student/course/${course.id}`);
   };
 
   if (!selectedCourse) {
@@ -429,4 +427,4 @@ const StudentCourse = ({ subject, user, progressCount }: any) => {
   );
 };
 
-export default StudentCourse;
+export default CoursDetails;

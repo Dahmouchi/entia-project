@@ -40,6 +40,7 @@ export const getSectionsIsVisible = async () => {
       where: {
         visible: true,
       },
+      orderBy: { order: "asc" },
       include: {
         featureItems: true,
         levels: {

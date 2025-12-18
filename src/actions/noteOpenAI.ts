@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use server"
+"use server";
 
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
 import OpenAI from "openai";
 // AI Client (if you need MagicNote generation here)
 const openai = new OpenAI({
@@ -13,7 +12,11 @@ const openai = new OpenAI({
 // -------------------------------
 
 // ✅ Create a new note
-export async function createNote(userId: string, courseId: string, content: string) {
+export async function createNote(
+  userId: string,
+  courseId: string,
+  content: string
+) {
   return prisma.note.create({
     data: {
       content,
@@ -69,7 +72,6 @@ export async function generateMagicNoteServer(
   courseTitle: string,
   lang: "fr" | "ar" | "en" = "fr"
 ) {
-
   // 1. Fetch notes content
   const notes = await prisma.note.findMany({
     where: { id: { in: noteIds } },
@@ -142,7 +144,10 @@ export async function generateMagicNoteServer(
   };
 }
 
-export async function generateMagicNote(noteId: string, lang: "fr" | "ar" | "en" = "en") {
+export async function generateMagicNote(
+  noteId: string,
+  lang: "fr" | "ar" | "en" = "en"
+) {
   // 1. Fetch the note
   const note = await prisma.note.findUnique({ where: { id: noteId } });
   if (!note) throw new Error("Note not found");

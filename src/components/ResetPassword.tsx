@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { KeyRound, LockKeyhole, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
 import { changeAdminPassword } from "@/actions/client";
 
-
-const ResetPassword =  (id: any)=> {
+const ResetPassword = (id: any) => {
   const [loading, setLoading] = useState(false);
   const [showPasswords, setShowPasswords] = useState({
     ancien: false,
     nouvelle: false,
-    cofirmer: false
+    cofirmer: false,
   });
   const [formData, setFormData] = useState({
     ancien: "",
@@ -28,22 +26,22 @@ const ResetPassword =  (id: any)=> {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
   const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
-    setShowPasswords(prev => ({
+    setShowPasswords((prev) => ({
       ...prev,
-      [field]: !prev[field]
+      [field]: !prev[field],
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.ancien || !formData.nouvelle || !formData.cofirmer) {
       toast.error("Veuillez remplir tous les champs");
       return;
@@ -82,12 +80,15 @@ const ResetPassword =  (id: any)=> {
       <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-white">
         Modifier le mot de passe
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-5">
           {/* Ancien mot de passe */}
           <div className="relative">
-            <label htmlFor="ancien" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="ancien"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Ancien mot de passe
             </label>
             <div className="relative">
@@ -106,16 +107,23 @@ const ResetPassword =  (id: any)=> {
               <button
                 type="button"
                 className="absolute right-3 top-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                onClick={() => togglePasswordVisibility('ancien')}
+                onClick={() => togglePasswordVisibility("ancien")}
               >
-                {showPasswords.ancien ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPasswords.ancien ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
 
           {/* Nouveau mot de passe */}
           <div className="relative">
-            <label htmlFor="nouvelle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="nouvelle"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Nouveau mot de passe
             </label>
             <div className="relative">
@@ -134,9 +142,13 @@ const ResetPassword =  (id: any)=> {
               <button
                 type="button"
                 className="absolute right-3 top-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                onClick={() => togglePasswordVisibility('nouvelle')}
+                onClick={() => togglePasswordVisibility("nouvelle")}
               >
-                {showPasswords.nouvelle ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPasswords.nouvelle ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -146,7 +158,10 @@ const ResetPassword =  (id: any)=> {
 
           {/* Confirmer mot de passe */}
           <div className="relative">
-            <label htmlFor="cofirmer" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="cofirmer"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Confirmer le mot de passe
             </label>
             <div className="relative">
@@ -165,9 +180,13 @@ const ResetPassword =  (id: any)=> {
               <button
                 type="button"
                 className="absolute right-3 top-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                onClick={() => togglePasswordVisibility('cofirmer')}
+                onClick={() => togglePasswordVisibility("cofirmer")}
               >
-                {showPasswords.cofirmer ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPasswords.cofirmer ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -181,9 +200,25 @@ const ResetPassword =  (id: any)=> {
           >
             {loading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 En cours...
               </>

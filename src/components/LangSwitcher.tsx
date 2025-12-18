@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import "country-flag-icons/react/3x2";
-import * as Flags from "country-flag-icons/react/3x2";
 import { Globe } from "lucide-react";
 
 interface Language {
@@ -50,11 +47,7 @@ export const LanguageSelector = () => {
     setIsOpen(false);
   };
 
-  const Flag =
-    (Flags as Record<string, React.ComponentType<any>>)[
-      currentLang.countryCode
-    ] || Flags.GB;
-
+  const Flag = "mo";
   return (
     <div className="relative inline-block text-left">
       <button
@@ -62,7 +55,6 @@ export const LanguageSelector = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer"
       >
-        <Flag className="h-5 w-5 mx-2 rounded-full" />
         <Globe className="h-4 w-4 text-gray-700" />
         <svg
           className="mx-2 h-5 w-5"
@@ -82,11 +74,6 @@ export const LanguageSelector = () => {
         <div className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
           <div className="py-1" role="none">
             {languages.map((lang) => {
-              const LangFlag =
-                (Flags as Record<string, React.ComponentType<any>>)[
-                  lang.countryCode
-                ] || Flags.GB;
-
               return (
                 <button
                   key={lang.key}
@@ -98,7 +85,6 @@ export const LanguageSelector = () => {
                   } w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center`}
                   role="menuitem"
                 >
-                  <LangFlag className="h-5 w-5 mr-2 rounded-full" />
                   {lang.name}
                 </button>
               );

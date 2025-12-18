@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -102,7 +101,7 @@ export default function MatieresPage({ niveauxx, classe, subject }: any) {
   const handleSave = async (subjectData: {
     name: string;
     color: string;
-    handler:string;
+    handler: string;
     gradeId: string;
     description: string;
   }) => {
@@ -171,8 +170,11 @@ export default function MatieresPage({ niveauxx, classe, subject }: any) {
             Gérez les matières de votre établissement par classe
           </p>
         </div>
-       
-        <Button onClick={handleCreate} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer">
+
+        <Button
+          onClick={handleCreate}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer"
+        >
           <Plus className="h-4 w-4" />
           Nouvelle Matière
         </Button>
@@ -180,77 +182,93 @@ export default function MatieresPage({ niveauxx, classe, subject }: any) {
 
       {/* Filtres */}
       <Card className="mb-6">
-  <CardHeader>
-    <CardTitle>Filtres</CardTitle>
-  </CardHeader>
-  <CardContent>
-    <div className="space-y-4">
-      {/* Filtre par niveau */}
-      <div>
-        <h4 className="text-sm font-medium mb-2">Par niveau :</h4>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={"outline"}
-            size="sm"
-            onClick={() => handleNiveauChange("all")}
-            className={selectedNiveau === "all" ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400" : ""}
-          >
-            Tous les niveaux ({subjects?.length})
-          </Button>
-          {niveaux.map((niveau) => {
-            const count = subjects?.filter(
-              (s) => s.grade.niveauId === niveau.id
-            ).length;
-            return (
-              <Button
-                key={niveau.id}
-                variant={"outline"}
-                size="sm"
-                onClick={() => handleNiveauChange(niveau.id)}
-                className={selectedNiveau === niveau.id ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400" : ""}
-              >
-                {niveau.name} ({count})
-              </Button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Filtre par classe */}
-      {selectedNiveau !== "all" && (
-        <div>
-          <h4 className="text-sm font-medium mb-2">Par classe :</h4>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={"outline"}
-              size="sm"
-              onClick={() => setSelectedGrade("all")}
-              className={selectedGrade === "all" ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400" : ""}
-            >
-              Toutes les classes
-            </Button>
-            {filteredGrades.map((grade) => {
-              const count = subjects.filter(
-                (s) => s.gradeId === grade.id
-              ).length;
-              return (
+        <CardHeader>
+          <CardTitle>Filtres</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {/* Filtre par niveau */}
+            <div>
+              <h4 className="text-sm font-medium mb-2">Par niveau :</h4>
+              <div className="flex flex-wrap gap-2">
                 <Button
-                  key={grade.id}
                   variant={"outline"}
                   size="sm"
-                  onClick={() => setSelectedGrade(grade.id)}
-                  className={selectedGrade === grade.id ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400" : ""}
+                  onClick={() => handleNiveauChange("all")}
+                  className={
+                    selectedNiveau === "all"
+                      ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400"
+                      : ""
+                  }
                 >
-                  {grade.name} ({count})
+                  Tous les niveaux ({subjects?.length})
                 </Button>
-              );
-            })}
+                {niveaux.map((niveau) => {
+                  const count = subjects?.filter(
+                    (s) => s.grade.niveauId === niveau.id
+                  ).length;
+                  return (
+                    <Button
+                      key={niveau.id}
+                      variant={"outline"}
+                      size="sm"
+                      onClick={() => handleNiveauChange(niveau.id)}
+                      className={
+                        selectedNiveau === niveau.id
+                          ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400"
+                          : ""
+                      }
+                    >
+                      {niveau.name} ({count})
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Filtre par classe */}
+            {selectedNiveau !== "all" && (
+              <div>
+                <h4 className="text-sm font-medium mb-2">Par classe :</h4>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant={"outline"}
+                    size="sm"
+                    onClick={() => setSelectedGrade("all")}
+                    className={
+                      selectedGrade === "all"
+                        ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400"
+                        : ""
+                    }
+                  >
+                    Toutes les classes
+                  </Button>
+                  {filteredGrades.map((grade) => {
+                    const count = subjects.filter(
+                      (s) => s.gradeId === grade.id
+                    ).length;
+                    return (
+                      <Button
+                        key={grade.id}
+                        variant={"outline"}
+                        size="sm"
+                        onClick={() => setSelectedGrade(grade.id)}
+                        className={
+                          selectedGrade === grade.id
+                            ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400"
+                            : ""
+                        }
+                      >
+                        {grade.name} ({count})
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
-    </div>
-  </CardContent>
-</Card>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

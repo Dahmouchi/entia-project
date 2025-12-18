@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // app/(teacher)/teach/live/[id]/page.tsx
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";

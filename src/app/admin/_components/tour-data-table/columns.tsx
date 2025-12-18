@@ -1,9 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Ban, CheckCircle, HelpCircle, MoreHorizontal, UserCheck } from "lucide-react";
+import {
+  Ban,
+  CheckCircle,
+  HelpCircle,
+  MoreHorizontal,
+  UserCheck,
+} from "lucide-react";
 import { toast } from "react-toastify";
 
 import React from "react";
@@ -83,7 +89,7 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "isUsed",
-    accessorFn: (row) => row.isUsed ? "true" : "false",
+    accessorFn: (row) => (row.isUsed ? "true" : "false"),
 
     header: "Utilisé",
     cell: ({ row }) => {
@@ -115,28 +121,28 @@ export const columns: ColumnDef<any>[] = [
 
       const status = row.original.user.archive || false; // Default to 'awaiting' if not set
 
-      if(status === false){
+      if (status === false) {
         return (
-        <div
-          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 border-2 border-blue-600 text-blue-800 dark:bg-blue-900 dark:text-blue-200`}
-        >
-          <UserCheck className="mr-1.5 h-3 w-3" />
-          actif
-        </div>
-      );
-    }
-      else {
-        return (
-        <div>
           <div
-            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 border-2 border-red-600 text-red-800 dark:bg-red-900 dark:text-red-200`}
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 border-2 border-blue-600 text-blue-800 dark:bg-blue-900 dark:text-blue-200`}
           >
-            <HelpCircle className="mr-1.5 h-3 w-3" />
-            Suspendu
+            <UserCheck className="mr-1.5 h-3 w-3" />
+            actif
           </div>
-        </div>)
+        );
+      } else {
+        return (
+          <div>
+            <div
+              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 border-2 border-red-600 text-red-800 dark:bg-red-900 dark:text-red-200`}
+            >
+              <HelpCircle className="mr-1.5 h-3 w-3" />
+              Suspendu
+            </div>
+          </div>
+        );
       }
-    }
+    },
   },
   {
     id: "actions",

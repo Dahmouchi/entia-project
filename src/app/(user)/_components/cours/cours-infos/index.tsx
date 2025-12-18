@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"; 
+
+"use client";
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -14,7 +14,7 @@ const CoursContainerInfos = (params: any) => {
 
   return (
     <div className="relative group">
-     {/* <Link
+      {/* <Link
         href={
           params.isLocked
             ? "#" // Disable link if locked
@@ -44,7 +44,11 @@ const CoursContainerInfos = (params: any) => {
 
       {params.isLocked && (
         <div className="absolute inset-0 bg-black/40 rounded-md flex flex-row gap-4 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-           <img src="/locked.png" className="text-white w-12 h-12" alt="locked"/>
+          <img
+            src="/locked.png"
+            className="text-white w-12 h-12"
+            alt="locked"
+          />
           <Link
             href="/dashboard/payment"
             className=" bg-cover  rounded-full shadow-md shadow-black/50 hover:shadow-lg hover:shadow-yellow-400/50 transition-all duration-200 active:translate-y-px inline-block w-fit"

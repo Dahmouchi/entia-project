@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Tooltip from "../tooltip";
 import { CheckCircle, Circle, Play } from "lucide-react";
 import Badge from "../badge";
@@ -13,12 +13,14 @@ const CoursContainer = (params: any) => {
   const { cours } = useParams<{ cours: string }>();
   const userId = params.userId; // pass this from parent
 
-  const [completedStatus, setCompletedStatus] = useState<{ [key: string]: boolean }>({});
+  const [completedStatus, setCompletedStatus] = useState<{
+    [key: string]: boolean;
+  }>({});
   useEffect(() => {
     const fetchCompletionStatus = async () => {
       const results = await Promise.all(
         params.cour.map(async (course: any) => {
-          const res = await getCourseCompletionStatus(userId, course.id);     
+          const res = await getCourseCompletionStatus(userId, course.id);
           return { courseId: course.id, completed: res.completed };
         })
       );
@@ -33,8 +35,8 @@ const CoursContainer = (params: any) => {
     fetchCompletionStatus();
   }, [params.cour, userId]);
   return (
-     <div className="space-y-2 w-full">
-      {params.cour.map((course: any,index:any) => {
+    <div className="space-y-2 w-full">
+      {params.cour.map((course: any, index: any) => {
         const isCompleted = completedStatus[course.id] || false;
         const isActive = course.id === cours;
 
@@ -46,7 +48,9 @@ const CoursContainer = (params: any) => {
           >
             <div
               onClick={() => {
-                router.push(`/dashboard/${params.subjectId}/chapitre/${course.id}`);
+                router.push(
+                  `/dashboard/${params.subjectId}/chapitre/${course.id}`
+                );
               }}
               className={`p-3 rounded-lg border w-full cursor-pointer ${
                 isActive
@@ -75,7 +79,7 @@ const CoursContainer = (params: any) => {
                       : "bg-gray-100 text-gray-600"
                   }`}
                 >
-                  {index+1}
+                  {index + 1}
                 </div>
 
                 <img
@@ -87,12 +91,13 @@ const CoursContainer = (params: any) => {
                 />
 
                 <div className="flex-1 min-w-0">
-                  <h4 className={`text-sm font-medium truncate transition-colors ${
+                  <h4
+                    className={`text-sm font-medium truncate transition-colors ${
                       isActive ? "text-blue-700" : "text-gray-900"
                     }`}
                   >
                     {course.title}
-                  </h4>        
+                  </h4>
                 </div>
 
                 {isActive && (

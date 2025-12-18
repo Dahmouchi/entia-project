@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -124,7 +123,10 @@ const NiveauxPage = ({ niveauxx }: { niveauxx: any }) => {
             Gérez les niveaux d&apos;éducation de votre établissement
           </p>
         </div>
-        <Button onClick={handleCreate} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer">
+        <Button
+          onClick={handleCreate}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer"
+        >
           <Plus className="h-4 w-4" />
           Nouveau Niveau
         </Button>
@@ -202,9 +204,7 @@ const NiveauxPage = ({ niveauxx }: { niveauxx: any }) => {
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger className="text-red-600 hover:text-red-700">
-                    
-                              <Trash2 className="h-4 w-4" />
-                            
+                            <Trash2 className="h-4 w-4" />
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>

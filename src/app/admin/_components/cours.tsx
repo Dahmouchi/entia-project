@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -345,7 +345,7 @@ export default function CoursesPage({ classe, subject, coures }: any) {
                             <span>{course.subject.name}</span>
                           </div>
                         </TableCell>
-                        
+
                         <TableCell className="text-center">
                           <Badge variant="outline">{course.index}</Badge>
                         </TableCell>

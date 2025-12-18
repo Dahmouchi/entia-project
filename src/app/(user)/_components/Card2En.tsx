@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from "react";
 import styled from "styled-components";
@@ -180,10 +179,12 @@ const CardSectionEn = () => {
         className="text-center"
       >
         <h2 className="text-2xl md:text-5xl font-bold text-white px-2">
-          Tailored <span className="text-yellow-400">Programs</span> for Your Needs
+          Tailored <span className="text-yellow-400">Programs</span> for Your
+          Needs
         </h2>
         <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
-          Specializations in Civil Engineering, Construction, and Public Works with prestigious international partnerships.
+          Specializations in Civil Engineering, Construction, and Public Works
+          with prestigious international partnerships.
         </p>
       </motion.div>
 

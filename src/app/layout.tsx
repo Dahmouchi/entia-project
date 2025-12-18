@@ -29,12 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <body className={`${poppins.className} relative`}>
-          <NextAuthProvider>
-            <div className="overflow-x-hidden">{children}</div>
-          </NextAuthProvider>
-          <ScrollToTop />
+        <NextAuthProvider>
+          <div className="overflow-x-hidden">{children}</div>
+        </NextAuthProvider>
+        <ScrollToTop />
         <AOSInit />
         <ToastContainer
           position="top-right"

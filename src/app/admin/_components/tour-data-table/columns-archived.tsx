@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import {
@@ -44,7 +44,11 @@ export const columns: ColumnDef<any>[] = [
       return (
         <span
           className={`inline-block px-3 py-1 rounded-full text-xs font-semibold shadow-sm
-          ${isActive ? "border border-green-500 bg-green-100 text-green-700" : "border border-red-500 bg-red-100 text-red-700"}`}
+          ${
+            isActive
+              ? "border border-green-500 bg-green-100 text-green-700"
+              : "border border-red-500 bg-red-100 text-red-700"
+          }`}
         >
           {isActive ? "Actif" : "Inactif"}
         </span>
@@ -139,7 +143,7 @@ export const columns: ColumnDef<any>[] = [
               }}
             >
               Voir détails / Modifier
-            </DropdownMenuItem>     
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

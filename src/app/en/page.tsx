@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Header from "@/components/Layout/Header";
@@ -152,7 +151,8 @@ const ExampleSection1 = () => {
                   className="smallImage"
                 />
                 <p className="text-sm sm:text-lg font-normal text-white">
-                 French-recognized diplomas from 2-year to 5-year higher education levels
+                  French-recognized diplomas from 2-year to 5-year higher
+                  education levels
                 </p>
               </div>
               <div className="flex gap-2">
@@ -164,7 +164,7 @@ const ExampleSection1 = () => {
                   className="smallImage"
                 />
                 <p className="text-sm sm:text-lg font-normal text-white">
-                   Recognition of prior learning (RPL)
+                  Recognition of prior learning (RPL)
                 </p>
               </div>
               <div className="flex gap-2">
@@ -176,7 +176,7 @@ const ExampleSection1 = () => {
                   className="smallImage"
                 />
                 <p className="text-sm sm:text-lg font-normal text-white">
-                   100% online or in-person training
+                  100% online or in-person training
                 </p>
               </div>
             </div>
@@ -255,7 +255,8 @@ const ExampleSection2 = () => {
             Why choose <span className="text-indigo-400">ENITA</span>?
           </h2>
           <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
-            French school specialized in Civil Engineering and Construction, offering flexible, recognized degree programs.
+            French school specialized in Civil Engineering and Construction,
+            offering flexible, recognized degree programs.
           </p>
         </motion.div>
 

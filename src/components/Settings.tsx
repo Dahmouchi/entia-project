@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -38,7 +37,6 @@ const settingsFormSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  
 });
 
 type SettingsFormValues = z.infer<typeof settingsFormSchema>;
@@ -53,7 +51,6 @@ export default function SettingsPage(user: any) {
       prenom: user.user.prenom || "",
       username: user?.user?.name || "",
       email: user?.user?.email || "",
-     
     },
   });
 
@@ -155,7 +152,6 @@ export default function SettingsPage(user: any) {
         </form>
       </Form>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-       
         <ResetPassword id={user?.user.id} />
       </div>
     </div>

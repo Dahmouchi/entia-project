@@ -1,5 +1,5 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { useEffect, useState } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,13 +13,16 @@ import {
   Check,
   AlertCircle,
   School,
-
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
 import { redirect, useRouter } from "next/navigation";
 
-import { getClientById, updateClientProfile1, updateClientProfile2 } from "@/actions/client";
+import {
+  getClientById,
+  updateClientProfile1,
+  updateClientProfile2,
+} from "@/actions/client";
 import { toast } from "react-toastify";
 import Header from "@/components/Layout/Header";
 import { getNiveau } from "@/actions/grads";
@@ -32,7 +35,7 @@ interface PersonalInfo {
 }
 
 interface StudyInfo {
-  gradeId:string;
+  gradeId: string;
   niveau: string;
   codeInscription: string;
 }
@@ -211,7 +214,6 @@ const PersonalInfoStep = ({
       className="space-y-6"
     >
       <div className="text-center mb-8">
-        
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           Informations Personnelles
         </h2>
@@ -249,7 +251,6 @@ const PersonalInfoStep = ({
         error={errors.phone}
         required
       />
-
     </motion.div>
   );
 };
@@ -263,18 +264,20 @@ const StudyInfoStep = ({
   onChange: (data: StudyInfo) => void;
   errors: Partial<StudyInfo>;
 }) => {
-  const [niveauOptions, setNiveauOptions] = useState<{
-    value: string;
-    label: string;
-    grades?: { value: string; label: string }[];
-  }[]>([]);
+  const [niveauOptions, setNiveauOptions] = useState<
+    {
+      value: string;
+      label: string;
+      grades?: { value: string; label: string }[];
+    }[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchNiveaux = async () => {
       try {
         const response = await getNiveau();
-        
+
         if (response.success) {
           const options = response.data.map((niveau: any) => ({
             value: niveau.id,
@@ -297,7 +300,7 @@ const StudyInfoStep = ({
   }, []);
 
   const handleNiveauChange = (value: string) => {
-    onChange({ ...data, niveau: value, gradeId: '' }); // Reset grade when niveau changes
+    onChange({ ...data, niveau: value, gradeId: "" }); // Reset grade when niveau changes
   };
 
   return (
@@ -317,39 +320,39 @@ const StudyInfoStep = ({
         </p>
       </div>
 
-       {loading ? (
-      <div className="flex justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    ) : (
-      <>
-        <SelectField
-          label="Niveau d'étude"
-          value={data.niveau}
-          onChange={handleNiveauChange}
-          options={niveauOptions}
-          placeholder="Sélectionnez votre niveau"
-          icon={BookOpen}
-          error={errors.niveau}
-          required
-        />
-
-        {data.niveau && (
+      {loading ? (
+        <div className="flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <>
           <SelectField
-            label="Classe/Niveau spécifique"
-            value={data.gradeId}
-            onChange={(value) => onChange({ ...data, gradeId: value })}
-            options={
-              niveauOptions.find((n) => n.value === data.niveau)?.grades || []
-            }
-            placeholder="Sélectionnez votre classe"
-            icon={School}
-            error={errors.gradeId}
+            label="Niveau d'étude"
+            value={data.niveau}
+            onChange={handleNiveauChange}
+            options={niveauOptions}
+            placeholder="Sélectionnez votre niveau"
+            icon={BookOpen}
+            error={errors.niveau}
             required
           />
-        )}
-      </>
-    )}
+
+          {data.niveau && (
+            <SelectField
+              label="Classe/Niveau spécifique"
+              value={data.gradeId}
+              onChange={(value) => onChange({ ...data, gradeId: value })}
+              options={
+                niveauOptions.find((n) => n.value === data.niveau)?.grades || []
+              }
+              placeholder="Sélectionnez votre classe"
+              icon={School}
+              error={errors.gradeId}
+              required
+            />
+          )}
+        </>
+      )}
 
       <InputField
         label="Code d'inscription"
@@ -425,7 +428,7 @@ const ConfirmationStep = ({ data }: { data: FormData }) => {
             <span className="text-gray-600">Téléphone :</span>
             <span className="font-medium">{data.personal.phone}</span>
           </div>
-         
+
           <div className="flex justify-between">
             <span className="text-gray-600">Niveau :</span>
             <span className="font-medium">
@@ -453,7 +456,7 @@ const ConfirmationStep = ({ data }: { data: FormData }) => {
 
 // Composant principal du formulaire multi-étapes
 const MultiStepForm = () => {
-  const { data: session, status,update } = useSession();
+  const { data: session, status, update } = useSession();
   const [currentStep, setCurrentStep] = useState(session?.user.step || 0);
   const [formData, setFormData] = useState<FormData>({
     personal: {
@@ -463,33 +466,33 @@ const MultiStepForm = () => {
     },
     study: {
       niveau: "",
-      gradeId:"",
+      gradeId: "",
       codeInscription: "",
     },
   });
   useEffect(() => {
-    console.log(session?.user)
+    console.log(session?.user);
     const fetchUserData = async () => {
       try {
-       if(session){
-         const res = await getClientById(session.user.id);
-        const user = res;
+        if (session) {
+          const res = await getClientById(session.user.id);
+          const user = res;
 
-        if (user) {
-          setFormData({
-            personal: {
-              nom: user.name || "",
-              prenom: user.prenom || "",
-              phone: user.phone?.toString() || "",
-            },
-            study: {
-              gradeId:"",
-              niveau:  "",
-              codeInscription: "",
-            },
-          });
+          if (user) {
+            setFormData({
+              personal: {
+                nom: user.name || "",
+                prenom: user.prenom || "",
+                phone: user.phone?.toString() || "",
+              },
+              study: {
+                gradeId: "",
+                niveau: "",
+                codeInscription: "",
+              },
+            });
+          }
         }
-       }
       } catch (error) {
         console.error("Failed to load user data", error);
       }
@@ -506,7 +509,7 @@ const MultiStepForm = () => {
     personal: {},
     study: {},
   });
-  const router = useRouter()
+  const router = useRouter();
   // Validation des champs
   const validatePersonalInfo = (data: PersonalInfo): Partial<PersonalInfo> => {
     const errors: Partial<PersonalInfo> = {};
@@ -534,55 +537,53 @@ const MultiStepForm = () => {
   };
 
   // Navigation
-const nextStep = async () => {
-  if (currentStep === 0) {
-    const personalErrors = validatePersonalInfo(formData.personal);
-    if (Object.keys(personalErrors).length > 0) {
-      setErrors((prev) => ({ ...prev, personal: personalErrors }));
-      return;
-    }
-    setErrors((prev) => ({ ...prev, personal: {} }));
-    try {
-      if(session){
-        const res = await updateClientProfile1(session?.user.id, formData);
-       
-      if (res) {
-        setCurrentStep(1); // Done
-      } else {
-        toast.error("Failed to update profile");
+  const nextStep = async () => {
+    if (currentStep === 0) {
+      const personalErrors = validatePersonalInfo(formData.personal);
+      if (Object.keys(personalErrors).length > 0) {
+        setErrors((prev) => ({ ...prev, personal: personalErrors }));
+        return;
       }
+      setErrors((prev) => ({ ...prev, personal: {} }));
+      try {
+        if (session) {
+          const res = await updateClientProfile1(session?.user.id, formData);
+
+          if (res) {
+            setCurrentStep(1); // Done
+          } else {
+            toast.error("Failed to update profile");
+          }
+        }
+      } catch (error) {
+        console.error("Update failed", error);
+        toast.error("An error occurred");
       }
-    } catch (error) {
-      console.error("Update failed", error);
-      toast.error("An error occurred");
-    }
-    
-  } else if (currentStep === 1) {
-    const studyErrors = validateStudyInfo(formData.study);
-    if (Object.keys(studyErrors).length > 0) {
-      setErrors((prev) => ({ ...prev, study: studyErrors }));
-      return;
-    }
-  try {
-      if(session){
-        const res = await updateClientProfile2(session?.user.id, formData);
-       
-      if (res) {
-        //setCurrentStep(2); // Done
-        await update({ step:2 });
-        router.push("/dashboard")
-      } else {
-        toast.error("Failed to update profile");
+    } else if (currentStep === 1) {
+      const studyErrors = validateStudyInfo(formData.study);
+      if (Object.keys(studyErrors).length > 0) {
+        setErrors((prev) => ({ ...prev, study: studyErrors }));
+        return;
       }
+      try {
+        if (session) {
+          const res = await updateClientProfile2(session?.user.id, formData);
+
+          if (res) {
+            //setCurrentStep(2); // Done
+            await update({ step: 2 });
+            router.push("/dashboard");
+          } else {
+            toast.error("Failed to update profile");
+          }
+        }
+      } catch (error) {
+        console.error("Update failed", error);
+        toast.error("An error occurred");
       }
-    } catch (error) {
-      console.error("Update failed", error);
-      toast.error("An error occurred");
+      setErrors((prev) => ({ ...prev, study: {} }));
     }
-    setErrors((prev) => ({ ...prev, study: {} }));
-    
-  }
-};
+  };
 
   const prevStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
@@ -609,13 +610,15 @@ const nextStep = async () => {
     redirect("/login");
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800  relative"
-     style={{
-            backgroundImage: `url("/Board.png")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}>
-      <Header visible={false}/>
+    <div
+      className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800  relative"
+      style={{
+        backgroundImage: `url("/Board.png")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <Header visible={false} />
       <div className="max-w-2xl mx-auto pt-32 p-2">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {currentStep < 2 && (

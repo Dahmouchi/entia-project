@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import CourseUpdateForm from "@/app/admin/_components/update-cour";
 import prisma from "@/lib/prisma";
 import React from "react";
-
 
 const CoursePageUpdate = async ({ params }: any) => {
   const grades = await prisma.grade.findMany({
@@ -42,4 +40,3 @@ const CoursePageUpdate = async ({ params }: any) => {
 };
 
 export default CoursePageUpdate;
-

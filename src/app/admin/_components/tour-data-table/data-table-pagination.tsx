@@ -1,27 +1,31 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-  import { type Table } from "@tanstack/react-table"
-  
-  import { Button } from "@/components/ui/button"
-  import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
-  
-  interface DataTablePaginationProps<TData> {
-    table: Table<TData>
-    pageSizeOptions?: number[]
-  }
-  
-  export function DataTablePagination<TData>({
-    table,
-    pageSizeOptions = [10, 20, 30, 40, 50],
-  }: DataTablePaginationProps<TData>) {
-    return (
-      <div className="flex items-center justify-between px-2">
+import { type Table } from "@tanstack/react-table";
+
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+
+interface DataTablePaginationProps<TData> {
+  table: Table<TData>;
+  pageSizeOptions?: number[];
+}
+
+export function DataTablePagination<TData>({
+  table,
+  pageSizeOptions = [10, 20, 30, 40, 50],
+}: DataTablePaginationProps<TData>) {
+  return (
+    <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -32,7 +36,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-r
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value: any) => {
-              table.setPageSize(Number(value))
+              table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
@@ -91,5 +95,5 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-r
         </div>
       </div>
     </div>
-    )
-  }
+  );
+}

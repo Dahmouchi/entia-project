@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -40,69 +40,68 @@ const monthlyProgressData = [
   { month: "Juin", nouveauxCours: 7, nouveauxQuiz: 14, nouveauxDocuments: 20 },
 ];
 
-
-
 export function DashboardCharts() {
   const [loading, setLoading] = useState(true);
   const [coursesPerGradeData, setCoursesPerGradeData] = useState<any[]>();
   const [users, setUsers] = useState<any[]>();
   const [users0, setUsers0] = useState<any[]>();
- useEffect(() => {
-  let isMounted = true; // Track if component is mounted to prevent state updates after unmount
+  useEffect(() => {
+    let isMounted = true; // Track if component is mounted to prevent state updates after unmount
 
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      
-      // Parallelize API calls for better performance
-      const [coursesData, statusData, monthlyStats] = await Promise.allSettled([
-        getCoursesPerGrade(),
-        getUserStatusDistribution(),
-        getMonthlyUserStats()
-      ]);
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
 
-      if (!isMounted) return;
+        // Parallelize API calls for better performance
+        const [coursesData, statusData, monthlyStats] =
+          await Promise.allSettled([
+            getCoursesPerGrade(),
+            getUserStatusDistribution(),
+            getMonthlyUserStats(),
+          ]);
 
-      // Handle each response with proper type checking
-      if (coursesData.status === 'fulfilled' && coursesData.value.success) {
-        setCoursesPerGradeData(coursesData.value.data);
-      } else {
-        console.error('Failed to load courses data:', coursesData.status === 'rejected' 
-          ? coursesData.reason 
-          : coursesData);
+        if (!isMounted) return;
+
+        // Handle each response with proper type checking
+        if (coursesData.status === "fulfilled" && coursesData.value.success) {
+          setCoursesPerGradeData(coursesData.value.data);
+        } else {
+          console.error(
+            "Failed to load courses data:",
+            coursesData.status === "rejected" ? coursesData.reason : coursesData
+          );
+        }
+
+        if (statusData.status === "fulfilled") {
+          setUsers0(statusData.value);
+        } else {
+          console.error("Failed to load user status data:", statusData.reason);
+        }
+
+        if (monthlyStats.status === "fulfilled") {
+          setUsers(monthlyStats.value);
+        } else {
+          console.error("Failed to load monthly stats:", monthlyStats.reason);
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error("Unexpected error in dashboard data fetch:", error);
+          // Optionally set error state for UI feedback
+          toast.error("Failed to load dashboard data. Please try again.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
+    };
 
-      if (statusData.status === 'fulfilled') {
-        setUsers0(statusData.value);
-      } else {
-        console.error('Failed to load user status data:', statusData.reason);
-      }
+    fetchDashboardData();
 
-      if (monthlyStats.status === 'fulfilled') {
-        setUsers(monthlyStats.value);
-      } else {
-        console.error('Failed to load monthly stats:', monthlyStats.reason);
-      }
-
-    } catch (error) {
-      if (isMounted) {
-        console.error("Unexpected error in dashboard data fetch:", error);
-        // Optionally set error state for UI feedback
-        toast.error("Failed to load dashboard data. Please try again.");
-      }
-    } finally {
-      if (isMounted) {
-        setLoading(false);
-      }
-    }
-  };
-
-  fetchDashboardData();
-
-  return () => {
-    isMounted = false; // Cleanup function
-  };
-}, []); // Empty dependency array means this runs once on mount
+    return () => {
+      isMounted = false; // Cleanup function
+    };
+  }, []); // Empty dependency array means this runs once on mount
 
   if (loading) {
     return (

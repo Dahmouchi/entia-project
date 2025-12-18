@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Types basés sur le schéma Prisma
 
 export interface User {
@@ -102,7 +101,6 @@ export interface SubjectProgress {
   percentage: number;
 }
 
-
 export type QuizScore = {
   quizId: string;
   score: number;
@@ -123,10 +121,10 @@ export interface UserStats {
 }
 
 export enum StatutUser {
-  awaiting = 'awaiting',
-  active = 'active',
-  suspended = 'suspended',
-  graduated = 'graduated'
+  awaiting = "awaiting",
+  active = "active",
+  suspended = "suspended",
+  graduated = "graduated",
 }
 export interface LearningContextType {
   currentCourse: Course | null;
@@ -136,8 +134,15 @@ export interface LearningContextType {
   markCourseAsCompleted: (courseId: string, userId: string) => void;
   updateQuizScore: (quizId: string, score: QuizScore) => void;
   setCurrentCourse: (course: Course | null) => void;
-  getCourseProgress: (courseId: string, userId: string) => CourseProgress | undefined;
-  getSubjectProgress: (subjectId: string, courses: Course[], userId: string) => SubjectProgress;
+  getCourseProgress: (
+    courseId: string,
+    userId: string
+  ) => CourseProgress | undefined;
+  getSubjectProgress: (
+    subjectId: string,
+    courses: Course[],
+    userId: string
+  ) => SubjectProgress;
   getQuizScore: (quizId: string) => QuizScore | undefined;
 }
 
@@ -182,20 +187,20 @@ export interface ProgressProps {
   max?: number;
   className?: string;
   showLabel?: boolean;
-  color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple';
+  color?: "blue" | "green" | "red" | "yellow" | "purple";
 }
 
 export interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'default' | 'success' | 'warning' | 'error' | 'info' | 'outline';
-  size?: 'sm' | 'default' | 'lg';
+  variant?: "default" | "success" | "warning" | "error" | "info" | "outline";
+  size?: "sm" | "default" | "lg";
   className?: string;
 }
 
 export interface TooltipProps {
   children: React.ReactNode;
   content: string;
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  position?: "top" | "bottom" | "left" | "right";
 }
 
 // Types pour les hooks
@@ -215,10 +220,19 @@ export interface UseCourseProgressReturn {
 // Types pour les actions du reducer
 
 export type LearningAction =
-  | { type: 'MARK_COURSE_COMPLETED'; payload: { courseId: string; userId: string } }
-  | { type: 'UPDATE_QUIZ_SCORE'; payload: { quizId: string; score: QuizScore } }
-  | { type: 'SET_CURRENT_COURSE'; payload: { course: Course | null } }
-  | { type: 'RESET_PROGRESS'; payload?: { courseProgress?: CourseProgress[]; quizScores?: Record<string, QuizScore> } };
+  | {
+      type: "MARK_COURSE_COMPLETED";
+      payload: { courseId: string; userId: string };
+    }
+  | { type: "UPDATE_QUIZ_SCORE"; payload: { quizId: string; score: QuizScore } }
+  | { type: "SET_CURRENT_COURSE"; payload: { course: Course | null } }
+  | {
+      type: "RESET_PROGRESS";
+      payload?: {
+        courseProgress?: CourseProgress[];
+        quizScores?: Record<string, QuizScore>;
+      };
+    };
 
 export interface LearningState {
   currentCourse: Course | null;
@@ -227,19 +241,53 @@ export interface LearningState {
   lastAccessedCourse: string | null;
 }
 
-
 import { Trophy, Medal, Star, Award, XCircle } from "lucide-react";
 
 export function getBadgeConfig(percentage: number) {
   if (percentage >= 90) {
-    return { icon: Trophy, color: 'text-yellow-700 bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-300', label: 'Excellent', description: 'Score parfait !', glow: 'shadow-yellow-200' };
+    return {
+      icon: Trophy,
+      color:
+        "text-yellow-700 bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-300",
+      label: "Excellent",
+      description: "Score parfait !",
+      glow: "shadow-yellow-200",
+    };
   } else if (percentage >= 80) {
-    return { icon: Medal, color: 'text-blue-700 bg-gradient-to-r from-blue-100 to-blue-200 border-blue-300', label: 'Très bien', description: 'Très bon résultat', glow: 'shadow-blue-200' };
+    return {
+      icon: Medal,
+      color:
+        "text-blue-700 bg-gradient-to-r from-blue-100 to-blue-200 border-blue-300",
+      label: "Très bien",
+      description: "Très bon résultat",
+      glow: "shadow-blue-200",
+    };
   } else if (percentage >= 70) {
-    return { icon: Star, color: 'text-green-700 bg-gradient-to-r from-green-100 to-green-200 border-green-300', label: 'Bien', description: 'Bon travail', glow: 'shadow-green-200' };
+    return {
+      icon: Star,
+      color:
+        "text-green-700 bg-gradient-to-r from-green-100 to-green-200 border-green-300",
+      label: "Bien",
+      description: "Bon travail",
+      glow: "shadow-green-200",
+    };
   } else if (percentage >= 50) {
-    return { icon: Award, color: 'text-orange-700 bg-gradient-to-r from-orange-100 to-orange-200 border-orange-300', label: 'Passable', description: 'Peut mieux faire', glow: 'shadow-orange-200' };
+    return {
+      icon: Award,
+      color:
+        "text-orange-700 bg-gradient-to-r from-orange-100 to-orange-200 border-orange-300",
+      label: "Passable",
+      description: "Peut mieux faire",
+      glow: "shadow-orange-200",
+    };
   } else {
-    return { icon: XCircle, color: 'text-red-700 bg-gradient-to-r from-red-100 to-red-200 border-red-300', label: 'À revoir', description: 'Recommencez le quiz', glow: 'shadow-red-200' };
+    return {
+      icon: XCircle,
+      color:
+        "text-red-700 bg-gradient-to-r from-red-100 to-red-200 border-red-300",
+      label: "À revoir",
+      description: "Recommencez le quiz",
+      glow: "shadow-red-200",
+    };
   }
 }

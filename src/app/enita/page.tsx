@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Header from "@/components/Layout/Header";
@@ -50,51 +49,51 @@ const ModernFeatureCards = ({ features }: any) => {
 
       {/* Mobile Carousel */}
       <div className="lg:hidden px-2 mt-6">
-             {" "}
-             {/* Added px-6 for side padding */}
-             <Carousel
-               opts={{
-                 align: "center", // Changed from "center" to "start"
-                 loop: true,
-               }}
-               plugins={[
-                 Autoplay({
-                   delay: 4000,
-                   stopOnInteraction: false,
-                 }),
-               ]}
-               className="relative group"
-             >
-               <CarouselContent className="gap-4 ml-2">
-                 {" "}
-                 {/* Added ml-4 */}
-                 {features.map((features:any, index:any) => (
-                   <CarouselItem
-                     key={index}
-                     className="px-2 basis-[85%] sm:basis-[45%] "
-                   >
-                     <Card key={features.id} feature={features} />
-                   </CarouselItem>
-                 ))}
-               </CarouselContent>
-     
-               {/* Navigation Arrows */}
-               <div className="hidden sm:block z-50">
-                 <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
-                 <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
-               </div>
-     
-               {/* Mobile Navigation */}
-               <div className="sm:hidden flex justify-center gap-4 mt-12 z-50 w-full">
-                 <CarouselPrevious className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-yellow-400 hover:text-white transition-all border border-gray-200">
-                   <ChevronLeft className="w-5 h-5" />
-                 </CarouselPrevious>
-                 <CarouselNext className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-yellow-400 hover:text-white transition-all border border-gray-200">
-                   <ChevronRight className="w-5 h-5" />
-                 </CarouselNext>
-               </div>
-             </Carousel>
-           </div>
+        {" "}
+        {/* Added px-6 for side padding */}
+        <Carousel
+          opts={{
+            align: "center", // Changed from "center" to "start"
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 4000,
+              stopOnInteraction: false,
+            }),
+          ]}
+          className="relative group"
+        >
+          <CarouselContent className="gap-4 ml-2">
+            {" "}
+            {/* Added ml-4 */}
+            {features.map((features: any, index: any) => (
+              <CarouselItem
+                key={index}
+                className="px-2 basis-[85%] sm:basis-[45%] "
+              >
+                <Card key={features.id} feature={features} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {/* Navigation Arrows */}
+          <div className="hidden sm:block z-50">
+            <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+            <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-yellow-400 rounded-full shadow-lg hover:bg-[#8ebd21] hover:text-white transition-all border border-gray-200 opacity-0 group-hover:opacity-100 z-10" />
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="sm:hidden flex justify-center gap-4 mt-12 z-50 w-full">
+            <CarouselPrevious className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-yellow-400 hover:text-white transition-all border border-gray-200">
+              <ChevronLeft className="w-5 h-5" />
+            </CarouselPrevious>
+            <CarouselNext className="static w-10 h-10 bg-white text-[#8ebd21] rounded-full shadow hover:bg-yellow-400 hover:text-white transition-all border border-gray-200">
+              <ChevronRight className="w-5 h-5" />
+            </CarouselNext>
+          </div>
+        </Carousel>
+      </div>
     </div>
   );
 };
@@ -138,45 +137,44 @@ const ExampleSection1 = () => {
                                         />
                                     </button>
                                 </div>*/}
-          <div className="flex flex-col gap-3 pt-6 lg:pt-4">
-  <div className="flex gap-2">
-    <Image
-      src="/images/banner/check-circle.svg"
-      alt="check-image"
-      width={30}
-      height={30}
-      className="smallImage"
-    />
-    <p className="text-sm sm:text-lg font-normal text-white">
-      Diplômes français reconnus de Bac+2 à Bac+5
-    </p>
-  </div>
-  <div className="flex gap-2">
-    <Image
-      src="/images/banner/check-circle.svg"
-      alt="check-image"
-      width={30}
-      height={30}
-      className="smallImage"
-    />
-    <p className="text-sm sm:text-lg font-normal text-white">
-      Formation 100% à distance ou en présentiel
-    </p>
-  </div>
-  <div className="flex gap-2">
-    <Image
-      src="/images/banner/check-circle.svg"
-      alt="check-image"
-      width={30}
-      height={30}
-      className="smallImage"
-    />
-    <p className="text-sm sm:text-lg font-normal text-white">
-      Validation des acquis de l&apos;expérience (VAE)
-    </p>
-  </div>
-  
-</div>
+            <div className="flex flex-col gap-3 pt-6 lg:pt-4">
+              <div className="flex gap-2">
+                <Image
+                  src="/images/banner/check-circle.svg"
+                  alt="check-image"
+                  width={30}
+                  height={30}
+                  className="smallImage"
+                />
+                <p className="text-sm sm:text-lg font-normal text-white">
+                  Diplômes français reconnus de Bac+2 à Bac+5
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Image
+                  src="/images/banner/check-circle.svg"
+                  alt="check-image"
+                  width={30}
+                  height={30}
+                  className="smallImage"
+                />
+                <p className="text-sm sm:text-lg font-normal text-white">
+                  Formation 100% à distance ou en présentiel
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Image
+                  src="/images/banner/check-circle.svg"
+                  alt="check-image"
+                  width={30}
+                  height={30}
+                  className="smallImage"
+                />
+                <p className="text-sm sm:text-lg font-normal text-white">
+                  Validation des acquis de l&apos;expérience (VAE)
+                </p>
+              </div>
+            </div>
           </motion.div>
           <motion.div className=" justify-center place-items-end h-full  items-end hidden lg:flex">
             <Image
@@ -252,7 +250,8 @@ const ExampleSection2 = () => {
             Pourquoi choisir <span className="text-indigo-400">ENITA</span> ?
           </h2>
           <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
-            École française spécialisée en Génie Civil et BTP, avec des formations diplômantes reconnues et flexibles.
+            École française spécialisée en Génie Civil et BTP, avec des
+            formations diplômantes reconnues et flexibles.
           </p>
         </motion.div>
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"; // Add this at the top since we need client-side interactivity
 
 import { useEffect, useState } from "react";

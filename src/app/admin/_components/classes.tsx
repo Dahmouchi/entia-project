@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -139,7 +138,10 @@ export default function ClassesPage({ niveauxx, classe }: any) {
             Gérez les classes de votre établissement par niveau
           </p>
         </div>
-        <Button onClick={handleCreate} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer">
+        <Button
+          onClick={handleCreate}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 cursor-pointer"
+        >
           <Plus className="h-4 w-4" />
           Nouvelle Classe
         </Button>
@@ -153,10 +155,13 @@ export default function ClassesPage({ niveauxx, classe }: any) {
         <CardContent>
           <div className="flex flex-wrap gap-2">
             <Button
-              variant={ "outline"}
+              variant={"outline"}
               size="sm"
-              className={selectedNiveau === "all" ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400" : ""}
-
+              className={
+                selectedNiveau === "all"
+                  ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400"
+                  : ""
+              }
               onClick={() => setSelectedNiveau("all")}
             >
               Tous les niveaux ({grades.length})
@@ -170,7 +175,11 @@ export default function ClassesPage({ niveauxx, classe }: any) {
                   key={niveau.id}
                   variant={"outline"}
                   size="sm"
-                  className={selectedNiveau === niveau.id ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400" : ""}
+                  className={
+                    selectedNiveau === niveau.id
+                      ? "shadow-yellow-500/30 hover:shadow-yellow-500/40 bg-amber-400"
+                      : ""
+                  }
                   onClick={() => setSelectedNiveau(niveau.id)}
                 >
                   {niveau.name} ({count})

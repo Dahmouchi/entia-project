@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use server";
 
 import nodemailer from "nodemailer";
@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (to: any, subject: any, html: any) => {
   const mailOptions = {
-    from:"contact@build360.ma",
+    from: "contact@build360.ma",
     to,
     subject,
     html,

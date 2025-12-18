@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +11,7 @@ import HeaderSubject from "../../_components/headerSubject";
 const CourseLayout = async ({ children, params }: any) => {
   const user = await getStudentById();
   if (!user) {
-    return redirect("/") ;
+    return redirect("/");
   }
 
   const matiereInfo = await prisma.subject.findFirst({
@@ -21,8 +20,8 @@ const CourseLayout = async ({ children, params }: any) => {
     },
     include: {
       courses: {
-        include:{
-          progress:true,
+        include: {
+          progress: true,
         },
         orderBy: {
           createdAt: "asc",
@@ -31,7 +30,7 @@ const CourseLayout = async ({ children, params }: any) => {
     },
   });
   if (!matiereInfo) {
-    return redirect("/") ;
+    return redirect("/");
   }
   const progressCount = await getSubjectProgress(user.id, matiereInfo.id);
 

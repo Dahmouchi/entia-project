@@ -1,33 +1,31 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const dynamic = "force-dynamic"
-export const revalidate = 0
-import { getCoursByHandle } from "@/actions/cours"
-import { Play } from "lucide-react"
-import VimeoTest from "@/app/(user)/_components/vimeoPlayer"
-import CourseContent from "@/app/(user)/_components/CourseContent"
-import { getStudentById } from "@/actions/client"
-import ButtonComplete from "@/app/(user)/_components/buttonComplete"
-import { redirect } from "next/navigation"
-import MagicNotesButton from "@/app/(user)/_components/magic-notes-button"
-import { getNotes } from "@/actions/noteOpenAI"
-import ButtonSynthese from "@/app/(user)/_components/ButtonSynthese"
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+import { getCoursByHandle } from "@/actions/cours";
+import { Play } from "lucide-react";
+import VimeoTest from "@/app/(user)/_components/vimeoPlayer";
+import CourseContent from "@/app/(user)/_components/CourseContent";
+import { getStudentById } from "@/actions/client";
+import ButtonComplete from "@/app/(user)/_components/buttonComplete";
+import { redirect } from "next/navigation";
+import MagicNotesButton from "@/app/(user)/_components/magic-notes-button";
+import { getNotes } from "@/actions/noteOpenAI";
+import ButtonSynthese from "@/app/(user)/_components/ButtonSynthese";
 
 const CoursePage = async ({ params }: any) => {
-  const course = await getCoursByHandle(params.cours)
+  const course = await getCoursByHandle(params.cours);
 
-  const user = await getStudentById()
-  
+  const user = await getStudentById();
 
   if (!user || !course) {
-    return redirect("/") 
+    return redirect("/");
   }
-    const results = await getNotes(user?.id, course.data?.id);
+  const results = await getNotes(user?.id, course.data?.id);
   if (!course?.success) {
     return (
       <div className="w-full aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
         <p className="text-gray-500">Sélectionnez un cours pour commencer</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -36,7 +34,10 @@ const CoursePage = async ({ params }: any) => {
       <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
         {course?.data?.videoUrl && course?.data?.coverImage ? (
           <div>
-            <VimeoTest videoUrl={course?.data?.videoUrl} imageUrl={course?.data?.coverImage} />
+            <VimeoTest
+              videoUrl={course?.data?.videoUrl}
+              imageUrl={course?.data?.coverImage}
+            />
           </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-800">
@@ -51,19 +52,26 @@ const CoursePage = async ({ params }: any) => {
       {/* Informations du cours */}
       <div className="mt-4 w-full">
         <div className="mt-4 flex  gap-2 lg:justify-between w-full flex-col lg:flex-row py-3 px-2">
-          <h1 className="text-2xl font-bold text-gray-900 ">{course?.data?.title}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 ">
+            {course?.data?.title}
+          </h1>
           <div className="flex flex-col gap-3">
             <ButtonComplete userId={user?.id} course={course?.data} />
-          <ButtonSynthese course={course?.data} userId={user?.id}/>
+            <ButtonSynthese course={course?.data} userId={user?.id} />
           </div>
         </div>
-         
-       {/*  <CourseContent course={course?.data} userId={user?.id} />*/}
+
+        {/*  <CourseContent course={course?.data} userId={user?.id} />*/}
       </div>
 
-      <MagicNotesButton courseTitle={course?.data?.title || "Cours"} userId={user.id} coursId={course.data?.id} results={results}/>
+      <MagicNotesButton
+        courseTitle={course?.data?.title || "Cours"}
+        userId={user.id}
+        coursId={course.data?.id}
+        results={results}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default CoursePage
+export default CoursePage;

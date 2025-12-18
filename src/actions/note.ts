@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use server"
+"use server";
 
 import { queryHuggingFace } from "@/lib/huggingface";
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
 import OpenAI from "openai";
 
 // AI Client (if you need MagicNote generation here)
@@ -15,7 +14,11 @@ const openai = new OpenAI({
 // -------------------------------
 
 // ✅ Create a new note
-export async function createNote(userId: string, courseId: string, content: string) {
+export async function createNote(
+  userId: string,
+  courseId: string,
+  content: string
+) {
   return prisma.note.create({
     data: {
       content,
@@ -92,7 +95,9 @@ export async function generateMagicNote(
   const result = await queryHuggingFace(model, prompt);
 
   // The result format depends on the model; summarization models usually return an array
-  return Array.isArray(result) ? result[0].summary_text || JSON.stringify(result) : JSON.stringify(result);
+  return Array.isArray(result)
+    ? result[0].summary_text || JSON.stringify(result)
+    : JSON.stringify(result);
 }
 
 // ✅ Get MagicNote (summary, flashcards, schema)

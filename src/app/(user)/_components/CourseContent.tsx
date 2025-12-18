@@ -1,5 +1,5 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from "react";
 import { FileText, Eye } from "lucide-react";
 import QuizDisplay from "./quizSection";
@@ -16,7 +16,6 @@ const SimplePDFViewer = dynamic(() => import("./cours-pdf"), {
   ssr: false,
 });
 const CourseContent = ({ course, userId }: any) => {
-  
   if (!course) {
     return (
       <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -89,29 +88,21 @@ const CourseContent = ({ course, userId }: any) => {
                           <Dialog>
                             <DialogTrigger>
                               <div className="flex gap-2">
-                            {/* Download button */}
-                            <div
-                             
-                              className="flex-1 flex text-white items-center justify-center gap-2 rounded-sm px-2 py-1 sm:flex-none border-2 bg-blue-600 hover:bg-blue-800 border-gray-300 hover:border-blue-300 "
-                            >
-                              <Eye className="w-4 h-4 mr-1 md:mr-2" />
-                              <span>Visualiser</span>
-                            </div>
-
-                            
-                          </div>
+                                {/* Download button */}
+                                <div className="flex-1 flex text-white items-center justify-center gap-2 rounded-sm px-2 py-1 sm:flex-none border-2 bg-blue-600 hover:bg-blue-800 border-gray-300 hover:border-blue-300 ">
+                                  <Eye className="w-4 h-4 mr-1 md:mr-2" />
+                                  <span>Visualiser</span>
+                                </div>
+                              </div>
                             </DialogTrigger>
                             <DialogOverlay>
                               <DialogContent className="h-[99vh] min-w-[90vw] overflow-auto">
-                               <DialogTitle> 
-                               
-                               </DialogTitle>
+                                <DialogTitle></DialogTitle>
                                 <SimplePDFViewer pdfFilePath={document?.url} />
                               </DialogContent>
                             </DialogOverlay>
                           </Dialog>
                           {/* Secondary actions */}
-                          
                         </div>
                       </div>
                     </div>

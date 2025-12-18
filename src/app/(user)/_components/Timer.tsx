@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
-import { TimerStart } from '@/actions/client';
-import React, { useEffect } from 'react'
+import { TimerStart } from "@/actions/client";
+import React, { useEffect } from "react";
 
-const Timer = ({user}:any) => {
-    let startTime: number | null = null;
+const Timer = ({ user }: any) => {
+  let startTime: number | null = null;
 
-     const trackTime = async (userId: string, duration: number) => {
+  const trackTime = async (userId: string, duration: number) => {
     try {
       // Replace this with your API call to save the time
       await TimerStart(userId, duration);
@@ -42,9 +42,7 @@ const Timer = ({user}:any) => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [user]);
-  return (
-    <div></div>
-  )
-}
+  return <div></div>;
+};
 
-export default Timer
+export default Timer;

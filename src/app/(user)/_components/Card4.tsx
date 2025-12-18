@@ -1,6 +1,4 @@
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from "react";
 import styled from "styled-components";
@@ -12,10 +10,16 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ChevronLeft, ChevronRight, GraduationCap, Quote, Star } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  GraduationCap,
+  Quote,
+  Star,
+} from "lucide-react";
 import Autoplay from "embla-carousel-autoplay"; // Optional: if you want autoplay
 
-import { motion} from "framer-motion";
+import { motion } from "framer-motion";
 const ReviewCard = ({ review }: any) => {
   return (
     <motion.div
@@ -25,10 +29,10 @@ const ReviewCard = ({ review }: any) => {
     >
       {/* Background avec gradient animé */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-white/20" />
-      
+
       {/* Effet de brillance au hover */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-      
+
       {/* Contenu */}
       <div className="relative h-full p-6 flex flex-col justify-between text-white">
         {/* Header avec icône */}
@@ -38,11 +42,14 @@ const ReviewCard = ({ review }: any) => {
           </div>
           <div className="flex gap-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <Star
+                key={i}
+                className="w-4 h-4 fill-yellow-400 text-yellow-400"
+              />
             ))}
           </div>
         </div>
-        
+
         {/* Citation */}
         <div className="flex-1 flex flex-col justify-center">
           <Quote className="w-6 h-6 text-white/60 mb-4" />
@@ -50,7 +57,7 @@ const ReviewCard = ({ review }: any) => {
             {review.comment}
           </p>
         </div>
-        
+
         {/* Footer avec nom */}
         <div className="border-t border-white/20 pt-4">
           <h3 className="font-bold lg:text-xl text-sm">{review.name}</h3>
@@ -64,15 +71,18 @@ const ReviewCard = ({ review }: any) => {
 const reviews = [
   {
     name: "Sara M. – Lycée",
-    comment: "Grâce à Scoolia, j'ai enfin compris mes cours de mathématiques, Les vidéos sont claires.",
+    comment:
+      "Grâce à Scoolia, j'ai enfin compris mes cours de mathématiques, Les vidéos sont claires.",
   },
   {
     name: "Yassine B. – Collège",
-    comment: "J'adore les QCM interactifs ! C'est motivant et ça me permet de savoir rapidement où je dois m'améliorer.",
+    comment:
+      "J'adore les QCM interactifs ! C'est motivant et ça me permet de savoir rapidement où je dois m'améliorer.",
   },
   {
     name: "Inès T. – Terminale",
-    comment: "Une plateforme très bien faite. Je révise à mon rythme, et je me sens beaucoup plus confiante pour les examens.",
+    comment:
+      "Une plateforme très bien faite. Je révise à mon rythme, et je me sens beaucoup plus confiante pour les examens.",
   },
 ];
 
@@ -94,10 +104,12 @@ const ReviewSection = () => {
         className="text-center"
       >
         <h2 className="text-2xl md:text-5xl font-bold text-white px-2">
-          Ce que <span className="text-yellow-400">nos partenaires</span> disent de nous
+          Ce que <span className="text-yellow-400">nos partenaires</span> disent
+          de nous
         </h2>
         <p className="text-sm md:text-xl text-gray-300 max-w-3xl mx-auto px-2 mt-3 md:mt-4">
-          Des entreprises et institutions qui nous font confiance témoignent de leur expérience avec Scoolia.ma.
+          Des entreprises et institutions qui nous font confiance témoignent de
+          leur expérience avec Scoolia.ma.
         </p>
       </motion.div>
 
@@ -115,7 +127,10 @@ const ReviewSection = () => {
         >
           <CarouselContent className="gap-4 ml-2">
             {reviews.map((review, index) => (
-              <CarouselItem key={index} className="px-2 basis-[87%] sm:basis-[45%]">
+              <CarouselItem
+                key={index}
+                className="px-2 basis-[87%] sm:basis-[45%]"
+              >
                 <ReviewCard review={review} />
               </CarouselItem>
             ))}

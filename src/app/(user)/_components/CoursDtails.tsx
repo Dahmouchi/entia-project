@@ -23,6 +23,7 @@ import ButtonSynthese from "./ButtonSynthese";
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
   DialogOverlay,
   DialogTitle,
   DialogTrigger,
@@ -402,9 +403,18 @@ const CoursDetails = ({ subject, user, progressCount }: any) => {
                             </div>
                           </DialogTrigger>
                           <DialogOverlay>
-                            <DialogContent className="h-[99vh] min-w-[90vw] overflow-auto">
-                              <DialogTitle></DialogTitle>
-                              {/*<SimplePDFViewer pdfFilePath={doc.url} />*/}
+                            <DialogContent className="h-[99vh] min-w-[90vw]  flex flex-col gap-2 p-2 lg:p-4">
+                              <DialogTitle className="h-fit">
+                                {doc.name}
+                              </DialogTitle>
+                              <div className="bg-amber-300 w-full h-full">
+                                {/*<SimplePDFViewer pdfFilePath={doc.url} />*/}
+                                <iframe
+                                  src={`${doc.url}#toolbar=1&navpanes=1&scrollbar=1`}
+                                  className="w-full h-full border-0"
+                                  title={doc.name}
+                                />
+                              </div>
                             </DialogContent>
                           </DialogOverlay>
                         </Dialog>

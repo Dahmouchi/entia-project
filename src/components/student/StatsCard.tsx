@@ -42,7 +42,7 @@ export const StatsCard = ({
         <p className="text-sm text-muted-foreground font-medium mb-1">
           {label}
         </p>
-        <p className="text-3xl font-bold text-foreground font-display">
+        <p className="lg:text-3xl text-lg font-bold text-foreground font-display">
           {value}
         </p>
         {subtext && (

@@ -84,14 +84,19 @@ export const StudentHeader = ({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center gap-2 px-2 hover:bg-muted/50"
+                className="flex items-center  gap-2 px-2 hover:bg-muted/50"
               >
-                <Avatar className="h-8 w-8 border-2 border-blue-600/20">
-                  <AvatarImage src={userAvatar} alt={userName} />
-                  <AvatarFallback className="bg-blue-600/10 text-blue-600 text-sm font-medium">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  {!userAvatar && (
+                    <div className="absolute top-0 right-0 z-50 bg-red-500 rounded-full w-2 h-2" />
+                  )}
+                  <Avatar className="h-8 w-8 border-2 border-blue-600/20">
+                    <AvatarImage src={userAvatar} alt={userName} />
+                    <AvatarFallback className="bg-blue-600/10 text-blue-600 text-sm font-medium">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
                 <span className="hidden md:inline-block text-sm font-medium">
                   {userName}
                 </span>
@@ -115,9 +120,12 @@ export const StudentHeader = ({
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="cursor-pointer"
+                className="cursor-pointer relative"
                 onClick={() => navigate.push("/dashboard/profile")}
               >
+                {!userAvatar && (
+                  <div className="absolute top-0 right-0 z-50 bg-red-500 rounded-full w-2 h-2" />
+                )}
                 <User className="mr-2 h-4 w-4" />
                 <span>Mon profil</span>
               </DropdownMenuItem>

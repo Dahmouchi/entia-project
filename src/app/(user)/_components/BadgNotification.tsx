@@ -85,7 +85,7 @@ export function BadgeNotification() {
               damping: 25,
               stiffness: 300,
             }}
-            className="fixed bottom-8 right-8 z-50 w-[380px] max-w-[calc(100vw-2rem)]"
+            className="fixed bottom-8 right-4 lg:right-8 z-50 w-[380px] max-w-[calc(100vw-2rem)]"
           >
             {/* Glow effect behind card */}
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 via-purple-500/30 to-pink-500/30 rounded-3xl blur-2xl opacity-60" />

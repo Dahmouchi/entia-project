@@ -17,6 +17,8 @@ import {
   FileText,
   X,
   Upload,
+  GraduationCap,
+  Award,
 } from "lucide-react";
 import {
   Dialog,
@@ -41,6 +43,8 @@ import { useCallback, useRef, useState } from "react";
 import { UpdateProfileForm } from "./UpdateProfileForm";
 import { updateStudentPicture } from "@/actions/student";
 import { BadgesDisplay } from "@/app/(user)/_components/BadgesDisplay";
+import { Certificate, CertificateCard } from "./CertificateCard";
+import { Banner1 } from "../pro-blocks/landing-page/banners/banner-1";
 
 const mockUser = {
   id: "1",
@@ -104,6 +108,27 @@ const achievements = [
     description: "Compléter tous les cours",
     icon: "👑",
     earned: false,
+  },
+];
+// Mock certificates data
+const mockCertificates: Certificate[] = [
+  {
+    id: "CERT-2024-001",
+    courseTitle: "Introduction à la programmation Python",
+    completionDate: "2024-12-15",
+    studentName: "Jean Dupont",
+  },
+  {
+    id: "CERT-2024-002",
+    courseTitle: "Développement Web avec React",
+    completionDate: "2024-11-28",
+    studentName: "Jean Dupont",
+  },
+  {
+    id: "CERT-2024-003",
+    courseTitle: "Base de données SQL avancées",
+    completionDate: "2024-10-10",
+    studentName: "Jean Dupont",
   },
 ];
 export const FileUpload = ({
@@ -219,6 +244,7 @@ export default function StudentProfile({ user, stats }: any) {
 
   return (
     <div className="min-h-screen">
+      {!user.image && <Banner1 text="Ajoutez une photo de profile" />}
       <main className="mx-auto lg:px-24 px-4 py-8 ">
         {/* Profile Header */}
         <motion.div
@@ -493,6 +519,40 @@ export default function StudentProfile({ user, stats }: any) {
 
           {/* Right Column - Achievements */}
           <BadgesDisplay />
+        </div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <GraduationCap className="h-5 w-5" />
+              Certificats obtenus
+            </h2>
+            <Badge variant="secondary">
+              {mockCertificates.length} certificat(s)
+            </Badge>
+          </div>
+
+          {mockCertificates.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Award className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground">
+                  Vous n'avez pas encore de certificats.
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Terminez un cours pour obtenir votre premier certificat !
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mockCertificates.map((certificate) => (
+                <CertificateCard
+                  key={certificate.id}
+                  certificate={certificate}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

@@ -34,7 +34,7 @@ export default function RootLayout({
         <NextAuthProvider>
           <div className="overflow-x-hidden">{children}</div>
         </NextAuthProvider>
-        <ScrollToTop />
+        {/* <ScrollToTop /> */}
         <AOSInit />
         <ToastContainer
           position="top-right"

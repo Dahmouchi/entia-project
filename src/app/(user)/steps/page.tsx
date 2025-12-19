@@ -501,7 +501,7 @@ const MultiStepForm = () => {
     if (session?.user?.id) {
       fetchUserData();
     }
-  }, [session]);
+  }, []);
   const [errors, setErrors] = useState<{
     personal: Partial<PersonalInfo>;
     study: Partial<StudyInfo>;

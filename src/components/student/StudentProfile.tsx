@@ -530,13 +530,13 @@ export default function StudentProfile({ user, stats }: any) {
               {mockCertificates.length} certificat(s)
             </Badge>
           </div>
-
+          {/* 
           {mockCertificates.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
                 <Award className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
                 <p className="text-muted-foreground">
-                  Vous n'avez pas encore de certificats.
+                  Vous n&apos;avez pas encore de certificats.
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
                   Terminez un cours pour obtenir votre premier certificat !
@@ -552,7 +552,7 @@ export default function StudentProfile({ user, stats }: any) {
                 />
               ))}
             </div>
-          )}
+          )}*/}
         </div>
       </main>
     </div>

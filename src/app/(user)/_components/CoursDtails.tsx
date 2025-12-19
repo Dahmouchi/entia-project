@@ -363,6 +363,56 @@ const CoursDetails = ({ subject, user, progressCount }: any) => {
                   </div>
                 </ScrollArea>
               </div>
+              <div className="bg-card rounded-2xl border border-border overflow-hidden">
+                <div className="p-4 border-b border-border bg-muted/30">
+                  <h3 className="font-semibold text-foreground">
+                    Matériel du cours
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {selectedCourse?.documents?.length} ressources
+                    téléchargeables
+                  </p>
+                </div>
+                <div className="p-3 space-y-2">
+                  {selectedCourse?.documents?.map((doc: any) => {
+                    return (
+                      <div
+                        key={doc.id}
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="flex items-center gap-3 p-3 cursor-pointer rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors group"
+                      >
+                        <div
+                          className={`p-2.5 rounded-xl bg-red-100 text-red-500`}
+                        >
+                          <FileText className="w-4 h-4" />
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-medium text-foreground truncate">
+                            {doc.name}
+                          </h4>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            Document PDF • Cliquez pour visualiser
+                          </p>
+                        </div>
+                        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                          <DialogTrigger>
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-red-800 hover:text-red-800">
+                              <Eye className="w-4 h-4" />
+                            </div>
+                          </DialogTrigger>
+                          <DialogOverlay>
+                            <DialogContent className="h-[99vh] min-w-[90vw] overflow-auto">
+                              <DialogTitle></DialogTitle>
+                              {/*<SimplePDFViewer pdfFilePath={doc.url} />*/}
+                            </DialogContent>
+                          </DialogOverlay>
+                        </Dialog>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>

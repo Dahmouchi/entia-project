@@ -14,7 +14,9 @@ const HeroCompo = ({ data, theme }: { data: any; theme: string }) => {
         <div
           className="rounded-2xl relative flex flex-col lg:flex-row lg:items-center lg:justify-center  lg:h-[90vh] h-[86.5vh] w-full" // 112px = py-14 (3.5rem) * 2
           style={{
-            backgroundImage: `url("/Board.png")`,
+            backgroundImage: data?.backgroundImageUrl
+              ? `url(${data?.backgroundImageUrl})`
+              : "url('/Board.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -87,7 +89,7 @@ const HeroCompo = ({ data, theme }: { data: any; theme: string }) => {
           </motion.div>
           <motion.div className=" justify-center place-items-end h-full  items-end hidden lg:flex">
             <Image
-              src={`${data.heroImageUrl}`}
+              src={`${data.heroImageUrl}` || "/enita/student5.png"}
               alt="nothing"
               className="lg:w-4/5 w-2/3 h-auto"
               width={800}
@@ -96,7 +98,7 @@ const HeroCompo = ({ data, theme }: { data: any; theme: string }) => {
           </motion.div>
           <motion.div className=" absolute bottom-0 lg:hidden w-full flex items-center justify-center">
             <Image
-              src={`${data.heroImageUrl}`}
+              src={`${data.heroImageUrl}` || "/enita/student5.png"}
               alt="nothing"
               className="lg:w-4/5 w-2/3 h-auto"
               width={800}

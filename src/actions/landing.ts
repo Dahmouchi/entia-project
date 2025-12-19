@@ -136,6 +136,14 @@ export const createSection = async (section: SectionWithFeatures) => {
   }
 };
 
+function isFileLike(value: unknown): value is File {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as any).arrayBuffer === "function"
+  );
+}
+
 export const updateSection = async (
   sectionId: string,
   section: Partial<SectionWithFeatures>
@@ -162,12 +170,12 @@ export const updateSection = async (
 
     // 2) Handle images: upload only if new file provided
     let backgroundImageUrl = existing.backgroundImageUrl;
-    if (section.backgroundImageUrl instanceof File) {
+    if (isFileLike(section.backgroundImageUrl)) {
       backgroundImageUrl = await uploadImage(section.backgroundImageUrl);
     }
 
     let heroImageUrl = existing.heroImageUrl;
-    if (section.heroImageUrl instanceof File) {
+    if (isFileLike(section.heroImageUrl)) {
       heroImageUrl = await uploadImage(section.heroImageUrl);
     }
 

@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Eye, List, Edit2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { SectionCard } from "./SectionCard";
@@ -45,6 +45,7 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
         toast.success("Section updated successfully");
         window.location.reload();
       } else {
+        console.log(res);
         toast.error("Section update failed");
       }
     } else {

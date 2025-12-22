@@ -32,8 +32,12 @@ export const SectionForm = ({
   onSave,
   onCancel,
 }: SectionFormProps) => {
+  const generateKey = () => {
+    const randomString = Math.random().toString(36).substring(2, 8);
+    return randomString;
+  };
   const [formData, setFormData] = useState({
-    key: section?.key || "",
+    key: section?.key || generateKey(),
     title: section?.title || "",
     subtitle: section?.subtitle || "",
     description: section?.description || "",
@@ -191,18 +195,6 @@ export const SectionForm = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="key">Clé de section</Label>
-              <Input
-                id="key"
-                placeholder="e.g., why_choose_us"
-                value={formData.key}
-                onChange={(e) =>
-                  setFormData({ ...formData, key: e.target.value })
-                }
-                required
-              />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="order">Ordre d&apos;affichage</Label>
               <Input

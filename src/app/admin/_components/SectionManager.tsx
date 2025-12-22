@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Eye, List, Edit2 } from "lucide-react";
+import { Plus, Eye, List, Edit2, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { SectionCard } from "./SectionCard";
 import { SectionPreview } from "./SectionPreview";
@@ -30,9 +30,11 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
     useState<SectionWithFeatures | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "preview">("list");
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async (data: Partial<SectionWithFeatures>) => {
     if (editingSection) {
+      setIsLoading(true);
       setSections(
         sections.map((s) =>
           s.id === editingSection.id
@@ -42,13 +44,16 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
       );
       const res = await updateSection(editingSection.id, data);
       if (res.success) {
+        setIsLoading(false);
         toast.success("Section updated successfully");
         window.location.reload();
       } else {
+        setIsLoading(false);
         console.log(res);
         toast.error("Section update failed");
       }
     } else {
+      setIsLoading(true);
       const newSection: SectionWithFeatures = {
         id: crypto.randomUUID(),
         key: data.key || "",
@@ -69,6 +74,7 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
       };
       const res = await createSection(newSection);
       if (res.success) {
+        setIsLoading(false);
         window.location.reload();
         setSections([...sections, newSection]);
         toast.success("Section created successfully");
@@ -76,9 +82,11 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
     }
     setIsFormOpen(false);
     setEditingSection(null);
+    setIsLoading(false);
   };
 
   const handleDelete = async (id: string) => {
+    setIsLoading(true);
     setSections(sections.filter((s) => s.id !== id));
     await deleteSection(id);
     toast.success("Section deleted");
@@ -149,11 +157,14 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
               </TabsTrigger>
             </TabsList>
           </Tabs>
-
-          <Button onClick={handleAddNew} className="gap-2">
-            <Plus size={18} />
+          <button
+            onClick={handleAddNew}
+            className="bg-blue-950 flex items-center gap-2 text-blue-50 border border-blue-400 border-b-4 font-medium overflow-hidden relative px-4 py-2 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-75 outline-none duration-300 group"
+          >
+            <span className="bg-blue-400 shadow-blue-400 absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 group-hover:top-[150%] duration-500 shadow-[0_0_10px_10px_rgba(0,0,0,0.3)]" />
             Ajouter une section
-          </Button>
+            <Plus size={18} />
+          </button>
         </div>
       </div>
 
@@ -224,14 +235,20 @@ export const SectionManager = (initialSections: { initialSections: any[] }) => {
               {editingSection ? "Edit Section" : "Create New Section"}
             </DialogTitle>
           </DialogHeader>
-          <SectionForm
-            section={editingSection || undefined}
-            onSave={handleSave}
-            onCancel={() => {
-              setIsFormOpen(false);
-              setEditingSection(null);
-            }}
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full w-full">
+              <Loader2 className="animate-spin text-blue-600" />
+            </div>
+          ) : (
+            <SectionForm
+              section={editingSection || undefined}
+              onSave={handleSave}
+              onCancel={() => {
+                setIsFormOpen(false);
+                setEditingSection(null);
+              }}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>

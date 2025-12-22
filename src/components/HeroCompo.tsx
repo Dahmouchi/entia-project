@@ -1,18 +1,39 @@
 import { cn } from "@/lib/utils";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { THEME_STYLES, ThemeStyle } from "@/lib/secion";
 
-const HeroCompo = ({ data, theme }: { data: any; theme: string }) => {
+interface HeroCompoProps {
+  data: {
+    title: string;
+    subtitle: string;
+    description: string;
+    checklistItems: string;
+    backgroundImageUrl?: string;
+    heroImageUrl?: string;
+  };
+  theme: ThemeStyle;
+}
+
+const HeroCompo = ({ data, theme }: HeroCompoProps) => {
   const checklistArray = data.checklistItems
     .split(",")
-    .filter((item: any) => item.trim() !== "");
+    .filter((item: string) => item.trim() !== "");
+
+  // Get theme configuration
+  const themeConfig = THEME_STYLES[theme];
 
   console.log("data", data);
+
   return (
-    <div className="max-h-screen  w-full">
-      <div className="  lg:px-14 px-4 ">
+    <div className="max-h-screen w-full">
+      <div className=" lg:px-12 px-5">
         <div
-          className="rounded-2xl relative flex flex-col lg:flex-row lg:items-center lg:justify-center  lg:h-[90vh] h-[86.5vh] w-full" // 112px = py-14 (3.5rem) * 2
+          className={cn(
+            "rounded-b-2xl relative flex flex-col lg:flex-row lg:items-center lg:justify-center lg:h-[90vh] h-[86.5vh] w-full",
+            // Apply theme background with overlay
+            themeConfig.colors.background
+          )}
           style={{
             backgroundImage: data?.backgroundImageUrl
               ? `url(${data?.backgroundImageUrl})`
@@ -21,85 +42,138 @@ const HeroCompo = ({ data, theme }: { data: any; theme: string }) => {
             backgroundPosition: "center",
           }}
         >
+          {/* Overlay for better text readability */}
+          <div
+            className={cn(
+              "absolute inset-0 rounded-b-2xl",
+              theme === "modern-dark" && "bg-slate-900/60",
+              theme === "light-minimal" && "bg-white/80",
+              theme === "gradient-bold" &&
+                "bg-gradient-to-br from-purple-900/70 via-pink-900/70 to-orange-900/70",
+              theme === "corporate" && "bg-gray-900/50"
+            )}
+          />
+
+          {/* Content Container */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col lg:gap-4 lg:w-1/2 lg:justify-center justify-end  lg:p-14 p-4"
+            className="flex flex-col lg:gap-4 lg:w-1/2 lg:justify-center justify-end lg:p-14 p-4 relative z-10"
           >
+            {/* Title */}
             <h1
               className={cn(
                 "text-2xl md:text-5xl font-bold mt-32",
-                theme === "modern-dark" && "text-white",
-                theme === "light-minimal" && "text-black",
-                theme === "gradient-bold" && "text-white",
-                theme === "corporate" && "text-white"
+                themeConfig.colors.primaryText
               )}
             >
               {data.title},{" "}
-              <span
-                className={cn(
-                  "",
-                  theme === "modern-dark" && "text-indigo-400",
-                  theme === "light-minimal" && "text-indigo-400",
-                  theme === "gradient-bold" && "text-yellow-400",
-                  theme === "corporate" && "text-indigo-400"
-                )}
-              >
-                {data.subtitle}
-              </span>
+              <span className={themeConfig.colors.accent}>{data.subtitle}</span>
             </h1>
+
+            {/* Description */}
             <h3
               className={cn(
                 "lg:text-lg text-sm pt-2 lg:pt-0",
-                theme === "modern-dark" && "text-gray-300",
-                theme === "light-minimal" && "text-gray-700",
-                theme === "gradient-bold" && "text-gray-300",
-                theme === "corporate" && "text-gray-300"
+                themeConfig.colors.secondaryText
               )}
             >
               {data.description}
             </h3>
-            {/*<div className="relative rounded-full pt-5 lg:pt-0">
-                                    <input type="Email address" name="q" className="py-6 lg:py-8 pl-8 pr-20 text-lg w-full text-white rounded-full focus:outline-none shadow-input-shadow" placeholder="search courses..." autoComplete="off" />
-                                    <button className="bg-secondary p-5 rounded-full absolute right-2 top-2 ">
-                                        <Icon
-                                            icon="solar:magnifer-linear"
-                                            className="text-white text-4xl inline-block"
-                                        />
-                                    </button>
-                                </div>*/}
+
+            {/* Checklist Items */}
             <div className="flex flex-col gap-3 pt-6 lg:pt-4">
-              {checklistArray.map((item: string) => (
-                <div className="flex gap-2" key={item}>
-                  <Image
-                    src="/images/banner/check-circle.svg"
-                    alt="check-image"
-                    width={30}
-                    height={30}
-                    className="smallImage"
-                  />
-                  <p className="text-sm sm:text-lg font-normal text-white">
+              {checklistArray.map((item: string, index: number) => (
+                <motion.div
+                  key={item}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  className="flex gap-2 items-center"
+                >
+                  {/* Check Icon Container */}
+                  <div
+                    className={cn(
+                      "flex items-center justify-center w-6 h-6 rounded-full flex-shrink-0",
+                      themeConfig.colors.accentBg
+                    )}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={cn(
+                        theme === "modern-dark" && "text-indigo-400",
+                        theme === "light-minimal" && "text-gray-900",
+                        theme === "gradient-bold" && "text-yellow-300",
+                        theme === "corporate" && "text-blue-600"
+                      )}
+                    >
+                      <path
+                        d="M20 6L9 17L4 12"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Checklist Text */}
+                  <p
+                    className={cn(
+                      "text-sm sm:text-lg font-normal",
+                      themeConfig.colors.secondaryText
+                    )}
+                  >
                     {item}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
-          <motion.div className=" justify-center place-items-end h-full  items-end hidden lg:flex">
-            <Image
-              src={`${data.heroImageUrl}` || "/enita/student5.png"}
-              alt="nothing"
-              className="lg:w-4/5 w-2/3 h-auto"
-              width={800}
-              height={805}
-            />
+
+          {/* Hero Image - Desktop */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="justify-center place-items-end h-full items-end hidden lg:flex relative z-10"
+          >
+            <div
+              className={cn(
+                "relative",
+                // Add glow effect based on theme
+                themeConfig.features.glassmorphism && themeConfig.colors.glow
+              )}
+            >
+              <Image
+                src={`${data.heroImageUrl}` || "/enita/student5.png"}
+                alt="Hero illustration"
+                className="lg:w-4/5 w-2/3 h-auto"
+                width={800}
+                height={805}
+              />
+            </div>
           </motion.div>
-          <motion.div className=" absolute bottom-0 lg:hidden w-full flex items-center justify-center">
+
+          {/* Hero Image - Mobile */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="absolute bottom-0 lg:hidden w-full flex items-center justify-center z-10"
+          >
             <Image
               src={`${data.heroImageUrl}` || "/enita/student5.png"}
-              alt="nothing"
+              alt="Hero illustration"
               className="lg:w-4/5 w-2/3 h-auto"
               width={800}
               height={805}
@@ -110,4 +184,5 @@ const HeroCompo = ({ data, theme }: { data: any; theme: string }) => {
     </div>
   );
 };
+
 export default HeroCompo;

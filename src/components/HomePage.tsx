@@ -46,7 +46,12 @@ const ModernFeatureCards = ({ features }: any) => {
       {/* Grille de cartes */}
       <div className="relative z-10 lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1 lg:gap-8 lg:p-6 p-2 hidden">
         {features.map((feature: any, index: any) => (
-          <Card key={index} feature={feature} index={index} />
+          <Card
+            key={index}
+            feature={feature}
+            index={index}
+            theme={feature.theme}
+          />
         ))}
       </div>
 
@@ -75,7 +80,11 @@ const ModernFeatureCards = ({ features }: any) => {
                 key={index}
                 className="px-2 basis-[85%] sm:basis-[45%] "
               >
-                <Card key={features.id} feature={features} />
+                <Card
+                  key={features.id}
+                  feature={features}
+                  theme={features.theme}
+                />
               </CarouselItem>
             ))}
           </CarouselContent>

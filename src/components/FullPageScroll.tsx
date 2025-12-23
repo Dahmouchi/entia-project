@@ -398,7 +398,7 @@ const FullPageScrollSystem = ({
   }, []);
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative bg">
       {/* Indicateur de progression */}
       <ScrollProgress
         currentSection={currentSection}

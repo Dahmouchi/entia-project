@@ -478,7 +478,7 @@ export default function StudentProfile({ user, stats }: any) {
 
                 <Separator className="my-6" />
 
-                {/* Average Score */}
+                {/* Average Score
                 <div className="text-center">
                   <div className="relative inline-flex items-center justify-center">
                     <svg className="w-24 h-24 transform -rotate-90">
@@ -512,7 +512,7 @@ export default function StudentProfile({ user, stats }: any) {
                   <p className="text-sm text-muted-foreground mt-2">
                     Score moyen
                   </p>
-                </div>
+                </div> */}
               </CardContent>
             </Card>
           </motion.div>
@@ -520,7 +520,7 @@ export default function StudentProfile({ user, stats }: any) {
           {/* Right Column - Achievements */}
           <BadgesDisplay />
         </div>
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold flex items-center gap-2">
               <GraduationCap className="h-5 w-5" />
@@ -530,7 +530,7 @@ export default function StudentProfile({ user, stats }: any) {
               {mockCertificates.length} certificat(s)
             </Badge>
           </div>
-          {/* 
+          
           {mockCertificates.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
@@ -552,8 +552,8 @@ export default function StudentProfile({ user, stats }: any) {
                 />
               ))}
             </div>
-          )}*/}
-        </div>
+          )}
+        </div>*/}
       </main>
     </div>
   );

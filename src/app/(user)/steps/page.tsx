@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User,
@@ -13,11 +12,13 @@ import {
   Check,
   AlertCircle,
   School,
+  Sparkles,
+  GraduationCap,
+  Award,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/Loading";
 import { redirect, useRouter } from "next/navigation";
-
 import {
   getClientById,
   updateClientProfile1,
@@ -27,7 +28,7 @@ import { toast } from "react-toastify";
 import Header from "@/components/Layout/Header";
 import { getNiveau } from "@/actions/grads";
 
-// Types pour les données du formulaire
+// Types
 interface PersonalInfo {
   nom: string;
   prenom: string;
@@ -45,7 +46,7 @@ interface FormData {
   study: StudyInfo;
 }
 
-// Composant pour les champs de saisie
+// Input Field avec design amélioré
 const InputField = ({
   label,
   type = "text",
@@ -66,39 +67,45 @@ const InputField = ({
   required?: boolean;
 }) => {
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-700">
+    <motion.div
+      className="space-y-2"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+        <Icon className="h-4 w-4 text-blue-500" />
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon className="h-5 w-5 text-gray-400" />
-        </div>
+      <div className="relative group">
         <input
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-            error ? "border-red-500" : "border-gray-200"
+          className={`w-full px-4 py-3.5 bg-white border-2 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-300 outline-none ${
+            error
+              ? "border-red-400 bg-red-50"
+              : "border-gray-200 hover:border-blue-300"
           }`}
         />
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </div>
       {error && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 text-red-500 text-sm"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-2 text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg"
         >
-          <AlertCircle className="w-4 h-4" />
-          {error}
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{error}</span>
         </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
-// Composant pour les champs select
+// Select Field amélioré
 const SelectField = ({
   label,
   value,
@@ -119,19 +126,24 @@ const SelectField = ({
   required?: boolean;
 }) => {
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-700">
+    <motion.div
+      className="space-y-2"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+        <Icon className="h-4 w-4 text-blue-500" />
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon className="h-5 w-5 text-gray-400" />
-        </div>
+      <div className="relative group">
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none bg-white ${
-            error ? "border-red-500" : "border-gray-200"
+          className={`w-full px-4 py-3.5 bg-white border-2 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-300 appearance-none outline-none ${
+            error
+              ? "border-red-400 bg-red-50"
+              : "border-gray-200 hover:border-blue-300"
           }`}
         >
           <option value="">{placeholder}</option>
@@ -141,22 +153,23 @@ const SelectField = ({
             </option>
           ))}
         </select>
+        <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 rotate-90 pointer-events-none" />
       </div>
       {error && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 text-red-500 text-sm"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-2 text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg"
         >
-          <AlertCircle className="w-4 h-4" />
-          {error}
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{error}</span>
         </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
-// Composant pour l'indicateur de progression
+// Progress Indicator moderne
 const ProgressIndicator = ({
   currentStep,
   totalSteps,
@@ -164,33 +177,63 @@ const ProgressIndicator = ({
   currentStep: number;
   totalSteps: number;
 }) => {
+  const steps = [
+    { icon: User, label: "Profil" },
+    { icon: GraduationCap, label: "Études" },
+  ];
+
   return (
-    <div className="flex items-center justify-center mb-8">
-      {Array.from({ length: totalSteps }, (_, index) => (
-        <React.Fragment key={index}>
+    <div className="mb-4">
+      <div className="flex items-center justify-between max-w-md mx-auto relative">
+        {/* Ligne de progression */}
+        <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200 rounded-full -z-10">
           <motion.div
-            className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-              index < currentStep
-                ? "bg-green-500 text-white"
-                : index === currentStep
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-500"
-            }`}
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            {index < currentStep ? <Check className="w-5 h-5" /> : index + 1}
-          </motion.div>
-          {index < totalSteps - 1 && (
-            <div
-              className={`w-16 h-1 mx-2 ${
-                index < currentStep ? "bg-green-500" : "bg-gray-200"
+            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+            initial={{ width: "0%" }}
+            animate={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </div>
+
+        {steps.map((step, index) => (
+          <div key={index} className="flex flex-col items-center gap-2">
+            <motion.div
+              className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold relative ${
+                index < currentStep
+                  ? "bg-gradient-to-br from-green-400 to-green-600 text-white shadow-lg shadow-green-500/50"
+                  : index === currentStep
+                  ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/50"
+                  : "bg-white border-2 border-gray-300 text-gray-400"
               }`}
-            />
-          )}
-        </React.Fragment>
-      ))}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              {index < currentStep ? (
+                <Check className="w-5 h-5" />
+              ) : (
+                <step.icon className="w-5 h-5" />
+              )}
+              {index === currentStep && (
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-blue-500"
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  style={{ opacity: 0.3 }}
+                />
+              )}
+            </motion.div>
+            <span
+              className={`text-xs font-medium ${
+                index <= currentStep ? "text-gray-700" : "text-gray-400"
+              }`}
+            >
+              {step.label}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -210,13 +253,15 @@ const PersonalInfoStep = ({
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
       className="space-y-6"
     >
+      {/* En-tête avec illustration */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Informations Personnelles
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          Bienvenue !
         </h2>
+        <p className="text-gray-600">Commençons par vos informations de base</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -224,17 +269,16 @@ const PersonalInfoStep = ({
           label="Nom"
           value={data.nom}
           onChange={(value) => onChange({ ...data, nom: value })}
-          placeholder="Votre nom de famille"
+          placeholder="Entrez votre nom"
           icon={User}
           error={errors.nom}
           required
         />
-
         <InputField
           label="Prénom"
           value={data.prenom}
           onChange={(value) => onChange({ ...data, prenom: value })}
-          placeholder="Votre prénom"
+          placeholder="Entrez votre prénom"
           icon={User}
           error={errors.prenom}
           required
@@ -255,12 +299,13 @@ const PersonalInfoStep = ({
   );
 };
 
+// Étape 2: Informations d'étude
 const StudyInfoStep = ({
   data,
   onChange,
   errors,
 }: {
-  data: StudyInfo & { gradeId?: string }; // Add gradeId to your StudyInfo type
+  data: StudyInfo & { gradeId?: string };
   onChange: (data: StudyInfo) => void;
   errors: Partial<StudyInfo>;
 }) => {
@@ -277,7 +322,6 @@ const StudyInfoStep = ({
     const fetchNiveaux = async () => {
       try {
         const response = await getNiveau();
-
         if (response.success) {
           const options = response.data.map((niveau: any) => ({
             value: niveau.id,
@@ -295,12 +339,11 @@ const StudyInfoStep = ({
         setLoading(false);
       }
     };
-
     fetchNiveaux();
   }, []);
 
   const handleNiveauChange = (value: string) => {
-    onChange({ ...data, niveau: value, gradeId: "" }); // Reset grade when niveau changes
+    onChange({ ...data, niveau: value, gradeId: "" });
   };
 
   return (
@@ -308,21 +351,25 @@ const StudyInfoStep = ({
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
       className="space-y-6"
     >
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Informations d&apos;Étude
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+          Votre Parcours
         </h2>
         <p className="text-gray-600">
-          Parlez-nous de votre parcours académique
+          Dites-nous en plus sur vos études actuelles
         </p>
       </div>
 
       {loading ? (
-        <div className="flex justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="flex justify-center py-12">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full"
+          />
         </div>
       ) : (
         <>
@@ -331,54 +378,70 @@ const StudyInfoStep = ({
             value={data.niveau}
             onChange={handleNiveauChange}
             options={niveauOptions}
-            placeholder="Sélectionnez votre niveau"
+            placeholder="Choisissez votre niveau"
             icon={BookOpen}
             error={errors.niveau}
             required
           />
 
-          {data.niveau && (
-            <SelectField
-              label="Classe/Niveau spécifique"
-              value={data.gradeId}
-              onChange={(value) => onChange({ ...data, gradeId: value })}
-              options={
-                niveauOptions.find((n) => n.value === data.niveau)?.grades || []
-              }
-              placeholder="Sélectionnez votre classe"
-              icon={School}
-              error={errors.gradeId}
-              required
-            />
-          )}
+          <AnimatePresence>
+            {data.niveau && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <SelectField
+                  label="Classe"
+                  value={data.gradeId}
+                  onChange={(value) => onChange({ ...data, gradeId: value })}
+                  options={
+                    niveauOptions.find((n) => n.value === data.niveau)
+                      ?.grades || []
+                  }
+                  placeholder="Sélectionnez votre classe"
+                  icon={School}
+                  error={errors.gradeId}
+                  required
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <InputField
+            label="Code d'inscription"
+            value={data.codeInscription}
+            onChange={(value) => onChange({ ...data, codeInscription: value })}
+            placeholder="Ex: 01234567"
+            icon={IdCard}
+            error={errors.codeInscription}
+            required
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-100 rounded-2xl p-4"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Award className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-800 mb-1">
+                  Code d&apos;inscription
+                </h4>
+                <p className="text-sm text-gray-600">
+                  Utilisez le code qui vous a été fourni lors de votre
+                  inscription à l&apos;établissement.
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </>
       )}
-
-      <InputField
-        label="Code d'inscription"
-        value={data.codeInscription}
-        onChange={(value) => onChange({ ...data, codeInscription: value })}
-        placeholder="Ex: 01234567"
-        icon={IdCard}
-        error={errors.codeInscription}
-        required
-      />
-
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-        <div className="flex items-start gap-3">
-          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-            <Check className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h4 className="font-semibold text-blue-800 mb-1">
-              Code d&apos;inscription
-            </h4>
-            <p className="text-sm text-blue-700">
-              Insérez le code d&apos;inscription qui vous a été accordé, Merci.
-            </p>
-          </div>
-        </div>
-      </div>
     </motion.div>
   );
 };
@@ -399,52 +462,88 @@ const ConfirmationStep = ({ data }: { data: FormData }) => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="text-center"
+      className="text-center py-8"
     >
-      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <Check className="w-10 h-10 text-green-600" />
-      </div>
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", duration: 0.8, delay: 0.2 }}
+        className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-green-500/50 relative"
+      >
+        <Check className="w-12 h-12 text-white" />
+        <motion.div
+          className="absolute inset-0 rounded-full bg-green-400"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        />
+      </motion.div>
 
-      <h2 className="text-3xl font-bold text-gray-800 mb-4">
-        Inscription Réussie !
-      </h2>
-      <p className="text-gray-600 mb-8">
-        Félicitations ! Votre profil a été créé avec succès.
-      </p>
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-3"
+      >
+        Félicitations ! 🎉
+      </motion.h2>
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="text-gray-600 mb-8 text-lg"
+      >
+        Votre profil a été créé avec succès
+      </motion.p>
 
-      <div className="bg-gray-50 rounded-xl p-6 text-left max-w-md mx-auto">
-        <h3 className="font-semibold text-gray-800 mb-4">
-          Récapitulatif de vos informations :
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 max-w-md mx-auto border-2 border-gray-200 shadow-xl"
+      >
+        <h3 className="font-bold text-gray-800 mb-6 text-lg flex items-center justify-center gap-2">
+          <User className="w-5 h-5 text-blue-500" />
+          Récapitulatif
         </h3>
 
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Nom complet :</span>
-            <span className="font-medium">
-              {data.personal.prenom} {data.personal.nom}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Téléphone :</span>
-            <span className="font-medium">{data.personal.phone}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="text-gray-600">Niveau :</span>
-            <span className="font-medium">
-              {niveauLabels[data.study.niveau] || data.study.niveau}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Code :</span>
-            <span className="font-medium">{data.study.codeInscription}</span>
-          </div>
+        <div className="space-y-4">
+          {[
+            {
+              label: "Nom complet",
+              value: `${data.personal.prenom} ${data.personal.nom}`,
+              icon: User,
+            },
+            { label: "Téléphone", value: data.personal.phone, icon: Phone },
+            {
+              label: "Niveau",
+              value: niveauLabels[data.study.niveau] || data.study.niveau,
+              icon: GraduationCap,
+            },
+            { label: "Code", value: data.study.codeInscription, icon: IdCard },
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 + index * 0.1 }}
+              className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm"
+            >
+              <span className="text-gray-600 text-sm flex items-center gap-2">
+                <item.icon className="w-4 h-4 text-gray-400" />
+                {item.label}
+              </span>
+              <span className="font-semibold text-gray-800">{item.value}</span>
+            </motion.div>
+          ))}
         </div>
-      </div>
+      </motion.div>
 
       <motion.button
-        className="mt-8 bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-200"
-        whileHover={{ scale: 1.05 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+        className="mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-2xl font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300"
+        whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => redirect("/dashboard")}
       >
@@ -454,54 +553,14 @@ const ConfirmationStep = ({ data }: { data: FormData }) => {
   );
 };
 
-// Composant principal du formulaire multi-étapes
+// Composant principal
 const MultiStepForm = () => {
   const { data: session, status, update } = useSession();
   const [currentStep, setCurrentStep] = useState(session?.user.step || 0);
   const [formData, setFormData] = useState<FormData>({
-    personal: {
-      nom: "",
-      prenom: "",
-      phone: "",
-    },
-    study: {
-      niveau: "",
-      gradeId: "",
-      codeInscription: "",
-    },
+    personal: { nom: "", prenom: "", phone: "" },
+    study: { niveau: "", gradeId: "", codeInscription: "" },
   });
-  useEffect(() => {
-    console.log(session?.user);
-    const fetchUserData = async () => {
-      try {
-        if (session) {
-          const res = await getClientById(session.user.id);
-          const user = res;
-
-          if (user) {
-            setFormData({
-              personal: {
-                nom: user.name || "",
-                prenom: user.prenom || "",
-                phone: user.phone?.toString() || "",
-              },
-              study: {
-                gradeId: "",
-                niveau: "",
-                codeInscription: "",
-              },
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load user data", error);
-      }
-    };
-
-    if (session?.user?.id) {
-      fetchUserData();
-    }
-  }, []);
   const [errors, setErrors] = useState<{
     personal: Partial<PersonalInfo>;
     study: Partial<StudyInfo>;
@@ -510,33 +569,50 @@ const MultiStepForm = () => {
     study: {},
   });
   const router = useRouter();
-  // Validation des champs
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        if (session) {
+          const res = await getClientById(session.user.id);
+          if (res) {
+            setFormData({
+              personal: {
+                nom: res.name || "",
+                prenom: res.prenom || "",
+                phone: res.phone?.toString() || "",
+              },
+              study: { gradeId: "", niveau: "", codeInscription: "" },
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load user data", error);
+      }
+    };
+    if (session?.user?.id) fetchUserData();
+  }, []);
+
   const validatePersonalInfo = (data: PersonalInfo): Partial<PersonalInfo> => {
     const errors: Partial<PersonalInfo> = {};
-
     if (!data.nom.trim()) errors.nom = "Le nom est requis";
     if (!data.prenom.trim()) errors.prenom = "Le prénom est requis";
     if (!data.phone.trim()) errors.phone = "Le téléphone est requis";
-    else if (!/^[\+]?[0-9\s\-\(\)]{8,}$/.test(data.phone)) {
+    else if (!/^[\+]?[0-9\s\-\(\)]{8,}$/.test(data.phone))
       errors.phone = "Format de téléphone invalide";
-    }
     return errors;
   };
 
   const validateStudyInfo = (data: StudyInfo): Partial<StudyInfo> => {
     const errors: Partial<StudyInfo> = {};
-
     if (!data.niveau) errors.niveau = "Le niveau d'étude est requis";
     if (!data.codeInscription.trim())
       errors.codeInscription = "Le code d'inscription est requis";
-    else if (data.codeInscription.length < 6) {
+    else if (data.codeInscription.length < 6)
       errors.codeInscription = "Le code doit contenir au moins 6 caractères";
-    }
-
     return errors;
   };
 
-  // Navigation
   const nextStep = async () => {
     if (currentStep === 0) {
       const personalErrors = validatePersonalInfo(formData.personal);
@@ -548,16 +624,12 @@ const MultiStepForm = () => {
       try {
         if (session) {
           const res = await updateClientProfile1(session?.user.id, formData);
-
-          if (res) {
-            setCurrentStep(1); // Done
-          } else {
-            toast.error("Failed to update profile");
-          }
+          if (res) setCurrentStep(1);
+          else toast.error("Échec de la mise à jour du profil");
         }
       } catch (error) {
         console.error("Update failed", error);
-        toast.error("An error occurred");
+        toast.error("Une erreur s'est produite");
       }
     } else if (currentStep === 1) {
       const studyErrors = validateStudyInfo(formData.study);
@@ -568,59 +640,59 @@ const MultiStepForm = () => {
       try {
         if (session) {
           const res = await updateClientProfile2(session?.user.id, formData);
-
           if (res) {
-            //setCurrentStep(2); // Done
             await update({ step: 2 });
             router.push("/dashboard");
-          } else {
-            toast.error("Failed to update profile");
-          }
+          } else toast.error("Échec de la mise à jour du profil");
         }
       } catch (error) {
         console.error("Update failed", error);
-        toast.error("An error occurred");
+        toast.error("Une erreur s'est produite");
       }
       setErrors((prev) => ({ ...prev, study: {} }));
     }
   };
 
-  const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  };
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
-  const updatePersonalInfo = (data: PersonalInfo) => {
-    console.log(data);
-    setFormData((prev) => ({ ...prev, personal: data }));
-    // Clear errors when user types
-    setErrors((prev) => ({ ...prev, personal: {} }));
-  };
+  if (status === "loading") return <Loading />;
+  if (!session) redirect("/login");
 
-  const updateStudyInfo = (data: StudyInfo) => {
-    setFormData((prev) => ({ ...prev, study: data }));
-    // Clear errors when user types
-    setErrors((prev) => ({ ...prev, study: {} }));
-  };
-
-  if (status === "loading") {
-    return <Loading />;
-  }
-
-  if (!session) {
-    redirect("/login");
-  }
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800  relative"
+      className="min-h-screen relative overflow-hidden"
       style={{
         backgroundImage: `url("/Board.png")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
+      {/* Overlay gradient */}
+      <div className="absolute inset-0" />
+
+      {/* Animated blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-0 left-0 w-96 h-96 bg-blue-400/30 rounded-full blur-3xl"
+          animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
+          transition={{ repeat: Infinity, duration: 20 }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400/30 rounded-full blur-3xl"
+          animate={{ x: [0, -100, 0], y: [0, -50, 0] }}
+          transition={{ repeat: Infinity, duration: 15 }}
+        />
+      </div>
+
       <Header visible={false} />
-      <div className="max-w-2xl mx-auto pt-32 p-2">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+
+      <div className="relative max-w-3xl mx-auto pt-32 p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12"
+        >
           {currentStep < 2 && (
             <ProgressIndicator currentStep={currentStep} totalSteps={2} />
           )}
@@ -630,54 +702,78 @@ const MultiStepForm = () => {
               <PersonalInfoStep
                 key="personal"
                 data={formData.personal}
-                onChange={updatePersonalInfo}
+                onChange={(data) => {
+                  setFormData((prev) => ({ ...prev, personal: data }));
+                  setErrors((prev) => ({ ...prev, personal: {} }));
+                }}
                 errors={errors.personal}
               />
             )}
-
             {currentStep === 1 && (
               <StudyInfoStep
                 key="study"
                 data={formData.study}
-                onChange={updateStudyInfo}
+                onChange={(data) => {
+                  setFormData((prev) => ({ ...prev, study: data }));
+                  setErrors((prev) => ({ ...prev, study: {} }));
+                }}
                 errors={errors.study}
               />
             )}
-
             {currentStep === 2 && (
               <ConfirmationStep key="confirmation" data={formData} />
             )}
           </AnimatePresence>
 
           {currentStep < 2 && (
-            <div className="flex justify-between mt-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="flex justify-between mt-10 gap-4"
+            >
               <motion.button
                 onClick={prevStep}
                 disabled={currentStep === 0}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                className={`flex items-center gap-2 px-6 py-3.5 rounded-2xl font-semibold transition-all duration-300 ${
                   currentStep === 0
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:shadow-lg hover:scale-105 active:scale-95"
                 }`}
-                whileHover={currentStep > 0 ? { scale: 1.05 } : {}}
+                whileHover={currentStep > 0 ? { x: -5 } : {}}
                 whileTap={currentStep > 0 ? { scale: 0.95 } : {}}
               >
                 <ChevronLeft className="w-5 h-5" />
-                Précédent
+                <span className="hidden sm:inline">Précédent</span>
               </motion.button>
 
               <motion.button
                 onClick={nextStep}
-                className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-200"
-                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3.5 rounded-2xl font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 relative overflow-hidden group"
+                whileHover={{ scale: 1.05, x: 5 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {currentStep === 1 ? "Terminer" : "Suivant"}
-                <ChevronRight className="w-5 h-5" />
+                <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative flex items-center gap-2">
+                  {currentStep === 1 ? "Terminer" : "Suivant"}
+                  <ChevronRight className="w-5 h-5" />
+                </span>
               </motion.button>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
+
+        {/* Indicateur d'étape textuel */}
+        {currentStep < 2 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="text-center mt-6 text-white/80 text-sm"
+          >
+            Étape {currentStep + 1} sur 2
+          </motion.div>
+        )}
       </div>
     </div>
   );

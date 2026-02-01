@@ -35,7 +35,7 @@ model NotesGlobal {
   updatedAt DateTime @updatedAt
 
   // Relations
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
 
@@ -65,7 +65,7 @@ model EarnedBadge {
 model UserActivity {
   id     String @id @default(cuid())
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   type        ActivityType // 👈 "login", "course_completed", etc.
   description String? // Optional text to add details
@@ -287,32 +287,32 @@ model Subject {
 }
 
 model CourseChatNotification {
-  id        String   @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   messageId String
   message   CourseChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  
-  userId    String
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  isRead    Boolean  @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  isRead    Boolean   @default(false)
   readAt    DateTime?
-  createdAt DateTime @default(now())
-  
+  createdAt DateTime  @default(now())
+
   @@unique([messageId, userId])
   @@index([userId, isRead])
 }
 
 model CourseChatMessageRead {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
   messageId String
   message   CourseChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
-  userId    String
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  readAt    DateTime @default(now())
+  readAt DateTime @default(now())
 
   @@unique([messageId, userId])
   @@index([userId])
@@ -320,21 +320,21 @@ model CourseChatMessageRead {
 }
 
 model CourseChatMessage {
-  id        String   @id @default(cuid())
-  content   String
+  id      String @id @default(cuid())
+  content String
 
-  parentId  String?
-  parent    CourseChatMessage? @relation("MessageReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies   CourseChatMessage[] @relation("MessageReplies")
+  parentId String?
+  parent   CourseChatMessage?  @relation("MessageReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  CourseChatMessage[] @relation("MessageReplies")
 
-  courseId  String
-  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  senderId  String
-  sender    User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId String
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
   reads         CourseChatMessageRead[]
-  notifications CourseChatNotification[]  // ✅ ADDED THIS!
+  notifications CourseChatNotification[] // ✅ ADDED THIS!
 
   createdAt DateTime @default(now())
 
@@ -345,15 +345,15 @@ model CourseChatMessage {
 }
 
 model Course {
-  id         String           @id @default(cuid())
+  id         String              @id @default(cuid())
   title      String
   content    String?
   videoUrl   String?
   coverImage String?
-  handler    String           @unique
+  handler    String              @unique
   index      Int
   subjectId  String
-  subject    Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject    Subject             @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   documents  Document[]
   quizzes    Quiz[]
   progress   CourseProgress[]
@@ -364,6 +364,7 @@ model Course {
 
   @@index([index])
 }
+
 model Document {
   id       String @id @default(cuid())
   name     String
@@ -462,10 +463,10 @@ model User {
   activities     UserActivity[]
   badges         EarnedBadge[]
   notesGlobal    NotesGlobal[]
-  
-  messages            CourseChatMessage[]       // existing
-  chatReads           CourseChatMessageRead[]    // ✅ ADD THIS
-  chatNotifications   CourseChatNotification[]  // ✅ ADD THIS
+
+  messages          CourseChatMessage[] // existing
+  chatReads         CourseChatMessageRead[] // ✅ ADD THIS
+  chatNotifications CourseChatNotification[] // ✅ ADD THIS
 }
 
 model Account {

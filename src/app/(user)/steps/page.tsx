@@ -73,7 +73,7 @@ const InputField = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+      <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
         <Icon className="h-4 w-4 text-blue-500" />
         {label} {required && <span className="text-red-500">*</span>}
       </label>
@@ -188,7 +188,7 @@ const ProgressIndicator = ({
         {/* Ligne de progression */}
         <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200 rounded-full -z-10">
           <motion.div
-            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+            className="h-full bg-gradient-to-r from-primary to-primary rounded-full"
             initial={{ width: "0%" }}
             animate={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
             transition={{ duration: 0.5 }}
@@ -202,8 +202,8 @@ const ProgressIndicator = ({
                 index < currentStep
                   ? "bg-gradient-to-br from-green-400 to-green-600 text-white shadow-lg shadow-green-500/50"
                   : index === currentStep
-                  ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/50"
-                  : "bg-white border-2 border-gray-300 text-gray-400"
+                    ? "bg-gradient-to-br from-primary to-primary text-white shadow-lg shadow-blue-500/50"
+                    : "bg-white border-2 border-gray-300 text-gray-400"
               }`}
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
@@ -217,7 +217,7 @@ const ProgressIndicator = ({
               )}
               {index === currentStep && (
                 <motion.div
-                  className="absolute inset-0 rounded-full bg-blue-500"
+                  className="absolute inset-0 rounded-full bg-primary"
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{ repeat: Infinity, duration: 2 }}
                   style={{ opacity: 0.3 }}
@@ -258,7 +258,7 @@ const PersonalInfoStep = ({
     >
       {/* En-tête avec illustration */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <h2 className="text-3xl font-bold bg-blue-500 bg-clip-text text-transparent mb-2">
           Bienvenue !
         </h2>
         <p className="text-gray-600">Commençons par vos informations de base</p>
@@ -355,7 +355,7 @@ const StudyInfoStep = ({
       className="space-y-6"
     >
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+        <h2 className="text-3xl font-bold bg-blue-500 bg-clip-text text-transparent mb-2">
           Votre Parcours
         </h2>
         <p className="text-gray-600">
@@ -426,7 +426,7 @@ const StudyInfoStep = ({
             className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-100 rounded-2xl p-4"
           >
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Award className="w-4 h-4 text-white" />
               </div>
               <div>
@@ -542,7 +542,7 @@ const ConfirmationStep = ({ data }: { data: FormData }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9 }}
-        className="mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-2xl font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300"
+        className="mt-8 bg-gradient-to-r from-primary to-primary/80 text-white px-10 py-4 rounded-2xl font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300"
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => redirect("/dashboard")}
@@ -749,11 +749,11 @@ const MultiStepForm = () => {
 
               <motion.button
                 onClick={nextStep}
-                className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3.5 rounded-2xl font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 relative overflow-hidden group"
+                className="flex items-center gap-2 bg-blue-500 text-white px-8 py-3.5 rounded-2xl font-semibold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 relative overflow-hidden group"
                 whileHover={{ scale: 1.05, x: 5 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-500/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative flex items-center gap-2">
                   {currentStep === 1 ? "Terminer" : "Suivant"}
                   <ChevronRight className="w-5 h-5" />

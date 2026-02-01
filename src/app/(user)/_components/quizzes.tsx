@@ -171,7 +171,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({
           quizScores.sort(
             (a, b) =>
               new Date(b.completedAt).getTime() -
-              new Date(a.completedAt).getTime()
+              new Date(a.completedAt).getTime(),
           );
           const latestScore = quizScores[0];
           newQuizScores[quizId] = {
@@ -226,7 +226,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({
       setQuizScores(updatedScores);
       localStorage.setItem(
         `quiz-scores-${userId}`,
-        JSON.stringify(updatedScores)
+        JSON.stringify(updatedScores),
       );
       setCurrentScore(score);
     } finally {
@@ -276,7 +276,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({
       const selectedOptionId = selectedAnswers[question.id];
       if (selectedOptionId) {
         const selectedOption = question.options.find(
-          (option) => option.id === selectedOptionId
+          (option) => option.id === selectedOptionId,
         );
         if (selectedOption && selectedOption.isCorrect) {
           correctAnswers++;
@@ -285,7 +285,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({
     });
 
     const percentage = Math.round(
-      (correctAnswers / selectedQuiz.questions.length) * 100
+      (correctAnswers / selectedQuiz.questions.length) * 100,
     );
     const existingScore = quizScores[selectedQuiz.id];
     // The attempts should be incremented based on the number of existing results for this quiz
@@ -390,7 +390,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({
                                       <span>
                                         Dernière tentative:{" "}
                                         {new Date(
-                                          score.completedAt
+                                          score.completedAt,
                                         ).toLocaleDateString()}
                                       </span>
                                     </div>
@@ -524,7 +524,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({
                                       <span>
                                         Dernière tentative:{" "}
                                         {new Date(
-                                          score.completedAt
+                                          score.completedAt,
                                         ).toLocaleDateString()}
                                       </span>
                                     </div>
@@ -731,7 +731,7 @@ const QuizDisplay: React.FC<QuizDisplayProps> = ({
               ${
                 selectedAnswers[currentQuestion.id] === option.id
                   ? "border-blue-500 bg-blue-100 text-blue-800 shadow-md"
-                  : "border-gray-200 bg-gray-500 hover:border-blue-300 hover:bg-blue-50"
+                  : "border-gray-200 bg-gray-100 hover:border-blue-300 hover:bg-blue-50"
               }
               flex items-center space-x-3
             `}

@@ -70,7 +70,7 @@ export const StudentHeader = ({
             transition={{ type: "spring", stiffness: 400 }}
             onClick={() => navigate.push("/dashboard")}
           >
-            <div className="relative h-10 w-auto rounded-xl bg-gradient-to-br from-blue-600 to-blue-600/60 flex items-center justify-center shadow-lg">
+            <div className="relative h-10 w-auto rounded-xl bg-gradient-to-br from-[#c33511] to-[#c33511]/60 flex items-center justify-center shadow-lg">
               <img
                 src="/enita/enitaLogo.jpeg"
                 alt=""
@@ -92,7 +92,7 @@ export const StudentHeader = ({
                   )}
                   <Avatar className="h-8 w-8 border-2 border-blue-600/20">
                     <AvatarImage src={userAvatar} alt={userName} />
-                    <AvatarFallback className="bg-blue-600/10 text-blue-600 text-sm font-medium">
+                    <AvatarFallback className="bg-[#c33511]/10 text-[#c33511] text-sm font-medium">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
@@ -107,7 +107,7 @@ export const StudentHeader = ({
               <div className="flex items-center gap-2 p-2">
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={userAvatar} alt={userName} />
-                  <AvatarFallback className="bg-blue-600/10 text-blue-600">
+                  <AvatarFallback className="bg-[#c33511]/10 text-[#c33511]">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
@@ -166,8 +166,8 @@ export const StudentHeader = ({
                 className={cn(
                   "flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors",
                   isActive
-                    ? "text-blue-600"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "text-[#c33511]"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 <item.icon className={cn("h-5 w-5", isActive && "scale-110")} />
@@ -175,7 +175,7 @@ export const StudentHeader = ({
                 {isActive && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute top-0 h-0.5 w-12 bg-blue-600 rounded-full"
+                    className="absolute top-0 h-0.5 w-12 bg-[#c33511] rounded-full"
                   />
                 )}
               </button>

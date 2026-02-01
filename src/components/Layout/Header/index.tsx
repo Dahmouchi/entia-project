@@ -132,29 +132,35 @@ const Header = ({ visible }: { visible: any }) => {
                 <div className=" flex items-center gap-2">
                   <motion.button
                     onClick={() => router.push("/dashboard")}
-                    className="relative group px-6 lg:py-3 py-2 cursor-pointer rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium shadow-lg overflow-hidden"
+                    className="
+    relative group px-6 lg:py-3 py-2 cursor-pointer rounded-lg
+    bg-gradient-to-r from-[#c33511] to-[#e04b24]
+    text-white font-medium shadow-lg overflow-hidden
+  "
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    {/* Glow effect */}
+                    {/* Soft glow */}
                     <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-lg"></span>
-                    {/* Inner glow */}
+
+                    {/* Border glow */}
                     <span className="absolute inset-0 border-2 border-white/20 rounded-lg group-hover:border-white/40 transition-all duration-300"></span>
-                    {/* Shadow animation */}
+
+                    {/* Animated shadow */}
                     <motion.span
-                      className="absolute inset-0 rounded-lg shadow-lg"
+                      className="absolute inset-0 rounded-lg"
                       initial={{
                         boxShadow:
-                          "0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.1)",
+                          "0 10px 15px -3px rgba(195, 53, 17, 0.35), 0 4px 6px -2px rgba(195, 53, 17, 0.2)",
                       }}
                       animate={{
                         boxShadow: [
-                          "0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.1)",
-                          "0 20px 25px -5px rgba(99, 102, 241, 0.4), 0 10px 10px -5px rgba(99, 102, 241, 0.2)",
-                          "0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.1)",
+                          "0 10px 15px -3px rgba(195, 53, 17, 0.35), 0 4px 6px -2px rgba(195, 53, 17, 0.2)",
+                          "0 20px 25px -5px rgba(195, 53, 17, 0.5), 0 10px 10px -5px rgba(195, 53, 17, 0.3)",
+                          "0 10px 15px -3px rgba(195, 53, 17, 0.35), 0 4px 6px -2px rgba(195, 53, 17, 0.2)",
                         ],
                       }}
                       transition={{
@@ -163,11 +169,13 @@ const Header = ({ visible }: { visible: any }) => {
                         ease: "easeInOut",
                       }}
                     />
+
                     <div className="relative z-10 flex items-center justify-center gap-2">
                       <User className="lg:text-lg text-sm" />
                       <span>Mon Espace</span>
                     </div>
                   </motion.button>
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -232,7 +240,11 @@ const Header = ({ visible }: { visible: any }) => {
               ) : (
                 <motion.button
                   onClick={() => router.push(`/login`)}
-                  className="relative group px-6 lg:py-3 py-2 cursor-pointer rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium shadow-lg overflow-hidden"
+                  className="
+    relative group px-6 lg:py-3 py-2 cursor-pointer rounded-lg
+    bg-gradient-to-r from-[#c33511] to-[#e04b24]
+    text-white font-medium shadow-lg overflow-hidden
+  "
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   initial={{ opacity: 0, y: 20 }}
@@ -241,20 +253,22 @@ const Header = ({ visible }: { visible: any }) => {
                 >
                   {/* Glow effect */}
                   <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-lg"></span>
-                  {/* Inner glow */}
+
+                  {/* Inner border glow */}
                   <span className="absolute inset-0 border-2 border-white/20 rounded-lg group-hover:border-white/40 transition-all duration-300"></span>
-                  {/* Shadow animation */}
+
+                  {/* Animated shadow */}
                   <motion.span
-                    className="absolute inset-0 rounded-lg shadow-lg"
+                    className="absolute inset-0 rounded-lg"
                     initial={{
                       boxShadow:
-                        "0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.1)",
+                        "0 10px 15px -3px rgba(195, 53, 17, 0.35), 0 4px 6px -2px rgba(195, 53, 17, 0.2)",
                     }}
                     animate={{
                       boxShadow: [
-                        "0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.1)",
-                        "0 20px 25px -5px rgba(99, 102, 241, 0.4), 0 10px 10px -5px rgba(99, 102, 241, 0.2)",
-                        "0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(99, 102, 241, 0.1)",
+                        "0 10px 15px -3px rgba(195, 53, 17, 0.35), 0 4px 6px -2px rgba(195, 53, 17, 0.2)",
+                        "0 20px 25px -5px rgba(195, 53, 17, 0.5), 0 10px 10px -5px rgba(195, 53, 17, 0.3)",
+                        "0 10px 15px -3px rgba(195, 53, 17, 0.35), 0 4px 6px -2px rgba(195, 53, 17, 0.2)",
                       ],
                     }}
                     transition={{
@@ -263,10 +277,11 @@ const Header = ({ visible }: { visible: any }) => {
                       ease: "easeInOut",
                     }}
                   />
+
                   <div className="relative z-10 flex items-center justify-center gap-2">
                     <LogIn className="lg:text-lg text-sm" />
                     <span>Connexion</span>
-                  </div>{" "}
+                  </div>
                 </motion.button>
               )}
               {/*<LanguageSelector />*/}

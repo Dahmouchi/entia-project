@@ -64,7 +64,7 @@
 
   /* Interactive color - friendly orange */
   --color-interactive: 255, 167, 38;
-
+  --radius: 0.425rem;
   --circle-size: 80%;
   --blending: soft-light;
   --background: oklch(1 0 0);
@@ -73,7 +73,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.5425 0.1841 34.21);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -198,7 +198,10 @@
     gap: 1rem;
   }
 }
-
+.container-custom {
+  max-width: 1280px;
+  margin-inline: auto;
+}
 /* In your global CSS */
 
 /* Ensure sections don't have pointer events when not active */
@@ -231,8 +234,62 @@ section.active {
   position: relative; /* or absolute/fixed if needed */
   z-index: 9999; /* higher than other sections */
 }
+@layer components {
+  .section-padding {
+    @apply py-8 md:py-12 px-4 md:px-8;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .heading-xl {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+  }
+
+  .heading-lg {
+    @apply text-3xl md:text-4xl font-bold leading-tight;
+  }
+
+  .heading-md {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-emerald-600 bg-clip-text text-transparent;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  .btn-shadow {
+    box-shadow: 0 4px 14px 0 hsl(var(--shadow-primary) / 0.35);
+  }
+
+  .hero-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--hero-bg)) 0%,
+      hsl(var(--background)) 100%
+    );
+  }
+}
 
 @layer utilities {
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
   @keyframes border {
     0% {
       border-color: rgb(255, 255, 255);
@@ -260,7 +317,9 @@ section.active {
     animation: border 4s linear infinite;
   }
   .animate-typing {
-    animation: typing 2s steps(20) infinite alternate, blink 0.7s infinite;
+    animation:
+      typing 2s steps(20) infinite alternate,
+      blink 0.7s infinite;
   }
   .animate-typewriter {
     animation: typewriter 2s steps(11) forwards;
@@ -519,7 +578,9 @@ section.active {
   overflow: hidden;
   border-right: 2px solid #3b82f6;
   white-space: nowrap;
-  animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
+  animation:
+    typing 2s steps(40, end),
+    blink-caret 0.75s step-end infinite;
 }
 
 /* Responsive animations */

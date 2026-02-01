@@ -32,7 +32,7 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
           className={cn(
             "rounded-b-2xl relative flex flex-col lg:flex-row lg:items-center lg:justify-center lg:h-[90vh] h-[86.5vh] w-full",
             // Apply theme background with overlay
-            themeConfig.colors.background
+            themeConfig.colors.background,
           )}
           style={{
             backgroundImage: data?.backgroundImageUrl
@@ -50,7 +50,7 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
               theme === "light-minimal" && "bg-white/80",
               theme === "gradient-bold" &&
                 "bg-gradient-to-br from-purple-900/70 via-pink-900/70 to-orange-900/70",
-              theme === "corporate" && "bg-gray-900/50"
+              theme === "corporate" && "bg-gray-900/50",
             )}
           />
 
@@ -66,7 +66,7 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
             <h1
               className={cn(
                 "text-2xl md:text-5xl font-bold mt-32",
-                themeConfig.colors.primaryText
+                themeConfig.colors.primaryText,
               )}
             >
               {data.title},{" "}
@@ -77,7 +77,7 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
             <h3
               className={cn(
                 "lg:text-lg text-sm pt-2 lg:pt-0",
-                themeConfig.colors.secondaryText
+                themeConfig.colors.secondaryText,
               )}
             >
               {data.description}
@@ -98,7 +98,7 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
                   <div
                     className={cn(
                       "flex items-center justify-center w-6 h-6 rounded-full flex-shrink-0",
-                      themeConfig.colors.accentBg
+                      themeConfig.colors.accentBg,
                     )}
                   >
                     <svg
@@ -111,7 +111,7 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
                         theme === "modern-dark" && "text-indigo-400",
                         theme === "light-minimal" && "text-gray-900",
                         theme === "gradient-bold" && "text-yellow-300",
-                        theme === "corporate" && "text-blue-600"
+                        theme === "corporate" && "text-blue-600",
                       )}
                     >
                       <path
@@ -128,7 +128,7 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
                   <p
                     className={cn(
                       "text-sm sm:text-lg font-normal",
-                      themeConfig.colors.secondaryText
+                      themeConfig.colors.secondaryText,
                     )}
                   >
                     {item}
@@ -150,7 +150,6 @@ const HeroCompo = ({ data, theme }: HeroCompoProps) => {
               className={cn(
                 "relative",
                 // Add glow effect based on theme
-                themeConfig.features.glassmorphism && themeConfig.colors.glow
               )}
             >
               <Image

@@ -108,7 +108,9 @@ export const Footer = () => {
 
           {/* Links Columns */}
           <div>
-            <h4 className="font-semibold text-background mb-4">L&apos;École</h4>
+            <h4 className="font-semibold text-background mb-4">
+              L&apos;École{" "}
+            </h4>
             <ul className="space-y-3">
               {footerLinks.école.map((link) => (
                 <li key={link.label}>
